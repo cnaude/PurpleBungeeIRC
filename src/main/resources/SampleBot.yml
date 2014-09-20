@@ -1,0 +1,219 @@
+# Sample PurpleIRC bot configuration.
+# Most of these options should be self explanatory.
+# Place your bot file in the PurpleIRC/bots/ folder.
+# NOTE: If you make changes to this file while the server is running use "/irc reloadbotconfigs" to load the changes into memory.
+#
+# nick - Your bot's unique nickname
+nick: AwesomeBot
+# login - Your bot's login name
+login: AwesomeName
+# realname
+realname: ''
+# server - IRC server to join
+server: irc.excample.com
+# port - IRC server port
+port: 6667
+# Attempt ssl connection to IRC server
+ssl: false
+# Trust all SSL certs
+trust-all-certs: false
+# Bind address
+bind: ''
+# Auto split length for long messages
+max-line-length: 440
+# Character encoding. Leave blank for Java default.
+charset: ''
+# show irc server motd on connect
+show-motd: false
+# autoconnect - Connect automatically on startup
+autoconnect: 'false'
+# password - Server password if needed
+password: ''
+# identify password (sent to NickServ)
+ident-password: ''
+# command-prefix - The bot will listen for commands that start with this. 
+command-prefix: '.'
+# quit-message - Message the bot will send when it quits the server
+quit-message: '&r[&5PurpleIRC&r] &rGood bye!'
+# Message delay in milliseconds (be careful when changing this)
+message-delay: 1000
+# send a raw message on connect
+raw-message-on-connect: false
+# the raw message
+raw-message: auth name pass
+# relay-private-chat - Allow private chat to the bot to relay to the game
+relay-private-chat: false
+# notify channels or users when a player uses commands
+command-notify:
+  enabled: false
+  # valid modes: msg, ctcp
+  mode: msg
+  # recipients can be channels or users
+  recipients:
+    - '#minecraft-test'
+    - example
+  ignore:
+    - /example
+# Automatically part invalid channels
+part-invalid-channels: false
+# Message when leaving invalid channel
+part-invalid-channels-message: 'I should not be here! Bye!'
+# Channel auto join delay in server ticks (20 ticks = 1 second)
+channel-auto-join-delay: 20
+# channels - List the channels your bot will join here
+channels:
+  # Channel name must be surrounded by sing quotes to be YAML compliant.
+  # Use %2E instead of dots in the channel names.
+  # Example: minecraft%2Etest == minecraft.test  
+  '#minecraft-test':
+    # worlds we listen to for this channel
+    worlds:
+    - '*'
+    # autojoin - Join the channel automatically on connect
+    autojoin: true
+    # modes - Channel modes to set
+    modes: ''
+    # password - Channel password
+    password: ''
+    # topic - Channel topic
+    topic: New topic
+    # topic-protect - Prevent others from changing the topic
+    topic-protect: false    
+    # Enable chanserve mode for topic set command (/msg chanserv topic #channel <topic>
+    topic-chanserv: false
+    # If the Shortify plugin is installed then shoten URLs sent from IRC
+    shortify: true
+    # Enable or disable message filtering
+    enable-filtering: false
+    # Filters. These wll be removed from IRC to game messages.
+    filter-list: 
+       - AwesomeBot
+    # enabled-messages - These are the message types that are either sent to the game or IRC
+    # config.yml. Remove or comment the messages you don't want.       
+    enabled-messages:
+    # These messages are sent from game to IRC (see permissions)
+    - console-chat
+    - game-action
+    - game-chat
+    - game-death
+    - game-kick
+    #- game-join
+    - game-switch
+    - game-quit
+    - game-mode
+    #- invalid-irc-commmand
+    #- irc-console-chat
+    # ops - IRC hostname mask styled ops list
+    ops:    
+    - '*!*sarah@example.com'
+    # muted - IRC users that should not be heard in game
+    muted:      
+    - KuShy
+    # commands - A list of commands that the bot will act on
+    # There are several builtin game_command options.
+    #  @list - list the players in the game
+    #  @help - print out of all of the commands
+    #  @uptime - print the uptime of the game server
+    #  @chat - send message to game
+    #  @hchat - send message to specific hero channel
+    #  @ochat - send message to game (overrides irc-chat)
+    #  @motd - display minecraft server motd
+    #  @msg - send private message to player
+    #  @query - query remote minecraft server
+    # The modes can be *, o , v , h, q, s, or i. Mix and match as needed.
+    # If game_command can optionally accept arguments via %ARGS% and %NAME%
+    # If a command is private then the result is sent to the player privately.
+    # Set ignore-irc-chat to true if you are using @chat and don't want regular IRC chat in your game
+    ignore-irc-chat: false
+    # ignore list for custom tab list
+    custom-tab-ignore-list:
+      - AwesomeBot
+    # Hide join message when player is invisible (VanishNoPacket)
+    hide-join-when-vanished: true
+    # Hide quit message when player is invisible (VanishNoPacket)
+    hide-quit-when-vanished: true
+    # How to respond to an invalid command
+    invalid-command:
+        private: false
+        ctcp: false
+    # Raw message to send if raw-message-on-join is true
+    raw-message: ''
+    raw-message-on-join: false
+    commands:
+      chat:
+        modes: '*'
+        private: false
+        ctcp: false
+        game_command: '@chat'
+        private_listen: true
+        channel_listen: true
+      ochat:
+        modes: '*'
+        private: false
+        ctcp: false
+        game_command: '@ochat'   
+        private_listen: true
+        channel_listen: true
+      h:
+        modes: '*'
+        private: false
+        ctcp: false
+        game_command: '@hchat'   
+        private_listen: true
+        channel_listen: true  
+      msg:
+        modes: '*'
+        private: true
+        ctcp: false
+        game_command: '@msg'
+        private_listen: true
+        channel_listen: true
+      list:
+        modes: '*'
+        private: false
+        ctcp: false
+        game_command: '@list'        
+        private_listen: true
+        channel_listen: true
+      help:
+        modes: '*'
+        private: false
+        ctcp: false
+        game_command: '@help'
+        private_listen: true
+        channel_listen: true
+      uptime:
+        modes: '*'
+        private: false
+        ctcp: false
+        game_command: '@uptime'        
+        private_listen: true
+        channel_listen: true
+      version:
+        modes: '*'
+        private: false
+        ctcp: false
+        game_command: version        
+        private_listen: true
+        channel_listen: true
+      lag:
+        modes: '*'
+        private: false
+        ctcp: false
+        game_command: lag   
+        private_listen: true
+        channel_listen: true
+      lagmem:
+        modes: '*'
+        private: true
+        ctcp: false
+        game_command: lagmem        
+        private_listen: true
+        channel_listen: true
+      gamemode:
+        modes: 'o'
+        private: false
+        ctcp: false
+        game_command: 'gamemode %ARGS%'
+        private_listen: true
+        channel_listen: true

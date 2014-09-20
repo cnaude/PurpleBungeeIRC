@@ -1,6 +1,6 @@
-# Sample PurpleIRC bot configuration.
+# Sample PurpleBungeeIRC bot configuration.
 # Most of these options should be self explanatory.
-# Place your bot file in the PurpleIRC/bots/ folder.
+# Place your bot file in the PurpleBungeeIRC/bots/ folder.
 # NOTE: If you make changes to this file while the server is running use "/irc reloadbotconfigs" to load the changes into memory.
 #
 # nick - Your bot's unique nickname
@@ -34,7 +34,7 @@ ident-password: ''
 # command-prefix - The bot will listen for commands that start with this. 
 command-prefix: '.'
 # quit-message - Message the bot will send when it quits the server
-quit-message: '&r[&5PurpleIRC&r] &rGood bye!'
+quit-message: '&r[&5PurpleBungeeIRC&r] &rGood bye!'
 # Message delay in milliseconds (be careful when changing this)
 message-delay: 1000
 # send a raw message on connect
@@ -115,7 +115,6 @@ channels:
     #  @help - print out of all of the commands
     #  @uptime - print the uptime of the game server
     #  @chat - send message to game
-    #  @hchat - send message to specific hero channel
     #  @ochat - send message to game (overrides irc-chat)
     #  @motd - display minecraft server motd
     #  @msg - send private message to player

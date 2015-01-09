@@ -5,8 +5,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- Bukkit API Version, change if out dated -->
-        <bukkit.version>1.7.10-R0.1</bukkit.version>
+        <!-- BungeeCord API Version, change if out dated -->
+        <bungeecord.version>1.8-SNAPSHOT</bungeecord.version>
         <build.number>SNAPSHOT</build.number>
     </properties>
 
@@ -46,7 +46,7 @@
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
-            <version>1.7-SNAPSHOT</version>
+            <version>${bungeecord.version}</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord</artifactId>
-            <version>1.7-SNAPSHOT</version>
+            <version>${bungeecord.version}</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>

@@ -61,6 +61,17 @@ message-format:
   irc-mode: '[&4IRC&r] %NAME% %MODE% on %CHANNEL%'
   irc-console-chat: '&f[&5IRC&f]&r<%NAME%> %MESSAGE%'
   irc-notice: '[&4IRC&r] [notice(%CHANNEL%)] %NOTICE% '
+  # Message template for Herochat to IRC messages
+  hero-chat: '[%CHANNEL%]<%NAME%> %MESSAGE%'
+  hero-action: '[&2%CHANNEL%&r]***%NAME% %MESSAGE%'
+  # Message templates for IRC to Herochat messages
+  irc-hero-action: '[&3IRC&r] ***%NAME% %MESSAGE%'
+  irc-hero-chat: '[&3IRC&r]<%NAME%> %MESSAGE%'  
+  irc-hero-join: '[&3IRC&r] %NAME% has joined %CHANNEL%.'
+  irc-hero-kick: '[&3IRC&r] %NAME% was kicked from %CHANNEL% by %KICKER%. (Reason- %REASON%)'
+  irc-hero-part: '[&3IRC&r] %NAME% has left %CHANNEL%.'  
+  irc-hero-quit: '[&3IRC&r] %NAME% has left %CHANNEL%.'  
+  irc-hero-topic: '[&3IRC&r] Topic changed by %NAME%: %TOPIC%.'  
   # Invalid IRC command message
   invalid-irc-command: "I'm sorry '%NICK%' I can't do that. Type '%CMDPREFIX%help' for a list of commands I might respond to."
   no-perm-for-irc-command: "I'm sorry '%NICK%' you are not authorized to do that. Type '%CMDPREFIX%help' for a list of commands I might respond to."

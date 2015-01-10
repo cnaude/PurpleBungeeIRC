@@ -270,4 +270,23 @@ public class ChatTokenizer {
                 .replace("%MESSAGE%", message)
         );
     }
+    
+    /**
+     * Herochat to IRC
+     *
+     * @param player
+     * @param message
+     * @param hColor
+     * @param hChannel
+     * @param hNick
+     * @param template
+     * @return
+     */
+    public String chatHeroTokenizer(ProxiedPlayer player, String message, String hColor, String hChannel, String hNick, String template) {
+        return gameChatToIRCTokenizer(player, template, message)
+                .replace("%HEROCHANNEL%", hChannel)
+                .replace("%HERONICK%", hNick)
+                .replace("%HEROCOLOR%", plugin.colorConverter.gameColorsToIrc(hColor))
+                .replace("%CHANNEL%", hChannel);
+    }
 }

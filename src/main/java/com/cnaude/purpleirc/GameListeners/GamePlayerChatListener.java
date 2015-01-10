@@ -1,4 +1,4 @@
-package com.cnaude.purpleirc.GameListeners;
+ package com.cnaude.purpleirc.GameListeners;
 
 import com.cnaude.purpleirc.PurpleBot;
 import com.cnaude.purpleirc.PurpleIRC;

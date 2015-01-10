@@ -41,5 +41,8 @@ public class TemplateName {
     
     public final static String BROADCAST_MESSAGE = "broadcast-message";
     public final static String BROADCAST_CONSOLE_MESSAGE = "broadcast-console-message";
+    
+    public final static String HERO_ACTION = "hero-action";
+    public final static String HERO_CHAT = "hero-chat";
             
 }

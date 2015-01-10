@@ -59,6 +59,20 @@
             <scope>provided</scope>
         </dependency>
         
+        <!-- Herochat -->
+        <dependency>
+            <groupId>com.cnaude.herochat</groupId>
+            <artifactId>HerochatBungeeBridge</artifactId>
+            <version>0.2</version>
+        </dependency>
+        
+        <!-- Herochat -->
+        <dependency>
+            <groupId>com.cnaude.bungeeyaml</groupId>
+            <artifactId>BungeeYAML</artifactId>
+            <version>1.2.4-bis</version>
+        </dependency>
+        
         <dependency>
             <groupId>org.pircbotx</groupId>
             <artifactId>pircbotx</artifactId>

@@ -4,6 +4,7 @@ import com.cnaude.purpleirc.Commands.IRCCommandInterface;
 import com.cnaude.purpleirc.GameListeners.GamePlayerChatListener;
 import com.cnaude.purpleirc.GameListeners.GamePlayerJoinListener;
 import com.cnaude.purpleirc.GameListeners.GamePlayerQuitListener;
+import com.cnaude.purpleirc.GameListeners.GamePluginMessageListener;
 import com.cnaude.purpleirc.GameListeners.GameServerSwitchListener;
 import com.cnaude.purpleirc.Utilities.CaseInsensitiveMap;
 import com.cnaude.purpleirc.Utilities.ChatTokenizer;
@@ -63,6 +64,7 @@ public class PurpleIRC extends Plugin {
     public static long startTime;
     public boolean identServerEnabled;
     private final CaseInsensitiveMap<HashMap<String, String>> messageTmpl;
+    private final CaseInsensitiveMap<CaseInsensitiveMap<String>> heroChannelMessages;
     private final HashMap<ServerInfo,Integer> serverMaxCounts;
     public String defaultPlayerSuffix,
             defaultPlayerPrefix,
@@ -129,6 +131,7 @@ public class PurpleIRC extends Plugin {
         this.serverMaxCounts = new HashMap<>();
         this.displayNameCache = new CaseInsensitiveMap<>();
         this.cacheFile = new File("plugins/PurpleIRC/displayName.cache");
+        this.heroChannelMessages = new CaseInsensitiveMap<>();
 
     }
 
@@ -158,6 +161,7 @@ public class PurpleIRC extends Plugin {
         this.getProxy().getPluginManager().registerListener(this, new GamePlayerJoinListener(this));
         this.getProxy().getPluginManager().registerListener(this, new GamePlayerQuitListener(this));
         this.getProxy().getPluginManager().registerListener(this, new GameServerSwitchListener(this));
+        this.getProxy().getPluginManager().registerListener(this, new GamePluginMessageListener(this));        
         regexGlobber = new RegexGlobber();
         tokenizer = new ChatTokenizer(this);
         commandHandlers = new CommandHandlers(this);
@@ -225,6 +229,39 @@ public class PurpleIRC extends Plugin {
 
     public String getMsgTemplate(String tmpl) {
         return getMsgTemplate(MAINCONFIG, tmpl);
+    }
+    
+    public String getHeroTemplate(CaseInsensitiveMap<CaseInsensitiveMap<String>> hc,
+            String botName, String hChannel) {
+        if (hc.containsKey(botName)) {
+            logDebug("HC1 => " + hChannel);
+            for (String s : hc.get(botName).keySet()) {
+                logDebug("HT => " + s);
+            }
+            if (hc.get(botName).containsKey(hChannel)) {
+                logDebug("HC2 => " + hChannel);
+                return hc.get(botName).get(hChannel);
+            }
+        }
+        if (hc.containsKey(MAINCONFIG)) {
+            logDebug("HC3 => " + hChannel);
+            for (String s : hc.get(MAINCONFIG).keySet()) {
+                logDebug("HT => " + s);
+            }
+            if (hc.get(MAINCONFIG).containsKey(hChannel)) {
+                logDebug("HC4 => " + hChannel);
+                return hc.get(MAINCONFIG).get(hChannel);
+            }
+        }
+        return "";
+    }
+    
+    public String getHeroChatChannelTemplate(String botName, String hChannel) {
+        String tmpl = getHeroTemplate(heroChannelMessages, botName, hChannel);
+        if (tmpl.isEmpty()) {
+            return getMsgTemplate(MAINCONFIG, TemplateName.HERO_CHAT);
+        }
+        return getHeroTemplate(heroChannelMessages, botName, hChannel);
     }
 
     public void loadCustomColors(Configuration config) {

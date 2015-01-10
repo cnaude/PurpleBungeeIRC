@@ -776,7 +776,35 @@ public final class PurpleBot {
             }
         }
     }
-
+    
+    // Called from HeroChat listener
+    /**
+     *
+     * @param player
+     * @param hChannel
+     * @param message
+     */
+    public void heroChat(ProxiedPlayer player, String hChannel, String message) {
+        if (!this.isConnected()) {
+            return;
+        }
+        for (String channelName : botChannels) {
+            if (!isPlayerInValidWorld(player, channelName)) {
+                continue;
+            }
+            plugin.logDebug("HC Channel: " + hChannel);
+            if (isMessageEnabled(channelName, "hero-" + hChannel + "-chat")
+                    || isMessageEnabled(channelName, TemplateName.HERO_CHAT)) {
+                asyncIRCMessage(channelName, plugin.tokenizer
+                        .chatHeroTokenizer(player, message, "", hChannel,
+                                hChannel, plugin.getHeroChatChannelTemplate(botNick, hChannel)));
+            } else {
+                plugin.logDebug("Player " + player.getName() + " is in \""
+                        + hChannel + "\" but hero-" + hChannel + "-chat is disabled.");
+            }
+        }
+    }
+    
     // Called from /irc send
     /**
      *

@@ -103,6 +103,24 @@ channels:
     - game-mode
     #- invalid-irc-commmand
     #- irc-console-chat
+    # Hero chat message types that are sent from game to IRC
+    # Game messages from Global HC channel
+    - hero-Global-chat
+    - hero-Global-action
+    # Game messages from any HC channel
+    - hero-chat
+    - hero-action
+    # Specific HC channel
+    #- hero-[CHANNEL]-chat
+    #- hero-[CHANNEL]-action
+    # Various IRC messages that are sent to Herochat channel. Receiving HC
+    # channel name is configured per hero-channel: 'CHANNEL NAME'
+    #- irc-hero-action
+    #- irc-hero-chat
+    #- irc-hero-kick
+    #- irc-hero-join
+    #- irc-hero-part
+    #- irc-hero-topic
     # ops - IRC hostname mask styled ops list
     ops:    
     - '*!*sarah@example.com'

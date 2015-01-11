@@ -33,9 +33,11 @@ public class GamePluginMessageListener
         if (!event.getTag().equalsIgnoreCase("BungeeChat")) {
             return;
         }
+        if (bungeeChatServer == null) {
+            return;
+        }
         byte[] bytes = event.getData();
         if (!bungeeChatServer.shouldBroadcast(ByteStreams.newDataInput(event.getData()).readUTF())) {
-            plugin.logInfo("Nope");
             return;
         }
 

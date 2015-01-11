@@ -64,7 +64,10 @@ public class PurpleIRC extends Plugin {
     public static long startTime;
     public boolean identServerEnabled;
     private final CaseInsensitiveMap<HashMap<String, String>> messageTmpl;
+    private final CaseInsensitiveMap<CaseInsensitiveMap<String>> ircHeroChannelMessages;
+    private final CaseInsensitiveMap<CaseInsensitiveMap<String>> ircHeroActionChannelMessages;
     private final CaseInsensitiveMap<CaseInsensitiveMap<String>> heroChannelMessages;
+    private final CaseInsensitiveMap<CaseInsensitiveMap<String>> heroActionChannelMessages;
     private final HashMap<ServerInfo,Integer> serverMaxCounts;
     public String defaultPlayerSuffix,
             defaultPlayerPrefix,
@@ -128,10 +131,13 @@ public class PurpleIRC extends Plugin {
         this.sampleFileName = "SampleBot.yml";
         this.ircBots = new CaseInsensitiveMap<>();
         this.messageTmpl = new CaseInsensitiveMap<>();
+        this.ircHeroChannelMessages = new CaseInsensitiveMap<>();
+        this.ircHeroActionChannelMessages = new CaseInsensitiveMap<>();
+        this.heroChannelMessages = new CaseInsensitiveMap<>();
+        this.heroActionChannelMessages = new CaseInsensitiveMap<>();
         this.serverMaxCounts = new HashMap<>();
         this.displayNameCache = new CaseInsensitiveMap<>();
         this.cacheFile = new File("plugins/PurpleIRC/displayName.cache");
-        this.heroChannelMessages = new CaseInsensitiveMap<>();
 
     }
 
@@ -262,6 +268,30 @@ public class PurpleIRC extends Plugin {
             return getMsgTemplate(MAINCONFIG, TemplateName.HERO_CHAT);
         }
         return getHeroTemplate(heroChannelMessages, botName, hChannel);
+    }
+
+    public String getHeroActionChannelTemplate(String botName, String hChannel) {
+        String tmpl = getHeroTemplate(heroActionChannelMessages, botName, hChannel);
+        if (tmpl.isEmpty()) {
+            return getMsgTemplate(MAINCONFIG, TemplateName.HERO_ACTION);
+        }
+        return getHeroTemplate(heroActionChannelMessages, botName, hChannel);
+    }
+
+    public String getIRCHeroChatChannelTemplate(String botName, String hChannel) {
+        String tmpl = getHeroTemplate(ircHeroChannelMessages, botName, hChannel);
+        if (tmpl.isEmpty()) {
+            return getMsgTemplate(MAINCONFIG, TemplateName.IRC_HERO_CHAT);
+        }
+        return getHeroTemplate(ircHeroChannelMessages, botName, hChannel);
+    }
+
+    public String getIRCHeroActionChannelTemplate(String botName, String hChannel) {
+        String tmpl = getHeroTemplate(ircHeroActionChannelMessages, botName, hChannel);
+        if (tmpl.isEmpty()) {
+            return getMsgTemplate(MAINCONFIG, TemplateName.IRC_HERO_ACTION);
+        }
+        return getHeroTemplate(ircHeroActionChannelMessages, botName, hChannel);
     }
 
     public void loadCustomColors(Configuration config) {

@@ -2,6 +2,7 @@ package com.cnaude.purpleirc.Utilities;
 
 import com.cnaude.purpleirc.PurpleBot;
 import com.cnaude.purpleirc.PurpleIRC;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.pircbotx.User;
 
@@ -65,7 +66,7 @@ public class ChatTokenizer {
                 .replace("%MESSAGE%", message)
                 .replace("%CHANNEL%", channel.getName()));
     }
-   
+
     /**
      * IRC kick message to game
      *
@@ -241,7 +242,7 @@ public class ChatTokenizer {
                 .replace("%WORLDALIAS%", worldAlias)
                 .replace("%WORLDCOLOR%", worldColor)
                 .replace("%WORLD%", worldName);
-    }    
+    }
 
     /**
      *
@@ -270,7 +271,7 @@ public class ChatTokenizer {
                 .replace("%MESSAGE%", message)
         );
     }
-    
+
     /**
      * Herochat to IRC
      *
@@ -288,5 +289,76 @@ public class ChatTokenizer {
                 .replace("%HERONICK%", hNick)
                 .replace("%HEROCOLOR%", plugin.colorConverter.gameColorsToIrc(hColor))
                 .replace("%CHANNEL%", hChannel);
+    }
+
+    /**
+     * IRC to Hero chat channel tokenizer
+     *
+     * @param ircBot
+     * @param user
+     * @param channel
+     * @param template
+     * @param message
+     * @param hChannel
+     * @return
+     */
+    public String ircChatToHeroChatTokenizer(PurpleBot ircBot, User user, org.pircbotx.Channel channel, String template, String message, String hChannel) {
+        String ircNick = user.getNick();
+        String tmpl;
+        ProxiedPlayer player = this.getPlayer(ircNick);
+        if (player != null) {
+            tmpl = playerTokenizer(player, template);
+        } else {
+            tmpl = playerTokenizer(ircNick, template);
+        }
+        return plugin.colorConverter.ircColorsToGame(ircUserTokenizer(tmpl, user)
+                .replace("%HEROCHANNEL%", hChannel)
+                .replace("%NICKPREFIX%", ircBot.getNickPrefix(user, channel))
+                .replace("%MESSAGE%", message)
+                .replace("%CHANNEL%", channel.getName()));
+    }
+
+    public String ircUserTokenizer(String template, User user) {
+        String host = user.getHostmask();
+        String server = user.getServer();
+        String away = user.getAwayMessage();
+        String ircNick = user.getNick();
+        if (host == null) {
+            host = "";
+        }
+        if (server == null) {
+            server = "";
+        }
+        if (away == null) {
+            away = "";
+        }
+        return template.replace("%HOST%", host)
+                .replace("%NAME%", ircNick)
+                .replace("%SERVER%", server)
+                .replace("%AWAY%", away);
+    }
+
+    private ProxiedPlayer getPlayer(String name) {
+        ProxiedPlayer player = null;
+        if (plugin.exactNickMatch) {
+            plugin.logDebug("Checking for exact player matching " + name);
+            for (ServerInfo server : plugin.getProxy().getServers().values()) {
+                for (ProxiedPlayer p : server.getPlayers()) {
+                    if (p.getName().equals(name)) {
+                        player = p;
+                    }
+                }
+            }
+        } else {
+            plugin.logDebug("Checking for player matching " + name);
+            for (ServerInfo server : plugin.getProxy().getServers().values()) {
+                for (ProxiedPlayer p : server.getPlayers()) {
+                    if (p.getName().equalsIgnoreCase(name)) {
+                        player = p;
+                    }
+                }
+            }
+        }
+        return player;
     }
 }

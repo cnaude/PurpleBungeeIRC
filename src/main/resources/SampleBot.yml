@@ -121,6 +121,8 @@ channels:
     #- irc-hero-join
     #- irc-hero-part
     #- irc-hero-topic
+    # Hero channel destination for IRC messages    
+    hero-channel: admin
     # ops - IRC hostname mask styled ops list
     ops:    
     - '*!*sarah@example.com'

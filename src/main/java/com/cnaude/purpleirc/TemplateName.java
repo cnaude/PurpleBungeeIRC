@@ -44,5 +44,14 @@ public class TemplateName {
     
     public final static String HERO_ACTION = "hero-action";
     public final static String HERO_CHAT = "hero-chat";
+    
+    public final static String IRC_HERO_ACTION = "irc-hero-action";
+    public final static String IRC_HERO_CHAT = "irc-hero-chat";
+    public final static String IRC_HERO_KICK = "irc-hero-kick";
+    public final static String IRC_HERO_JOIN = "irc-hero-join";
+    public final static String IRC_HERO_PART = "irc-hero-part";
+    public final static String IRC_HERO_QUIT = "irc-hero-quit";
+    public final static String IRC_HERO_TOPIC = "irc-hero-topic";   
+    public final static String IRC_ESS_HELPOP = "irc-ess-helpop";
             
 }

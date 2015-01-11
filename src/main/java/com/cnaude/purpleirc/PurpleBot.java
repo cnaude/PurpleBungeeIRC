@@ -20,6 +20,8 @@ import com.cnaude.purpleirc.IRCListeners.WhoisListener;
 import com.cnaude.purpleirc.Utilities.CaseInsensitiveMap;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -33,6 +35,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
@@ -543,7 +546,7 @@ public final class PurpleBot {
             if (channelCmdNotifyIgnore.isEmpty()) {
                 plugin.logInfo(" No command-notify ignores defined.");
             }
-            
+
             plugin.logInfo("Channels: " + config.getKeys().toString());
 
             for (String enChannelName : config.getSection("channels").getKeys()) {
@@ -776,7 +779,7 @@ public final class PurpleBot {
             }
         }
     }
-    
+
     // Called from HeroChat listener
     /**
      *
@@ -804,7 +807,7 @@ public final class PurpleBot {
             }
         }
     }
-    
+
     // Called from /irc send
     /**
      *
@@ -933,7 +936,7 @@ public final class PurpleBot {
             }
         }
     }
-    
+
     /**
      *
      * @param player
@@ -1696,6 +1699,27 @@ public final class PurpleBot {
             plugin.logDebug("NOPE we can't broadcast due to " + TemplateName.IRC_CHAT
                     + " disabled");
         }
+        
+        plugin.logDebug("Checking if " + TemplateName.IRC_HERO_CHAT + " is enabled before broadcasting chat from IRC to HeroChat");
+        if (enabledMessages.get(myChannel).contains(TemplateName.IRC_HERO_CHAT)) {
+            String hChannel = heroChannel.get(myChannel);
+            String tmpl = plugin.getIRCHeroChatChannelTemplate(botNick, hChannel);
+            plugin.logDebug("broadcastChat [HC]: " + hChannel + ": " + tmpl);
+            String rawHCMessage = filterMessage(
+                    plugin.tokenizer.ircChatToHeroChatTokenizer(this, user, channel, tmpl, message, hChannel), myChannel);
+            if (!rawHCMessage.isEmpty()) {
+                ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                out.writeUTF(hChannel);
+                out.writeUTF(message);
+                for (ServerInfo server : this.plugin.getProxy().getServers().values()) {
+                        if (!server.getPlayers().isEmpty()) {
+                            server.sendData("BungeeChat", out.toByteArray());
+                        }
+                }
+            }
+        } else {
+            plugin.logDebug("NOPE we can't broadcast to HeroChat due to " + TemplateName.IRC_HERO_CHAT + " disabled");
+        }
 
         if (enabledMessages.get(myChannel).contains(TemplateName.IRC_CONSOLE_CHAT)) {
             String tmpl = plugin.getMsgTemplate(botNick, TemplateName.IRC_CONSOLE_CHAT);
@@ -2015,7 +2039,7 @@ public final class PurpleBot {
     public String getFileName() {
         return fileName;
     }
-    
+
     /**
      *
      * @param sender
@@ -2035,8 +2059,8 @@ public final class PurpleBot {
         config.set("nick", newNick);
         saveConfig();
     }
-    
-     /**
+
+    /**
      *
      * @param sender
      */
@@ -2050,7 +2074,7 @@ public final class PurpleBot {
             sender.sendMessage(ex.getMessage());
         }
     }
-    
+
     /**
      *
      */

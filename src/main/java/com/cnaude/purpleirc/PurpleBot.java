@@ -1710,7 +1710,7 @@ public final class PurpleBot {
             if (!rawHCMessage.isEmpty()) {
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();
                 out.writeUTF(hChannel);
-                out.writeUTF(message);
+                out.writeUTF(rawHCMessage);
                 for (ServerInfo server : this.plugin.getProxy().getServers().values()) {
                         if (!server.getPlayers().isEmpty()) {
                             server.sendData("BungeeChat", out.toByteArray());
@@ -1795,6 +1795,24 @@ public final class PurpleBot {
         } else {
             plugin.logDebug("Ignoring action due to "
                     + TemplateName.IRC_ACTION + " is false");
+        }
+        
+        if (enabledMessages.get(myChannel).contains(TemplateName.IRC_HERO_ACTION)) {
+            String hChannel = heroChannel.get(myChannel);
+            String tmpl = plugin.getIRCHeroActionChannelTemplate(botNick, hChannel);
+            plugin.logDebug("broadcastChat [HA]: " + hChannel + ": " + tmpl);
+            String rawHCMessage = filterMessage(
+                    plugin.tokenizer.ircChatToHeroChatTokenizer(this, user, channel, tmpl, message, hChannel), myChannel);
+            if (!rawHCMessage.isEmpty()) {
+                ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                out.writeUTF(hChannel);
+                out.writeUTF(rawHCMessage);
+                for (ServerInfo server : this.plugin.getProxy().getServers().values()) {
+                        if (!server.getPlayers().isEmpty()) {
+                            server.sendData("BungeeChat", out.toByteArray());
+                        }
+                }
+            }
         }
 
     }

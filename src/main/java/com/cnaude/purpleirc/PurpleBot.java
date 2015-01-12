@@ -15,7 +15,6 @@ import com.cnaude.purpleirc.IRCListeners.PrivateMessageListener;
 import com.cnaude.purpleirc.IRCListeners.QuitListener;
 import com.cnaude.purpleirc.IRCListeners.ServerResponseListener;
 import com.cnaude.purpleirc.IRCListeners.TopicListener;
-import com.cnaude.purpleirc.IRCListeners.VersionListener;
 import com.cnaude.purpleirc.IRCListeners.WhoisListener;
 import com.cnaude.purpleirc.Utilities.CaseInsensitiveMap;
 import com.google.common.base.Joiner;
@@ -72,7 +71,10 @@ public final class PurpleBot {
     public long chatDelay;
     public String botServer;
     public String bindAddress;
+    public String nick;
     public String botNick;
+    public List<String> altNicks;
+    int nickIndex = 0;
     public String botLogin;
     public String botRealName;
     public int ircMaxLineLength;
@@ -119,6 +121,8 @@ public final class PurpleBot {
     private final ArrayList<ListenerAdapter> ircListeners;
     public IRCMessageQueueWatcher messageQueue;
     private final String fileName;
+    String version;
+    String finger;
     
     private final ScheduledTask bt;
 
@@ -130,6 +134,7 @@ public final class PurpleBot {
     public PurpleBot(File file, PurpleIRC plugin) {
         
         fileName = file.getName();
+        this.altNicks = new ArrayList<>();
         this.connected = false;
         this.botChannels = new ArrayList<>();
         this.ircListeners = new ArrayList<>();
@@ -166,6 +171,9 @@ public final class PurpleBot {
         whoisSenders = new ArrayList<>();
         loadConfig();
         addListeners();
+        version = plugin.getDescription().getName() + ", "
+                        + plugin.getDescription().getDescription() + " - "
+                        + "http://www.spigotmc.org/resources/purplebungeeirc.3017/";
         
         bt = this.plugin.getProxy().getScheduler().runAsync(this.plugin, new Runnable() {
             @Override
@@ -182,6 +190,8 @@ public final class PurpleBot {
                 .setName(botNick)
                 .setLogin(botLogin)
                 .setAutoNickChange(true)
+                .setVersion(version)
+                .setFinger(finger)
                 .setCapEnabled(true)
                 .setMessageDelay(chatDelay)
                 .setRealName(botRealName)
@@ -250,8 +260,7 @@ public final class PurpleBot {
         ircListeners.add(new PartListener(plugin, this));
         ircListeners.add(new PrivateMessageListener(plugin, this));
         ircListeners.add(new QuitListener(plugin, this));
-        ircListeners.add(new TopicListener(plugin, this));
-        ircListeners.add(new VersionListener(plugin));
+        ircListeners.add(new TopicListener(plugin, this));        
         ircListeners.add(new WhoisListener(plugin, this));
         ircListeners.add(new MotdListener(plugin, this));
         ircListeners.add(new ServerResponseListener(plugin, this));
@@ -489,7 +498,9 @@ public final class PurpleBot {
             relayPrivateChat = config.getBoolean("relay-private-chat", false);
             partInvalidChannels = config.getBoolean("part-invalid-channels", false);
             partInvalidChannelsMsg = config.getString("part-invalid-channels-message", "");
-            botNick = config.getString("nick", "");
+            nick = config.getString("nick", "");
+            botNick = nick;
+            altNicks = config.getStringList("alt-nicks");
             plugin.loadTemplates(config, botNick);
             botLogin = config.getString("login", "PircBot");
             botRealName = config.getString("realname", "");
@@ -2113,5 +2124,19 @@ public final class PurpleBot {
         } catch (IOException ex) {
             plugin.logError(ex.getMessage());
         }
+    }
+    
+    public void altNickChange() {
+        if (altNicks.isEmpty()) {
+            return;
+        }
+        if (nickIndex >= 0 && nickIndex < altNicks.size()) {
+            botNick = altNicks.get(nickIndex).replace("%NICK%", nick);
+            nickIndex++;
+        } else {
+            nickIndex = 0;
+        }
+        plugin.logInfo("Trying alternate nick " + botNick);
+        bot.sendIRC().changeNick(botNick);
     }
 }

@@ -37,6 +37,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import org.pircbotx.Channel;
@@ -118,6 +119,8 @@ public final class PurpleBot {
     private final ArrayList<ListenerAdapter> ircListeners;
     public IRCMessageQueueWatcher messageQueue;
     private final String fileName;
+    
+    private final ScheduledTask bt;
 
     /**
      *
@@ -125,6 +128,7 @@ public final class PurpleBot {
      * @param plugin
      */
     public PurpleBot(File file, PurpleIRC plugin) {
+        
         fileName = file.getName();
         this.connected = false;
         this.botChannels = new ArrayList<>();
@@ -162,7 +166,14 @@ public final class PurpleBot {
         whoisSenders = new ArrayList<>();
         loadConfig();
         addListeners();
-        buildBot();
+        
+        bt = this.plugin.getProxy().getScheduler().runAsync(this.plugin, new Runnable() {
+            @Override
+            public void run() {
+                buildBot();
+            }
+        });
+        
         messageQueue = new IRCMessageQueueWatcher(this, plugin);
     }
 

@@ -1,5 +1,7 @@
 package com.cnaude.purpleirc.Utilities;
 
+import com.cnaude.purpleirc.IRCCommand;
+import com.cnaude.purpleirc.IRCCommandSender;
 import com.cnaude.purpleirc.PurpleBot;
 import com.cnaude.purpleirc.PurpleIRC;
 import com.cnaude.purpleirc.TemplateName;
@@ -114,6 +116,21 @@ public class IRCMessageHandler {
                             sendMessage(ircBot, target, plugin.getRemotePlayers(commandArgs), ctcpResponse);
                             break;
                         default:
+                            if (commandArgs == null) {
+                                    commandArgs = "";
+                                }
+                                if (gameCommand.contains("%ARGS%")) {
+                                    gameCommand = gameCommand.replace("%ARGS%", commandArgs);
+                                }
+                                if (gameCommand.contains("%NAME%")) {
+                                    gameCommand = gameCommand.replace("%NAME%", user.getNick());
+                                }
+                                plugin.logDebug("GM: \"" + gameCommand.trim() + "\"");
+                                try {
+                                    plugin.commandQueue.add(new IRCCommand(new IRCCommandSender(ircBot, target, plugin, ctcpResponse), gameCommand.trim()));
+                                } catch (Exception ex) {
+                                    plugin.logError(ex.getMessage());
+                                }
                             break;
                     }
                 } else {

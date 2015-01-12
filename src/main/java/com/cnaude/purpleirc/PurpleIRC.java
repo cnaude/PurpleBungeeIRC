@@ -117,6 +117,7 @@ public class PurpleIRC extends Plugin {
     public CaseInsensitiveMap<PurpleBot> ircBots;
     private BotWatcher botWatcher;
     public IRCMessageHandler ircMessageHandler;
+    public CommandQueueWatcher commandQueue;
     public CommandHandlers commandHandlers;
     Configuration mainConfig;
 
@@ -178,6 +179,7 @@ public class PurpleIRC extends Plugin {
         channelWatcher = new ChannelWatcher(this);
         botWatcher = new BotWatcher(this);
         ircMessageHandler = new IRCMessageHandler(this);
+        commandQueue = new CommandQueueWatcher(this);
         updateServerCache(this);
     }
 
@@ -199,6 +201,7 @@ public class PurpleIRC extends Plugin {
         } else {
             logInfo("Disconnecting IRC bots.");
             for (PurpleBot ircBot : ircBots.values()) {
+                commandQueue.cancel();
                 ircBot.quit();
             }
             ircBots.clear();

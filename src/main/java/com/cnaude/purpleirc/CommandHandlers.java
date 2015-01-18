@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 
 /**
@@ -85,7 +86,7 @@ public class CommandHandlers extends Command {
             String subCmd = args[0].toLowerCase();
             if (commands.containsKey(subCmd)) {
                 if (!sender.hasPermission("irc." + subCmd)) {
-                    sender.sendMessage(plugin.noPermission);
+                    sender.sendMessage(new TextComponent(plugin.noPermission));
                 }
                 commands.get(subCmd).dispatch(sender, args);
                 return;

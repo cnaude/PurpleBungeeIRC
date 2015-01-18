@@ -3,6 +3,7 @@ package com.cnaude.purpleirc.Commands;
 import com.cnaude.purpleirc.PurpleIRC;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
 
@@ -52,14 +53,14 @@ public class AddOp implements IRCCommandInterface {
                     plugin.ircBots.get(bot).addOp(channelName, mask, sender);
                     plugin.ircBots.get(bot).opIrcUsers(channelName);
                 } else {
-                    sender.sendMessage(ChatColor.RED + "Invalid user or mask: " 
-                            + ChatColor.WHITE + mask);
+                    sender.sendMessage(new TextComponent(ChatColor.RED + "Invalid user or mask: " 
+                            + ChatColor.WHITE + mask));
                 }
             } else {
-                sender.sendMessage(plugin.invalidBotName.replace("%BOT%", bot));
+                sender.sendMessage(new TextComponent(plugin.invalidBotName.replace("%BOT%", bot)));
             }
         } else {
-            sender.sendMessage(fullUsage);
+            sender.sendMessage(new TextComponent(fullUsage));
         }
     }
 

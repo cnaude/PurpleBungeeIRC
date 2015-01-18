@@ -9,6 +9,7 @@ import com.cnaude.purpleirc.PurpleIRC;
 import java.util.ArrayList;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  *
@@ -52,7 +53,7 @@ public class CTCP implements IRCCommandInterface {
             }
 
             if (msgIdx == 3 && args.length <= 3) {
-                sender.sendMessage(fullUsage);
+                sender.sendMessage(new TextComponent(fullUsage));
                 return;
             }
 
@@ -62,10 +63,10 @@ public class CTCP implements IRCCommandInterface {
                     msg = msg + " " + args[i];
                 }
                 ircBot.asyncCTCPCommand(target, msg.substring(1));
-                sender.sendMessage("Sent CTCP command \"" + msg.substring(1) + "\" to \"" + target + "\"");
+                sender.sendMessage(new TextComponent("Sent CTCP command \"" + msg.substring(1) + "\" to \"" + target + "\""));
             }
         } else {
-            sender.sendMessage(fullUsage);
+            sender.sendMessage(new TextComponent(fullUsage));
         }
     }
 

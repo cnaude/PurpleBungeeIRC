@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
@@ -286,7 +287,7 @@ public final class PurpleBot {
     }
 
     public void reload(CommandSender sender) {
-        sender.sendMessage("Reloading bot: " + botNick);
+        sender.sendMessage(new TextComponent("Reloading bot: " + botNick));
         reload();
     }
 
@@ -300,7 +301,7 @@ public final class PurpleBot {
      */
     public void reloadConfig(CommandSender sender) {
         loadConfig();
-        sender.sendMessage(plugin.LOG_HEADER_F + " [" + botNick + "] IRC bot configuration reloaded.");
+        sender.sendMessage(new TextComponent(plugin.LOG_HEADER_F + " [" + botNick + "] IRC bot configuration reloaded."));
     }
 
     /**
@@ -311,9 +312,9 @@ public final class PurpleBot {
      */
     public void mute(String channelName, CommandSender sender, String user) {
         if (muteList.get(channelName).contains(user)) {
-            sender.sendMessage("User '" + user + "' is already muted.");
+            sender.sendMessage(new TextComponent("User '" + user + "' is already muted."));
         } else {
-            sender.sendMessage("User '" + user + "' is now muted.");
+            sender.sendMessage(new TextComponent("User '" + user + "' is now muted."));
             muteList.get(channelName).add(user);
         }
     }
@@ -325,10 +326,10 @@ public final class PurpleBot {
      */
     public void muteList(String channelName, CommandSender sender) {
         if (muteList.get(channelName).isEmpty()) {
-            sender.sendMessage("There are no users muted for " + channelName);
+            sender.sendMessage(new TextComponent("There are no users muted for " + channelName));
         } else {
-            sender.sendMessage("Muted users for " + channelName
-                    + ": " + Joiner.on(", ").join(muteList.get(channelName)));
+            sender.sendMessage(new TextComponent("Muted users for " + channelName
+                    + ": " + Joiner.on(", ").join(muteList.get(channelName))));
         }
     }
 
@@ -340,16 +341,16 @@ public final class PurpleBot {
      */
     public void unMute(String channelName, CommandSender sender, String user) {
         if (muteList.get(channelName).contains(user)) {
-            sender.sendMessage("User '" + user + "' is no longer muted.");
+            sender.sendMessage(new TextComponent("User '" + user + "' is no longer muted."));
             muteList.get(channelName).remove(user);
 
         } else {
-            sender.sendMessage("User '" + user + "' is not muted.");
+            sender.sendMessage(new TextComponent("User '" + user + "' is not muted."));
         }
     }
 
     public void asyncConnect(CommandSender sender) {
-        sender.sendMessage(connectMessage);
+        sender.sendMessage(new TextComponent(connectMessage));
         asyncConnect();
     }
 
@@ -473,10 +474,10 @@ public final class PurpleBot {
      * @param newLogin
      */
     public void changeLogin(CommandSender sender, String newLogin) {
-        sender.sendMessage(ChatColor.DARK_PURPLE
+        sender.sendMessage(new TextComponent(ChatColor.DARK_PURPLE
                 + "Login set to " + ChatColor.WHITE
                 + newLogin + ChatColor.DARK_PURPLE
-                + ". Reload the bot for the change to take effect.");
+                + ". Reload the bot for the change to take effect."));
         config.set("login", newLogin);
     }
 
@@ -761,10 +762,10 @@ public final class PurpleBot {
      */
     public void setIRCDelay(CommandSender sender, long delay) {
         config.set("message-delay", delay);
-        sender.sendMessage(ChatColor.DARK_PURPLE
+        sender.sendMessage(new TextComponent(ChatColor.DARK_PURPLE
                 + "IRC message delay changed to "
                 + ChatColor.WHITE + delay + ChatColor.DARK_PURPLE + " ms. "
-                + "Reload for the change to take effect.");
+                + "Reload for the change to take effect."));
     }
 
     private boolean isPlayerInValidWorld(ProxiedPlayer player, String channelName) {
@@ -1082,9 +1083,9 @@ public final class PurpleBot {
             setTheTopic(channel, tTopic);
             config.set("channels." + encodeChannel(getConfigChannelName(channelName)) + ".topic", topic);
             channelTopic.put(channelName, topic);
-            sender.sendMessage("IRC topic for " + channelName + " changed to \"" + topic + "\"");
+            sender.sendMessage(new TextComponent("IRC topic for " + channelName + " changed to \"" + topic + "\""));
         } else {
-            sender.sendMessage("Invalid channel: " + channelName);
+            sender.sendMessage(new TextComponent("Invalid channel: " + channelName));
         }
     }
 
@@ -1136,9 +1137,8 @@ public final class PurpleBot {
         config.set("port", botServerPort);
         config.set("autoconnect", autoConnect);
 
-        sender.sendMessage("IRC server changed to \"" + botServer + ":"
-                + botServerPort + "\". (AutoConnect: "
-                + autoConnect + ")");
+        sender.sendMessage(new TextComponent("IRC server changed to \"" + botServer + ":"
+                + botServerPort + "\". (AutoConnect: " + autoConnect + ")"));
     }
 
     /**
@@ -1149,11 +1149,11 @@ public final class PurpleBot {
      */
     public void addOp(String channelName, String userMask, CommandSender sender) {
         if (opsList.get(channelName).contains(userMask)) {
-            sender.sendMessage("User mask " + ChatColor.WHITE + userMask
-                    + ChatColor.RESET + " is already in the ops list.");
+            sender.sendMessage(new TextComponent("User mask " + ChatColor.WHITE + userMask
+                    + ChatColor.RESET + " is already in the ops list."));
         } else {
-            sender.sendMessage("User mask " + ChatColor.WHITE + userMask
-                    + ChatColor.RESET + " has been added to the ops list.");
+            sender.sendMessage(new TextComponent("User mask " + ChatColor.WHITE + userMask
+                    + ChatColor.RESET + " has been added to the ops list."));
             opsList.get(channelName).add(userMask);
         }
         config.set("channels." + encodeChannel(getConfigChannelName(channelName)) + ".ops", opsList.get(channelName));
@@ -1167,11 +1167,11 @@ public final class PurpleBot {
      */
     public void addVoice(String channelName, String userMask, CommandSender sender) {
         if (voicesList.get(channelName).contains(userMask)) {
-            sender.sendMessage("User mask " + ChatColor.WHITE + userMask
-                    + ChatColor.RESET + " is already in the voices list.");
+            sender.sendMessage(new TextComponent("User mask " + ChatColor.WHITE + userMask
+                    + ChatColor.RESET + " is already in the voices list."));
         } else {
-            sender.sendMessage("User mask " + ChatColor.WHITE + userMask
-                    + ChatColor.RESET + " has been added to the voices list.");
+            sender.sendMessage(new TextComponent("User mask " + ChatColor.WHITE + userMask
+                    + ChatColor.RESET + " has been added to the voices list."));
             voicesList.get(channelName).add(userMask);
         }
         config.set("channels." + encodeChannel(getConfigChannelName(channelName)) + ".voices", voicesList.get(channelName));
@@ -1185,12 +1185,12 @@ public final class PurpleBot {
      */
     public void removeOp(String channelName, String userMask, CommandSender sender) {
         if (opsList.get(channelName).contains(userMask)) {
-            sender.sendMessage("User mask " + ChatColor.WHITE + userMask
-                    + ChatColor.RESET + " has been removed to the ops list.");
+            sender.sendMessage(new TextComponent("User mask " + ChatColor.WHITE + userMask
+                    + ChatColor.RESET + " has been removed to the ops list."));
             opsList.get(channelName).remove(userMask);
         } else {
-            sender.sendMessage("User mask " + ChatColor.WHITE + userMask
-                    + ChatColor.RESET + " is not in the ops list.");
+            sender.sendMessage(new TextComponent("User mask " + ChatColor.WHITE + userMask
+                    + ChatColor.RESET + " is not in the ops list."));
         }
         config.set("channels." + encodeChannel(getConfigChannelName(channelName)) + ".ops", opsList.get(channelName));
     }
@@ -1203,12 +1203,12 @@ public final class PurpleBot {
      */
     public void removeVoice(String channelName, String userMask, CommandSender sender) {
         if (voicesList.get(channelName).contains(userMask)) {
-            sender.sendMessage("User mask " + ChatColor.WHITE + userMask
-                    + ChatColor.RESET + " has been removed to the voices list.");
+            sender.sendMessage(new TextComponent("User mask " + ChatColor.WHITE + userMask
+                    + ChatColor.RESET + " has been removed to the voices list."));
             voicesList.get(channelName).remove(userMask);
         } else {
-            sender.sendMessage("User mask " + ChatColor.WHITE + userMask
-                    + ChatColor.RESET + " is not in the voices list.");
+            sender.sendMessage(new TextComponent("User mask " + ChatColor.WHITE + userMask
+                    + ChatColor.RESET + " is not in the voices list."));
         }
         config.set("channels." + encodeChannel(getConfigChannelName(channelName)) + ".voices", voicesList.get(channelName));
     }
@@ -1367,7 +1367,7 @@ public final class PurpleBot {
      * @param sender
      */
     public void asyncQuit(CommandSender sender) {
-        sender.sendMessage("Disconnecting " + bot.getNick() + " from IRC server " + botServer);
+        sender.sendMessage(new TextComponent("Disconnecting " + bot.getNick() + " from IRC server " + botServer));
         asyncQuit(false);
     }
 
@@ -1405,13 +1405,13 @@ public final class PurpleBot {
     public void sendTopic(CommandSender sender) {
         for (String channelName : botChannels) {
             if (commandMap.containsKey(channelName)) {
-                sender.sendMessage(ChatColor.WHITE + "[" + ChatColor.DARK_PURPLE
+                sender.sendMessage(new TextComponent(ChatColor.WHITE + "[" + ChatColor.DARK_PURPLE
                         + botNick + ChatColor.WHITE + "]" + ChatColor.RESET
                         + " IRC topic for " + ChatColor.WHITE + channelName
                         + ChatColor.RESET + ": \""
                         + ChatColor.WHITE + plugin.colorConverter
                         .ircColorsToGame(activeTopic.get(channelName))
-                        + ChatColor.RESET + "\"");
+                        + ChatColor.RESET + "\""));
             }
         }
     }
@@ -1432,7 +1432,7 @@ public final class PurpleBot {
         }
 
         if (user == null) {
-            sender.sendMessage(ChatColor.RED + "Invalid user: " + ChatColor.WHITE + nick);
+            sender.sendMessage(new TextComponent(ChatColor.RED + "Invalid user: " + ChatColor.WHITE + nick));
         } else {
             bot.sendRaw().rawLineNow(String.format("WHOIS %s %s", nick, nick));
             whoisSenders.add(sender);
@@ -1448,14 +1448,14 @@ public final class PurpleBot {
         String invalidChannel = ChatColor.RED + "Invalid channel: "
                 + ChatColor.WHITE + channelName;
         if (!isValidChannel(channelName)) {
-            sender.sendMessage(invalidChannel);
+            sender.sendMessage(new TextComponent(invalidChannel));
             return;
         }
         Channel channel = getChannel(channelName);
         if (channel != null) {
             sendUserList(sender, channel);
         } else {
-            sender.sendMessage(invalidChannel);
+            sender.sendMessage(new TextComponent(invalidChannel));
         }
     }
 
@@ -1467,31 +1467,31 @@ public final class PurpleBot {
     public void sendUserList(CommandSender sender, Channel channel) {
         String channelName = channel.getName();
         if (!isValidChannel(channelName)) {
-            sender.sendMessage(ChatColor.RED + "Invalid channel: "
-                    + ChatColor.WHITE + channelName);
+            sender.sendMessage(new TextComponent(ChatColor.RED + "Invalid channel: "
+                    + ChatColor.WHITE + channelName));
             return;
         }
-        sender.sendMessage(ChatColor.DARK_PURPLE + "-----[  " + ChatColor.WHITE + channelName
-                + ChatColor.DARK_PURPLE + " - " + ChatColor.WHITE + bot.getNick() + ChatColor.DARK_PURPLE + " ]-----");
+        sender.sendMessage(new TextComponent(ChatColor.DARK_PURPLE + "-----[  " + ChatColor.WHITE + channelName
+                + ChatColor.DARK_PURPLE + " - " + ChatColor.WHITE + bot.getNick() + ChatColor.DARK_PURPLE + " ]-----"));
         if (!this.isConnected()) {
-            sender.sendMessage(ChatColor.RED + " Not connected!");
+            sender.sendMessage(new TextComponent(ChatColor.RED + " Not connected!"));
             return;
         }
         List<String> channelUsers = new ArrayList<>();
         for (User user : channel.getUsers()) {
-            String nick = user.getNick();
-            nick = getNickPrefix(user, channel) + nick;
+            String n = user.getNick();
+            n = getNickPrefix(user, channel) + n;
             if (user.isAway()) {
-                nick = nick + ChatColor.GRAY + " | Away";
+                n = n + ChatColor.GRAY + " | Away";
             }
-            if (nick.equals(bot.getNick())) {
-                nick = ChatColor.DARK_PURPLE + nick;
+            if (n.equals(bot.getNick())) {
+                n = ChatColor.DARK_PURPLE + n;
             }
-            channelUsers.add(nick);
+            channelUsers.add(n);
         }
         Collections.sort(channelUsers, Collator.getInstance());
         for (String userName : channelUsers) {
-            sender.sendMessage("  " + ChatColor.WHITE + userName);
+            sender.sendMessage(new TextComponent("  " + ChatColor.WHITE + userName));
         }
     }
 
@@ -2095,7 +2095,7 @@ public final class PurpleBot {
                 bot.sendIRC().changeNick(newNick);
             }
         });
-        sender.sendMessage("Setting nickname to " + newNick);
+        sender.sendMessage(new TextComponent("Setting nickname to " + newNick));
         config.set("nick", newNick);
         saveConfig();
     }
@@ -2107,11 +2107,11 @@ public final class PurpleBot {
     public void saveConfig(CommandSender sender) {
         try {
             ConfigurationProvider.getProvider(YamlConfiguration.class).save(config, file);
-            sender.sendMessage(plugin.LOG_HEADER_F
-                    + " Saving bot \"" + botNick + "\" to " + file.getName());
+            sender.sendMessage(new TextComponent(plugin.LOG_HEADER_F
+                    + " Saving bot \"" + botNick + "\" to " + file.getName()));
         } catch (IOException ex) {
             plugin.logError(ex.getMessage());
-            sender.sendMessage(ex.getMessage());
+            sender.sendMessage(new TextComponent(ex.getMessage()));
         }
     }
 

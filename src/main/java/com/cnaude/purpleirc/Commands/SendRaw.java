@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  *
@@ -40,7 +41,7 @@ public class SendRaw implements IRCCommandInterface {
     public void dispatch(CommandSender sender, String[] args) {
         if (args.length >= 2) {
             int msgIdx = 1;
-            List<PurpleBot> myBots = new ArrayList<PurpleBot>();
+            List<PurpleBot> myBots = new ArrayList<>();
             if (plugin.ircBots.containsKey(args[1])) {
                 myBots.add(plugin.ircBots.get(args[1]));
                 msgIdx = 2;
@@ -56,7 +57,7 @@ public class SendRaw implements IRCCommandInterface {
                 ircBot.asyncRawlineNow(msg.substring(1));                  
             }
         } else {
-            sender.sendMessage(fullUsage);
+            sender.sendMessage(new TextComponent(fullUsage));
         }
     }
 

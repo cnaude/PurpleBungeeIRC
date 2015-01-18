@@ -7,6 +7,7 @@ package com.cnaude.purpleirc.Commands;
 import com.cnaude.purpleirc.PurpleIRC;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  *
@@ -42,21 +43,21 @@ public class MessageDelay implements IRCCommandInterface  {
                     long delay = Long.parseLong(args[2]);
                     plugin.ircBots.get(bot).setIRCDelay(sender, delay);
                 } else {
-                    sender.sendMessage(plugin.invalidBotName.replace("%BOT%", bot));
+                    sender.sendMessage(new TextComponent(plugin.invalidBotName.replace("%BOT%", bot)));
                 }
             } else {
-                sender.sendMessage(fullUsage);
+                sender.sendMessage(new TextComponent(fullUsage));
             }
         } else if (args.length == 2) {
             String bot = args[1];
             if (plugin.ircBots.containsKey(bot)) {
-                sender.sendMessage(ChatColor.WHITE + "IRC message delay is currently "
-                        + plugin.ircBots.get(bot).getMessageDelay() + " ms.");
+                sender.sendMessage(new TextComponent(ChatColor.WHITE + "IRC message delay is currently "
+                        + plugin.ircBots.get(bot).getMessageDelay() + " ms."));
             } else {
-                sender.sendMessage(plugin.invalidBotName.replace("%BOT%", bot));
+                sender.sendMessage(new TextComponent(plugin.invalidBotName.replace("%BOT%", bot)));
             }
         } else {
-            sender.sendMessage(fullUsage);
+            sender.sendMessage(new TextComponent(fullUsage));
         }
     }
 

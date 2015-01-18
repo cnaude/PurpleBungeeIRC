@@ -7,6 +7,7 @@ package com.cnaude.purpleirc.Commands;
 import com.cnaude.purpleirc.PurpleIRC;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  *
@@ -40,19 +41,19 @@ public class ListOps implements IRCCommandInterface {
             String channelName = args[2];
             if (plugin.ircBots.containsKey(bot)) {
                 if (plugin.ircBots.get(bot).opsList.containsKey(channelName)) {
-                    sender.sendMessage(ChatColor.DARK_PURPLE + "-----[  " + ChatColor.WHITE + channelName
-                            + ChatColor.DARK_PURPLE + " - " + ChatColor.WHITE + "Auto Op Masks" + ChatColor.DARK_PURPLE + " ]-----");
+                    sender.sendMessage(new TextComponent(ChatColor.DARK_PURPLE + "-----[  " + ChatColor.WHITE + channelName
+                            + ChatColor.DARK_PURPLE + " - " + ChatColor.WHITE + "Auto Op Masks" + ChatColor.DARK_PURPLE + " ]-----"));
                     for (String userMask : plugin.ircBots.get(bot).opsList.get(channelName)) {
-                        sender.sendMessage(" - " + userMask);
+                        sender.sendMessage(new TextComponent(" - " + userMask));
                     }
                 } else {
-                    sender.sendMessage(plugin.invalidChannel.replace("%CHANNEL%", channelName));
+                    sender.sendMessage(new TextComponent(plugin.invalidChannel.replace("%CHANNEL%", channelName)));
                 }
             } else {
-                sender.sendMessage(plugin.invalidBotName.replace("%BOT%", bot));
+                sender.sendMessage(new TextComponent(plugin.invalidBotName.replace("%BOT%", bot)));
             }
         } else {
-            sender.sendMessage(fullUsage);
+            sender.sendMessage(new TextComponent(fullUsage));
         }
     }
 

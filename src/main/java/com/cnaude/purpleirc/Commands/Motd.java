@@ -8,6 +8,7 @@ import com.cnaude.purpleirc.PurpleBot;
 import com.cnaude.purpleirc.PurpleIRC;
 import java.util.ArrayList;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  *
@@ -35,13 +36,13 @@ public class Motd implements IRCCommandInterface {
      */
     @Override
     public void dispatch(CommandSender sender, String[] args) {
-        java.util.List<PurpleBot> myBots = new ArrayList<PurpleBot>();
+        java.util.List<PurpleBot> myBots = new ArrayList<>();
         if (args.length >= 2) {
             if (plugin.ircBots.containsKey(args[1])) {
                 myBots.add(plugin.ircBots.get(args[1]));
                 
             } else {
-                sender.sendMessage(plugin.invalidBotName.replace("%BOT%", args[1]));
+                sender.sendMessage(new TextComponent(plugin.invalidBotName.replace("%BOT%", args[1])));
             }
         } else {
             myBots.addAll(plugin.ircBots.values());
@@ -50,9 +51,9 @@ public class Motd implements IRCCommandInterface {
         for (PurpleBot ircBot : myBots) {
             String motd = ircBot.getMotd();
             if (motd != null) {
-                sender.sendMessage(motd);
+                sender.sendMessage(new TextComponent(motd));
             } else {
-                sender.sendMessage("No MOTD found.");
+                sender.sendMessage(new TextComponent("No MOTD found."));
             }
         }
     }

@@ -7,6 +7,7 @@ package com.cnaude.purpleirc.Commands;
 import com.cnaude.purpleirc.PurpleIRC;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  *
@@ -46,12 +47,12 @@ public class Join implements IRCCommandInterface {
             }
             if (plugin.ircBots.containsKey(bot)) {
                 plugin.ircBots.get(bot).asyncJoinChannel(channelName, password);
-                sender.sendMessage(ChatColor.WHITE + "Joining " + channelName + "...");
+                sender.sendMessage(new TextComponent(ChatColor.WHITE + "Joining " + channelName + "..."));
             } else {
-                sender.sendMessage(plugin.invalidBotName.replace("%BOT%", bot));
+                sender.sendMessage(new TextComponent(plugin.invalidBotName.replace("%BOT%", bot)));
             }
         } else {
-            sender.sendMessage(fullUsage);
+            sender.sendMessage(new TextComponent(fullUsage));
         }
     }
 

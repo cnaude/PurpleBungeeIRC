@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 /**
@@ -42,7 +43,7 @@ public class Send implements IRCCommandInterface {
         if (args.length >= 2) {
             int msgIdx = 1;
             String channelName = null;
-            List<PurpleBot> myBots = new ArrayList<PurpleBot>();
+            List<PurpleBot> myBots = new ArrayList<>();
             if (plugin.ircBots.containsKey(args[1])) {
                 myBots.add(plugin.ircBots.get(args[1]));
                 msgIdx = 2;
@@ -77,7 +78,7 @@ public class Send implements IRCCommandInterface {
 
             }
         } else {
-            sender.sendMessage(fullUsage);
+            sender.sendMessage(new TextComponent(fullUsage));
         }
     }
 

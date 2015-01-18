@@ -7,6 +7,7 @@ package com.cnaude.purpleirc.Commands;
 import com.cnaude.purpleirc.PurpleIRC;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.pircbotx.Channel;
 
 /**
@@ -50,19 +51,19 @@ public class Leave implements IRCCommandInterface {
                     for (Channel channel : plugin.ircBots.get(bot).getChannels()) {
                         if (channel.getName().equalsIgnoreCase(channelName)) {
                             channel.send().part(reason);
-                            sender.sendMessage(ChatColor.WHITE + "Leaving " + channelName + "...");
+                            sender.sendMessage(new TextComponent(ChatColor.WHITE + "Leaving " + channelName + "..."));
                             return;
                         }
                     }
-                    sender.sendMessage(ChatColor.WHITE + "Channel " + channelName + " is not valid.");
+                    sender.sendMessage(new TextComponent(ChatColor.WHITE + "Channel " + channelName + " is not valid."));
                 } else {
-                    sender.sendMessage(ChatColor.RED + "Not connected.");
+                    sender.sendMessage(new TextComponent(ChatColor.RED + "Not connected."));
                 }
             } else {
-                sender.sendMessage(plugin.invalidBotName.replace("%BOT%", bot));
+                sender.sendMessage(new TextComponent(plugin.invalidBotName.replace("%BOT%", bot)));
             }
         } else {
-            sender.sendMessage(fullUsage);
+            sender.sendMessage(new TextComponent(fullUsage));
         }
     }
 

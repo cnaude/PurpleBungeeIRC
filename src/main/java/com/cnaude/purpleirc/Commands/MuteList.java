@@ -8,6 +8,7 @@ import com.cnaude.purpleirc.Utilities.BotsAndChannels;
 import com.cnaude.purpleirc.PurpleIRC;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  *
@@ -43,7 +44,7 @@ public class MuteList implements IRCCommandInterface {
         } else if (args.length == 1) {
             bac = new BotsAndChannels(plugin, sender);
         } else {
-            sender.sendMessage(fullUsage);
+            sender.sendMessage(new TextComponent(fullUsage));
             return;
         }
         if (bac.bot.size() > 0 && bac.channel.size() > 0) {

@@ -3,6 +3,7 @@ package com.cnaude.purpleirc.Utilities;
 import com.cnaude.purpleirc.PurpleIRC;
 import java.util.ArrayList;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  *
@@ -20,10 +21,10 @@ public class BotsAndChannels {
             if (plugin.ircBots.get(botName).isValidChannel(channelName)) {           
                 channel.add(channelName);
             } else {
-                sender.sendMessage(plugin.invalidChannelName.replace("%CHANNEL%", channelName));
+                sender.sendMessage(new TextComponent(plugin.invalidChannelName.replace("%CHANNEL%", channelName)));
             }
         } else {
-            sender.sendMessage(plugin.invalidBotName.replace("%BOT%", botName));
+            sender.sendMessage(new TextComponent(plugin.invalidBotName.replace("%BOT%", botName)));
         }
     }
 

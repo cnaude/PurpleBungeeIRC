@@ -5,6 +5,7 @@ import com.cnaude.purpleirc.PurpleIRC;
 import java.util.ArrayList;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 /**
@@ -38,7 +39,7 @@ public class Msg implements IRCCommandInterface {
             plugin.logDebug("Dispatching msg command...");
             int msgIdx = 2;
             String nick;
-            java.util.List<PurpleBot> myBots = new ArrayList<PurpleBot>();
+            java.util.List<PurpleBot> myBots = new ArrayList<>();
             if (plugin.ircBots.containsKey(args[1])) {
                 myBots.add(plugin.ircBots.get(args[1]));
                 msgIdx = 3;
@@ -49,7 +50,7 @@ public class Msg implements IRCCommandInterface {
             }
 
             if (msgIdx == 3 && args.length <= 3) {
-                sender.sendMessage(fullUsage);
+                sender.sendMessage(new TextComponent(fullUsage));
                 return;
             }
 
@@ -65,12 +66,12 @@ public class Msg implements IRCCommandInterface {
                     ircBot.consoleMsgPlayer(nick, msg.substring(1));
                 }                
                 if (!template.isEmpty()) {
-                    sender.sendMessage(plugin.tokenizer.msgChatResponseTokenizer(nick, msg.substring(1), template));
+                    sender.sendMessage(new TextComponent(plugin.tokenizer.msgChatResponseTokenizer(nick, msg.substring(1), template)));
                 }
             }
         }
         else {
-            sender.sendMessage(fullUsage);
+            sender.sendMessage(new TextComponent(fullUsage));
     }
 }
 

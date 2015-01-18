@@ -7,6 +7,7 @@ package com.cnaude.purpleirc.Commands;
 import com.cnaude.purpleirc.PurpleIRC;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  *
@@ -42,16 +43,16 @@ public class Op implements IRCCommandInterface {
                 for (int i = 3; i < args.length; i++) {
                     // #channel, user
                     plugin.ircBots.get(bot).op(channelName, args[i]);
-                    sender.sendMessage("Giving operator status to " 
+                    sender.sendMessage(new TextComponent("Giving operator status to " 
                             + ChatColor.WHITE + args[i] 
                             + ChatColor.RESET + " on " 
-                            + ChatColor.WHITE + channelName);
+                            + ChatColor.WHITE + channelName));
                 }
             } else {
-                sender.sendMessage(plugin.invalidBotName.replace("%BOT%", bot));
+                sender.sendMessage(new TextComponent(plugin.invalidBotName.replace("%BOT%", bot)));
             }
         } else {
-            sender.sendMessage(fullUsage);
+            sender.sendMessage(new TextComponent(fullUsage));
         }
     }
 

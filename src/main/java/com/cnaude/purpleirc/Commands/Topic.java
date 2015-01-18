@@ -8,6 +8,7 @@ import com.cnaude.purpleirc.PurpleIRC;
 import com.cnaude.purpleirc.Utilities.BotsAndChannels;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  *
@@ -49,15 +50,15 @@ public class Topic implements IRCCommandInterface {
             bac = new BotsAndChannels(plugin, sender);
             for (String botName : bac.bot) {
                 for (String channelName : bac.channel) {
-                    sender.sendMessage(ChatColor.WHITE + "[" + ChatColor.DARK_PURPLE 
+                    sender.sendMessage(new TextComponent(ChatColor.WHITE + "[" + ChatColor.DARK_PURPLE 
                             + botName + ChatColor.WHITE 
                             + "/" + ChatColor.DARK_PURPLE + channelName 
                             + ChatColor.WHITE + "]"
                             + " Topic: " + plugin.ircBots.get(botName)
-                                    .channelTopic.get(channelName));
+                                    .channelTopic.get(channelName)));
                 }
             }
-            sender.sendMessage(fullUsage);
+            sender.sendMessage(new TextComponent(fullUsage));
             return;
         }
         if (bac.bot.size() > 0 && bac.channel.size() > 0) {

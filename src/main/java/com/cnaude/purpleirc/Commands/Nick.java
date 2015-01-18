@@ -8,6 +8,7 @@ import com.cnaude.purpleirc.PurpleBot;
 import com.cnaude.purpleirc.PurpleIRC;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  *
@@ -41,8 +42,8 @@ public class Nick implements IRCCommandInterface {
             String nick = args[2];
             if (plugin.ircBots.containsKey(bot)) {
                 if (plugin.ircBots.containsKey(nick)) {
-                    sender.sendMessage(ChatColor.RED 
-                            + "There is already a bot with that nick!");
+                    sender.sendMessage(new TextComponent(ChatColor.RED 
+                            + "There is already a bot with that nick!"));
                 } else {
                     plugin.ircBots.get(bot).asyncChangeNick(sender, nick);
                     PurpleBot ircBot = plugin.ircBots.remove(bot);
@@ -50,10 +51,10 @@ public class Nick implements IRCCommandInterface {
                     ircBot.botNick = nick;
                 }
             } else {
-                sender.sendMessage(plugin.invalidBotName.replace("%BOT%", bot));
+                sender.sendMessage(new TextComponent(plugin.invalidBotName.replace("%BOT%", bot)));
             }
         } else {
-            sender.sendMessage(fullUsage);
+            sender.sendMessage(new TextComponent(fullUsage));
         }
     }
 

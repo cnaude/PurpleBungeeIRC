@@ -8,6 +8,7 @@ import com.cnaude.purpleirc.PurpleBot;
 import com.cnaude.purpleirc.PurpleIRC;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.pircbotx.Channel;
 
 /**
@@ -36,17 +37,17 @@ public class ListBots implements IRCCommandInterface {
      */
     @Override
     public void dispatch(CommandSender sender, String[] args) {
-        sender.sendMessage(ChatColor.DARK_PURPLE + "-----[  " + ChatColor.WHITE + "IRC Bots"
-                + ChatColor.DARK_PURPLE + "   ]-----");
+        sender.sendMessage(new TextComponent(ChatColor.DARK_PURPLE + "-----[  " + ChatColor.WHITE + "IRC Bots"
+                + ChatColor.DARK_PURPLE + "   ]-----"));
         for (PurpleBot ircBot : plugin.ircBots.values()) {
-            sender.sendMessage(ChatColor.DARK_PURPLE + "* " + ChatColor.WHITE + ircBot.botNick
-            + ChatColor.DARK_PURPLE + " [" + ChatColor.GRAY + ircBot.getFileName() + ChatColor.DARK_PURPLE + "]");
+            sender.sendMessage(new TextComponent(ChatColor.DARK_PURPLE + "* " + ChatColor.WHITE + ircBot.botNick
+            + ChatColor.DARK_PURPLE + " [" + ChatColor.GRAY + ircBot.getFileName() + ChatColor.DARK_PURPLE + "]"));
             if (ircBot.isConnected()) {
                 for (Channel channel : ircBot.getChannels()) {
-                    sender.sendMessage(ChatColor.DARK_PURPLE + "  - " + ChatColor.WHITE + channel.getName());
+                    sender.sendMessage(new TextComponent(ChatColor.DARK_PURPLE + "  - " + ChatColor.WHITE + channel.getName()));
                 }
             } else {
-                sender.sendMessage(ChatColor.RED + "Not connected.");
+                sender.sendMessage(new TextComponent(ChatColor.RED + "Not connected."));
             }
         }
     }

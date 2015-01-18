@@ -6,6 +6,9 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.pircbotx.Channel;
+import org.pircbotx.User;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.WhoisEvent;
 
@@ -38,23 +41,36 @@ public class WhoisListener extends ListenerAdapter {
             return;
         }
         CommandSender sender = ircBot.whoisSenders.remove(0);
-
-        sender.sendMessage(ChatColor.DARK_PURPLE + "----[ " + ChatColor.WHITE + "Whois" + ChatColor.DARK_PURPLE + " ]----");
-        sender.sendMessage(ChatColor.DARK_PURPLE + "Nick: " + ChatColor.WHITE + event.getNick());        
-        sender.sendMessage(ChatColor.DARK_PURPLE + "Username: " + ChatColor.WHITE + event.getLogin() + "@" + event.getHostname());
-        sender.sendMessage(ChatColor.DARK_PURPLE + "Real name: " + ChatColor.WHITE + event.getRealname());
-        sender.sendMessage(ChatColor.DARK_PURPLE + "Server: " + ChatColor.WHITE + event.getServer());        
+        sender.sendMessage(new TextComponent(ChatColor.DARK_PURPLE + "----[ " + ChatColor.WHITE + "Whois" + ChatColor.DARK_PURPLE + " ]----"));
+        sender.sendMessage(new TextComponent(ChatColor.DARK_PURPLE + "Nick: " + ChatColor.WHITE + event.getNick()));        
+        sender.sendMessage(new TextComponent(ChatColor.DARK_PURPLE + "Username: " + ChatColor.WHITE + event.getLogin() + "@" + event.getHostname()));
+        sender.sendMessage(new TextComponent(ChatColor.DARK_PURPLE + "Real name: " + ChatColor.WHITE + event.getRealname()));
+        sender.sendMessage(new TextComponent(ChatColor.DARK_PURPLE + "Server: " + ChatColor.WHITE + event.getServer()));
+        User user = null;
+        for (Channel channel : ircBot.getBot().getUserBot().getChannels()) {
+            for (User u : channel.getUsers()) {
+                if (u.getNick().equalsIgnoreCase(event.getNick())) {
+                    user = u;
+                    break;
+                }
+            }
+        }
+        if (user != null) {
+            if (user.isAway()) {
+                sender.sendMessage(new TextComponent(ChatColor.DARK_PURPLE + "Away: " + ChatColor.WHITE + user.getAwayMessage()));
+            }
+        }
         if (!event.getChannels().isEmpty()) {
             StringBuilder sb = new StringBuilder();
             for (Object channel : (List<String>)event.getChannels()) {                
                 sb.append(" ");
                 sb.append(channel);
             }
-            sender.sendMessage(ChatColor.DARK_PURPLE + "Currently on:" + ChatColor.WHITE + sb.toString());
+            sender.sendMessage(new TextComponent(ChatColor.DARK_PURPLE + "Currently on:" + ChatColor.WHITE + sb.toString()));
         }
-        sender.sendMessage(ChatColor.DARK_PURPLE + "Idle: " + ChatColor.WHITE + secondsToTime(event.getIdleSeconds()));
-        sender.sendMessage(ChatColor.DARK_PURPLE + "Online since: " + ChatColor.WHITE + secondsToDate(event.getSignOnTime()));        
-        sender.sendMessage(ChatColor.DARK_PURPLE + "----[ " + ChatColor.WHITE + "End Whois" + ChatColor.DARK_PURPLE + " ]----");
+        sender.sendMessage(new TextComponent(ChatColor.DARK_PURPLE + "Idle: " + ChatColor.WHITE + secondsToTime(event.getIdleSeconds())));
+        sender.sendMessage(new TextComponent(ChatColor.DARK_PURPLE + "Online since: " + ChatColor.WHITE + secondsToDate(event.getSignOnTime())));        
+        sender.sendMessage(new TextComponent(ChatColor.DARK_PURPLE + "----[ " + ChatColor.WHITE + "End Whois" + ChatColor.DARK_PURPLE + " ]----"));
     }
     
     private String secondsToDate(long sec) {                          

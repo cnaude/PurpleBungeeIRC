@@ -7,6 +7,7 @@ package com.cnaude.purpleirc.Commands;
 import com.cnaude.purpleirc.PurpleIRC;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  *
@@ -37,26 +38,26 @@ public class Help implements IRCCommandInterface {
         if (args.length >= 2) {
             String s = args[1];
             if (plugin.commandHandlers.commands.containsKey(s)) {
-                sender.sendMessage(helpStringBuilder(
+                sender.sendMessage(new TextComponent(helpStringBuilder(
                         plugin.commandHandlers.commands.get(s).name(),
                         plugin.commandHandlers.commands.get(s).desc(),
-                        plugin.commandHandlers.commands.get(s).usage()));
+                        plugin.commandHandlers.commands.get(s).usage())));
                 return;
             } else {
-                sender.sendMessage(ChatColor.RED + "Invalid sub command: " 
-                        + ChatColor.WHITE + s);
+                sender.sendMessage(new TextComponent(ChatColor.RED + "Invalid sub command: " 
+                        + ChatColor.WHITE + s));
                 return;
             }
         }
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
+        sender.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&',
                 "&5-----[  &fPurpleIRC&5 - &f" + plugin.getProxy().getPluginManager()
-                .getPlugin("PurpleBungeeIRC").getDescription().getVersion() + "&5 ]-----"));
+                .getPlugin("PurpleBungeeIRC").getDescription().getVersion() + "&5 ]-----")));
         for (String s : plugin.commandHandlers.sortedCommands) {
             if (plugin.commandHandlers.commands.containsKey(s)) {
-                sender.sendMessage(helpStringBuilder(
+                sender.sendMessage(new TextComponent(helpStringBuilder(
                         plugin.commandHandlers.commands.get(s).name(),
                         plugin.commandHandlers.commands.get(s).desc(),
-                        plugin.commandHandlers.commands.get(s).usage()));
+                        plugin.commandHandlers.commands.get(s).usage())));
             }
         }
 

@@ -9,6 +9,7 @@ import com.cnaude.purpleirc.PurpleIRC;
 import java.util.ArrayList;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  *
@@ -41,7 +42,7 @@ public class Notice implements IRCCommandInterface {
             plugin.logDebug("Dispatching notice command...");
             int msgIdx = 2;
             String target;
-            java.util.List<PurpleBot> myBots = new ArrayList<PurpleBot>();
+            java.util.List<PurpleBot> myBots = new ArrayList<>();
             if (plugin.ircBots.containsKey(args[1])) {
                 myBots.add(plugin.ircBots.get(args[1]));
                 msgIdx = 3;
@@ -52,7 +53,7 @@ public class Notice implements IRCCommandInterface {
             }
 
             if (msgIdx == 3 && args.length <= 3) {
-                sender.sendMessage(fullUsage);
+                sender.sendMessage(new TextComponent(fullUsage));
                 return;
             }
 
@@ -62,10 +63,10 @@ public class Notice implements IRCCommandInterface {
                     msg = msg + " " + args[i];
                 }
                 ircBot.asyncNotice(target, msg.substring(1));
-                sender.sendMessage("Sent notice message \"" + msg.substring(1) + "\" to \"" + target + "\"");
+                sender.sendMessage(new TextComponent("Sent notice message \"" + msg.substring(1) + "\" to \"" + target + "\""));
             }
         } else {
-            sender.sendMessage(fullUsage);
+            sender.sendMessage(new TextComponent(fullUsage));
         }
     }
 

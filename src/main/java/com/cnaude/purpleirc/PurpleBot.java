@@ -809,8 +809,10 @@ public final class PurpleBot {
      * @param player
      * @param hChannel
      * @param message
+     * @param hColor
+     * @param hNick
      */
-    public void heroChat(ProxiedPlayer player, String hChannel, String message) {
+    public void heroChat(ProxiedPlayer player, String hChannel, String message, String hColor, String hNick) {
         if (!this.isConnected()) {
             return;
         }
@@ -822,8 +824,8 @@ public final class PurpleBot {
             if (isMessageEnabled(channelName, "hero-" + hChannel + "-chat")
                     || isMessageEnabled(channelName, TemplateName.HERO_CHAT)) {
                 asyncIRCMessage(channelName, plugin.tokenizer
-                        .chatHeroTokenizer(player, message, "", hChannel,
-                                hChannel, plugin.getHeroChatChannelTemplate(botNick, hChannel)));
+                        .chatHeroTokenizer(player, message, hColor, hChannel,
+                                hNick, plugin.getHeroChatChannelTemplate(botNick, hChannel)));
             } else {
                 plugin.logDebug("Player " + player.getName() + " is in \""
                         + hChannel + "\" but hero-" + hChannel + "-chat is disabled.");

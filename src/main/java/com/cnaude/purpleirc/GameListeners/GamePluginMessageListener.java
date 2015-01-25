@@ -45,6 +45,8 @@ public class GamePluginMessageListener
         String hChannel = in.readUTF();
         String message = in.readUTF();
         String playerName = in.readUTF();
+        String hColor = in.readUTF();
+        String hNick = in.readUTF();
         ProxiedPlayer player = null;
         message = ChatColor.translateAlternateColorCodes('&', message);
         for (ServerInfo server : plugin.getProxy().getServers().values()) {
@@ -57,7 +59,7 @@ public class GamePluginMessageListener
         if (player != null) {
             if (player.hasPermission("irc.message.gamechat")) {
                 for (PurpleBot ircBot : plugin.ircBots.values()) {
-                    ircBot.heroChat(player, hChannel, message);
+                    ircBot.heroChat(player, hChannel, message, hColor, hNick);
                 }
             }
         }

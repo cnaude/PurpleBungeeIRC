@@ -46,7 +46,11 @@ public class GamePluginMessageListener
         String message = in.readUTF();
         String playerName = in.readUTF();
         String hColor = in.readUTF();
-        String hNick = in.readUTF();
+        String hNick = in.readUTF();       
+        plugin.logDebug("message: " + message);
+        plugin.logDebug("playerName: " + playerName);
+        plugin.logDebug("hColor: " + hColor);
+        plugin.logDebug("hNick: " + hNick);
         ProxiedPlayer player = null;
         message = ChatColor.translateAlternateColorCodes('&', message);
         for (ServerInfo server : plugin.getProxy().getServers().values()) {

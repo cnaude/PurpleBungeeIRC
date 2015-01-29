@@ -18,12 +18,9 @@ channel-check-interval: 5
 #  %KICKER%
 #  %TOPIC%
 #  %REASON%
-#  %GROUP% - Requires Vault if you want to use this.
-#  %PLAYERPREFIX% - Requires Vault if you want to use this.
-#  %PLAYERSUFFIX% - Requires Vault if you want to use this.
-#  %GROUPSUFFIX% - Requires Vault if you want to use this.
-#  %GROUPPREFIX% - Requires Vault if you want to use this.
-#  %WORLDCOLOR% - Requires Multiverse.
+#  %HEROCHANNEL% - HeroChat channel name
+#  %HERONICK% - HeroChat channel nick
+#  %HEROCOLOR% - HeroChat channel color
 message-format:
   # Message templates for game to IRC messages  
   console-chat: '[&dServer&r] %MESSAGE%' 

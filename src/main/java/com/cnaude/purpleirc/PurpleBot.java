@@ -807,12 +807,9 @@ public final class PurpleBot {
     /**
      *
      * @param player
-     * @param hChannel
-     * @param message
-     * @param hColor
-     * @param hNick
+     * @param cm
      */
-    public void heroChat(ProxiedPlayer player, String hChannel, String message, String hColor, String hNick) {
+    public void heroChat(ProxiedPlayer player, ChatMessage cm) {
         if (!this.isConnected()) {
             return;
         }
@@ -820,15 +817,14 @@ public final class PurpleBot {
             if (!isPlayerInValidWorld(player, channelName)) {
                 continue;
             }
-            plugin.logDebug("HC Channel: " + hChannel);
-            if (isMessageEnabled(channelName, "hero-" + hChannel + "-chat")
+            plugin.logDebug("HC Channel: " + cm.getChannel());
+            if (isMessageEnabled(channelName, "hero-" + cm.getChannel() + "-chat")
                     || isMessageEnabled(channelName, TemplateName.HERO_CHAT)) {
                 asyncIRCMessage(channelName, plugin.tokenizer
-                        .chatHeroTokenizer(player, message, hColor, hChannel,
-                                hNick, plugin.getHeroChatChannelTemplate(botNick, hChannel)));
+                        .chatHeroTokenizer(player, cm, plugin.getHeroChatChannelTemplate(botNick, cm.getChannel())));
             } else {
                 plugin.logDebug("Player " + player.getName() + " is in \""
-                        + hChannel + "\" but hero-" + hChannel + "-chat is disabled.");
+                        + cm.getChannel() + "\" but hero-" + cm.getChannel() + "-chat is disabled.");
             }
         }
     }

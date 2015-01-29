@@ -1,5 +1,6 @@
 package com.cnaude.purpleirc.Utilities;
 
+import com.cnaude.purpleirc.ChatMessage;
 import com.cnaude.purpleirc.PurpleBot;
 import com.cnaude.purpleirc.PurpleIRC;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -204,7 +205,6 @@ public class ChatTokenizer {
         String playerIP = player.getAddress().getAddress().getHostAddress();
         String worldName = "";
         String worldAlias = "";
-        String worldColor = "";
         String jobShort = "";
         String job = "";
         String serverName = player.getServer().getInfo().getName();
@@ -222,7 +222,6 @@ public class ChatTokenizer {
                 .replace("%SERVER%", serverName)
                 .replace("%PLAYERIP%", playerIP)
                 .replace("%WORLDALIAS%", worldAlias)
-                .replace("%WORLDCOLOR%", worldColor)
                 .replace("%WORLD%", worldName);
     }
 
@@ -230,17 +229,9 @@ public class ChatTokenizer {
         plugin.logDebug("Tokenizing " + player);
         String worldName = plugin.defaultPlayerWorld;
         String displayName = plugin.getDisplayName(player);
-        String worldAlias = "";
-        String worldColor = "";
-        String jobShort = "";
-        String job = "";
         plugin.logDebug("[S]Raw message: " + message);
         return message.replace("%DISPLAYNAME%", displayName)
-                .replace("%JOBS%", job)
-                .replace("%JOBSSHORT%", jobShort)
                 .replace("%NAME%", player)
-                .replace("%WORLDALIAS%", worldAlias)
-                .replace("%WORLDCOLOR%", worldColor)
                 .replace("%WORLD%", worldName);
     }
 
@@ -276,19 +267,21 @@ public class ChatTokenizer {
      * Herochat to IRC
      *
      * @param player
-     * @param message
-     * @param hColor
-     * @param hChannel
-     * @param hNick
+     * @param cm
      * @param template
      * @return
      */
-    public String chatHeroTokenizer(ProxiedPlayer player, String message, String hColor, String hChannel, String hNick, String template) {
-        return gameChatToIRCTokenizer(player, template, message)
-                .replace("%HEROCHANNEL%", hChannel)
-                .replace("%HERONICK%", hNick)
-                .replace("%HEROCOLOR%", plugin.colorConverter.gameColorsToIrc(hColor))
-                .replace("%CHANNEL%", hChannel);
+    public String chatHeroTokenizer(ProxiedPlayer player, ChatMessage cm, String template) {
+        return gameChatToIRCTokenizer(player, template, cm.getMessage())
+                .replace("%GROUP%", cm.getPlayerGroup())
+                .replace("%PLAYERPREFIX%", cm.getPlayerPrefix())
+                .replace("%PLAYERSUFFIX%", cm.getPlayerSuffix())
+                .replace("%GROUPPREFIX%", cm.getGroupPrefix())
+                .replace("%GROUPSUFFIX%", cm.getGroupSuffix())
+                .replace("%HEROCHANNEL%", cm.getChannel())
+                .replace("%HERONICK%", cm.getHeroNick())
+                .replace("%HEROCOLOR%", plugin.colorConverter.gameColorsToIrc(cm.getHeroColor()))
+                .replace("%CHANNEL%", cm.getChannel());
     }
 
     /**

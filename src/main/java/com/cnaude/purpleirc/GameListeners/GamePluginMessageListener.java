@@ -1,9 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.cnaude.purpleirc.GameListeners;
 
+import com.cnaude.purpleirc.ChatMessage;
 import com.cnaude.purpleirc.PurpleBot;
 import com.cnaude.purpleirc.PurpleIRC;
 import com.google.common.io.ByteArrayDataInput;
@@ -42,20 +39,13 @@ public class GamePluginMessageListener
         }
 
         ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
-        String hChannel = in.readUTF();
-        String message = in.readUTF();
-        String playerName = in.readUTF();
-        String hColor = in.readUTF();
-        String hNick = in.readUTF();       
-        plugin.logDebug("message: " + message);
-        plugin.logDebug("playerName: " + playerName);
-        plugin.logDebug("hColor: " + hColor);
-        plugin.logDebug("hNick: " + hNick);
+        ChatMessage cm = new ChatMessage(in);        
+        
         ProxiedPlayer player = null;
-        message = ChatColor.translateAlternateColorCodes('&', message);
+        cm.setMessage(ChatColor.translateAlternateColorCodes('&', cm.getMessage()));
         for (ServerInfo server : plugin.getProxy().getServers().values()) {
             for (ProxiedPlayer p : server.getPlayers()) {
-                if (p.getName().equals(playerName)) {
+                if (p.getName().equals(cm.getSender())) {
                     player = p;
                 }
             }
@@ -63,7 +53,7 @@ public class GamePluginMessageListener
         if (player != null) {
             if (player.hasPermission("irc.message.gamechat")) {
                 for (PurpleBot ircBot : plugin.ircBots.values()) {
-                    ircBot.heroChat(player, hChannel, message, hColor, hNick);
+                    ircBot.heroChat(player, cm);
                 }
             }
         }

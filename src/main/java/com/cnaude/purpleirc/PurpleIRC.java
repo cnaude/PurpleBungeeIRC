@@ -169,7 +169,7 @@ public class PurpleIRC extends Plugin {
         this.getProxy().getPluginManager().registerListener(this, new GamePlayerJoinListener(this));
         this.getProxy().getPluginManager().registerListener(this, new GamePlayerQuitListener(this));
         this.getProxy().getPluginManager().registerListener(this, new GameServerSwitchListener(this));
-        this.getProxy().getPluginManager().registerListener(this, new GamePluginMessageListener(this));        
+        this.getProxy().getPluginManager().registerListener(this, new GamePluginMessageListener(this));
         regexGlobber = new RegexGlobber();
         tokenizer = new ChatTokenizer(this);
         commandHandlers = new CommandHandlers(this);
@@ -240,7 +240,7 @@ public class PurpleIRC extends Plugin {
     public String getMsgTemplate(String tmpl) {
         return getMsgTemplate(MAINCONFIG, tmpl);
     }
-    
+
     public String getHeroTemplate(CaseInsensitiveMap<CaseInsensitiveMap<String>> hc,
             String botName, String hChannel) {
         if (hc.containsKey(botName)) {
@@ -265,7 +265,7 @@ public class PurpleIRC extends Plugin {
         }
         return "";
     }
-    
+
     public String getHeroChatChannelTemplate(String botName, String hChannel) {
         String tmpl = getHeroTemplate(heroChannelMessages, botName, hChannel);
         if (tmpl.isEmpty()) {
@@ -564,7 +564,7 @@ public class PurpleIRC extends Plugin {
             return "Invalid host.";
         }
     }
-    
+
     private void updateServerCache(final PurpleIRC plugin) {
         getProxy().getScheduler().runAsync(this, new Runnable() {
             @Override
@@ -595,7 +595,7 @@ public class PurpleIRC extends Plugin {
                 }
             }
 
-            String[] data = str.toString().split("§");            
+            String[] data = str.toString().split("§");
             maxPlayers = Integer.parseInt(data[data.length-1]);
         } catch (UnknownHostException e) {
             logInfo(e.getMessage());
@@ -605,7 +605,7 @@ public class PurpleIRC extends Plugin {
             return;
         }
         serverMaxCounts.put(si, maxPlayers);
-        
+
     }
 
     /**

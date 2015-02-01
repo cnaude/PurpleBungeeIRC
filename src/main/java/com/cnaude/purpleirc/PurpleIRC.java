@@ -456,7 +456,7 @@ public class PurpleIRC extends Plugin {
      * @param message
      */
     public void logInfo(String message) {
-        getLogger().log(Level.INFO, String.format("%s %s", LOG_HEADER, message));
+        getLogger().log(Level.INFO, message);
     }
 
     /**
@@ -464,7 +464,7 @@ public class PurpleIRC extends Plugin {
      * @param message
      */
     public void logError(String message) {
-        getLogger().log(Level.SEVERE, String.format("%s %s", LOG_HEADER, message));
+        getLogger().log(Level.SEVERE, message);
     }
 
     /**
@@ -473,7 +473,7 @@ public class PurpleIRC extends Plugin {
      */
     public void logDebug(String message) {
         if (debugEnabled) {
-            getLogger().log(Level.ALL, String.format("%s [DEBUG] %s", LOG_HEADER, message));
+            getLogger().log(Level.ALL, String.format("[DEBUG] %s", message));
         }
     }
 

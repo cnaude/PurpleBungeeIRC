@@ -472,7 +472,7 @@ public class PurpleIRC extends Plugin {
      */
     public void logDebug(String message) {
         if (debugEnabled) {
-            getLogger().log(Level.ALL, String.format("[DEBUG] %s", message));
+            getLogger().log(Level.INFO, String.format("[DEBUG] %s", message));
         }
     }
 

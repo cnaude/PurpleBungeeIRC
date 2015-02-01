@@ -695,7 +695,7 @@ public class PurpleIRC extends Plugin {
     public void broadcast(String message, String permission) {
         for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
             if (player.hasPermission(permission)) {
-                player.sendMessage(message);
+                player.sendMessage(new TextComponent(message));
             }
         }
     }

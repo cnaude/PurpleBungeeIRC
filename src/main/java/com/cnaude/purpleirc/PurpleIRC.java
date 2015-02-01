@@ -56,7 +56,6 @@ public class PurpleIRC extends Plugin {
 
     public String LOG_HEADER;
     public String LOG_HEADER_F;
-    static final Logger log = Logger.getLogger(BungeeCord.class.getName());
     private final String sampleFileName;
     private final String MAINCONFIG;
     private File pluginFolder;
@@ -457,7 +456,7 @@ public class PurpleIRC extends Plugin {
      * @param message
      */
     public void logInfo(String message) {
-        log.log(Level.INFO, String.format("%s %s", LOG_HEADER, message));
+        getLogger().log(Level.INFO, String.format("%s %s", LOG_HEADER, message));
     }
 
     /**
@@ -465,7 +464,7 @@ public class PurpleIRC extends Plugin {
      * @param message
      */
     public void logError(String message) {
-        log.log(Level.SEVERE, String.format("%s %s", LOG_HEADER, message));
+        getLogger().log(Level.SEVERE, String.format("%s %s", LOG_HEADER, message));
     }
 
     /**
@@ -474,7 +473,7 @@ public class PurpleIRC extends Plugin {
      */
     public void logDebug(String message) {
         if (debugEnabled) {
-            log.log(Level.INFO, String.format("%s [DEBUG] %s", LOG_HEADER, message));
+            getLogger().log(Level.ALL, String.format("%s [DEBUG] %s", LOG_HEADER, message));
         }
     }
 

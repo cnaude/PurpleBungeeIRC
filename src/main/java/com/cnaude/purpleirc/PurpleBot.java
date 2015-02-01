@@ -124,7 +124,7 @@ public final class PurpleBot {
     private final String fileName;
     String version;
     String finger;
-    
+
     private final ScheduledTask bt;
 
     /**
@@ -133,7 +133,7 @@ public final class PurpleBot {
      * @param plugin
      */
     public PurpleBot(File file, PurpleIRC plugin) {
-        
+
         fileName = file.getName();
         this.altNicks = new ArrayList<>();
         this.connected = false;
@@ -173,16 +173,16 @@ public final class PurpleBot {
         loadConfig();
         addListeners();
         version = plugin.getDescription().getName() + ", "
-                        + plugin.getDescription().getDescription() + " - "
-                        + "http://www.spigotmc.org/resources/purplebungeeirc.3017/";
-        
+                + plugin.getDescription().getDescription() + " - "
+                + "http://www.spigotmc.org/resources/purplebungeeirc.3017/";
+
         bt = this.plugin.getProxy().getScheduler().runAsync(this.plugin, new Runnable() {
             @Override
             public void run() {
                 buildBot();
             }
         });
-        
+
         messageQueue = new IRCMessageQueueWatcher(this, plugin);
     }
 
@@ -261,7 +261,7 @@ public final class PurpleBot {
         ircListeners.add(new PartListener(plugin, this));
         ircListeners.add(new PrivateMessageListener(plugin, this));
         ircListeners.add(new QuitListener(plugin, this));
-        ircListeners.add(new TopicListener(plugin, this));        
+        ircListeners.add(new TopicListener(plugin, this));
         ircListeners.add(new WhoisListener(plugin, this));
         ircListeners.add(new MotdListener(plugin, this));
         ircListeners.add(new ServerResponseListener(plugin, this));
@@ -1719,7 +1719,7 @@ public final class PurpleBot {
             plugin.logDebug("NOPE we can't broadcast due to " + TemplateName.IRC_CHAT
                     + " disabled");
         }
-        
+
         plugin.logDebug("Checking if " + TemplateName.IRC_HERO_CHAT + " is enabled before broadcasting chat from IRC to HeroChat");
         if (enabledMessages.get(myChannel).contains(TemplateName.IRC_HERO_CHAT)) {
             String hChannel = heroChannel.get(myChannel);
@@ -1732,9 +1732,9 @@ public final class PurpleBot {
                 out.writeUTF(hChannel);
                 out.writeUTF(rawHCMessage);
                 for (ServerInfo server : this.plugin.getProxy().getServers().values()) {
-                        if (!server.getPlayers().isEmpty()) {
-                            server.sendData("BungeeChat", out.toByteArray());
-                        }
+                    if (!server.getPlayers().isEmpty()) {
+                        server.sendData("BungeeChat", out.toByteArray());
+                    }
                 }
             }
         } else {
@@ -1744,9 +1744,10 @@ public final class PurpleBot {
         if (enabledMessages.get(myChannel).contains(TemplateName.IRC_CONSOLE_CHAT)) {
             String tmpl = plugin.getMsgTemplate(botNick, TemplateName.IRC_CONSOLE_CHAT);
             plugin.logDebug("broadcastChat [Console]: " + tmpl);
-            //plugin.getServer().getConsoleSender().sendMessage(plugin.tokenizer.ircChatToGameTokenizer(
-            //        this, user, channel, plugin.getMsgTemplate(botNick,
-            //                TemplateName.IRC_CONSOLE_CHAT), message));
+            plugin.getProxy().getConsole().sendMessage(new TextComponent(
+                    plugin.tokenizer.ircChatToGameTokenizer(
+                            this, user, channel, plugin.getMsgTemplate(botNick,
+                                    TemplateName.IRC_CONSOLE_CHAT), message)));
         }
     }
 
@@ -1787,7 +1788,7 @@ public final class PurpleBot {
                                 .targetChatResponseTokenizer(pName, msg, responseTemplate));
                     }
                     plugin.logDebug("Tokenized message: " + t);
-                    player.sendMessage(t);
+                    player.sendMessage(new TextComponent(t));
                 } else {
                     asyncIRCMessage(target, "Player not found (possibly offline): " + pName);
                 }
@@ -1816,7 +1817,7 @@ public final class PurpleBot {
             plugin.logDebug("Ignoring action due to "
                     + TemplateName.IRC_ACTION + " is false");
         }
-        
+
         if (enabledMessages.get(myChannel).contains(TemplateName.IRC_HERO_ACTION)) {
             String hChannel = heroChannel.get(myChannel);
             String tmpl = plugin.getIRCHeroActionChannelTemplate(botNick, hChannel);
@@ -1828,9 +1829,9 @@ public final class PurpleBot {
                 out.writeUTF(hChannel);
                 out.writeUTF(rawHCMessage);
                 for (ServerInfo server : this.plugin.getProxy().getServers().values()) {
-                        if (!server.getPlayers().isEmpty()) {
-                            server.sendData("BungeeChat", out.toByteArray());
-                        }
+                    if (!server.getPlayers().isEmpty()) {
+                        server.sendData("BungeeChat", out.toByteArray());
+                    }
                 }
             }
         }
@@ -2123,7 +2124,7 @@ public final class PurpleBot {
             plugin.logError(ex.getMessage());
         }
     }
-    
+
     public void altNickChange() {
         if (altNicks.isEmpty()) {
             return;

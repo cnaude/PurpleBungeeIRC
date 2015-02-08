@@ -33,12 +33,6 @@
     </repositories>
     
     <dependencies>
-        
-        <dependency>
-            <groupId>com.cnaude.purpleirc</groupId>
-            <artifactId>PurpleIRC-API</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
 
         <dependency>
             <groupId>com.google.guava</groupId>

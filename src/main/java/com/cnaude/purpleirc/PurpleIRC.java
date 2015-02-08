@@ -51,7 +51,7 @@ import org.pircbotx.IdentServer;
  *
  * @author Chris Naudé
  */
-public class PurpleIRC extends Plugin implements PurpleAPI {
+public class PurpleIRC extends Plugin {
 
     public String LOG_HEADER;
     public String LOG_HEADER_F;
@@ -720,19 +720,5 @@ public class PurpleIRC extends Plugin implements PurpleAPI {
             logError("Problem saving to " + configFile.getName() + ": " + ex.getMessage());
         }
     }
-    
-    @Override
-    public void sendIrcMessage(String target, String message) {
-        for (PurpleBot ircBot : ircBots.values()) {
-            ircBot.asyncIRCMessage(target, message);
-        }
-    }
-
-    @Override
-    public void sendCtcpMessage(String target, String message) {
-        for (PurpleBot ircBot : ircBots.values()) {
-            ircBot.asyncCTCPMessage(target, message);
-        }
-    }
-    
+        
 }

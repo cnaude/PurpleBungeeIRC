@@ -33,7 +33,6 @@
     </repositories>
     
     <dependencies>
-
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
@@ -42,7 +41,14 @@
             <scope>provided</scope>
         </dependency>
         
-        <!-- BungeeCord for safer threading -->
+        <!-- PircBotX -->
+        <dependency>
+            <groupId>com.cnaude.pircbotx</groupId>
+            <artifactId>pircbotx</artifactId>
+            <version>2.0.3</version>
+        </dependency>
+        
+        <!-- BungeeCord API -->
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
@@ -50,7 +56,8 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
-        <!-- BungeeCord for safer threading -->
+        
+        <!-- BungeeCord -->
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord</artifactId>
@@ -71,13 +78,6 @@
             <groupId>com.cnaude.bungeeyaml</groupId>
             <artifactId>BungeeYAML</artifactId>
             <version>1.2.4-bis</version>
-        </dependency>
-                           
-        <!-- PircBotX -->
-        <dependency>
-            <groupId>com.cnaude.pircbotx</groupId>
-            <artifactId>pircbotx</artifactId>
-            <version>2.0.2</version>
         </dependency>
            
         <dependency>

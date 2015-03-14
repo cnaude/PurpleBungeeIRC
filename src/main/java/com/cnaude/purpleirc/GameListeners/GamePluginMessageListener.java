@@ -34,9 +34,11 @@ public class GamePluginMessageListener
             return;
         }
         byte[] bytes = event.getData();
+        /*
         if (!bungeeChatServer.shouldBroadcast(ByteStreams.newDataInput(event.getData()).readUTF())) {
             return;
         }
+        */
 
         ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
         ChatMessage cm = new ChatMessage(in);        

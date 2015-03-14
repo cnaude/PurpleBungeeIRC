@@ -42,7 +42,9 @@ public class GamePlayerJoinListener implements Listener {
             public void run() {
                 for (PurpleBot ircBot : plugin.ircBots.values()) {
                     ircBot.gameJoin(event.getPlayer(), "joined");
-                    plugin.updateServerCache(event.getPlayer().getServer().getInfo());
+                    if (event.getPlayer().getServer() != null) {
+                        plugin.updateServerCache(event.getPlayer().getServer().getInfo());
+                    }
                 }
             }
         }, 2, TimeUnit.SECONDS);

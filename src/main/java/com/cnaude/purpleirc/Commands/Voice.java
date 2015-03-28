@@ -1,9 +1,25 @@
+/*
+ * Copyright (C) 2014 cnaude
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.cnaude.purpleirc.Commands;
 
 import com.cnaude.purpleirc.PurpleIRC;
+import com.cnaude.purpleirc.Utilities.BotsAndChannels;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  *
@@ -12,10 +28,10 @@ import net.md_5.bungee.api.chat.TextComponent;
 public class Voice implements IRCCommandInterface {
 
     private final PurpleIRC plugin;
-    private final String usage = "[bot] [channel] [user(s)]";
+    private final String usage = "([bot]) ([channel]) [user(s)]";
     private final String desc = "Voice an IRC user in a channel.";
     private final String name = "voice";
-    private final String fullUsage = ChatColor.WHITE + "Usage: " + ChatColor.GOLD + "/irc " + name + " " + usage; 
+    private final String fullUsage = ChatColor.WHITE + "Usage: " + ChatColor.GOLD + "/irc " + name + " " + usage;
 
     /**
      *
@@ -32,24 +48,32 @@ public class Voice implements IRCCommandInterface {
      */
     @Override
     public void dispatch(CommandSender sender, String[] args) {
+        BotsAndChannels bac;
+        int idx;
+
         if (args.length >= 4) {
-            String bot = args[1];
-            String channelName = args[2];
-            if (plugin.ircBots.containsKey(bot)) {
-                for (int i = 3; i < args.length; i++) {
-                    // #channel, user
-                    plugin.ircBots.get(bot).voice(channelName, args[i]);
-                    sender.sendMessage(new TextComponent("Giving voice status to " 
-                            + ChatColor.WHITE + args[i] 
-                            + ChatColor.RESET + " on " 
-                            + ChatColor.WHITE + channelName));
-                }
-            } else {
-                sender.sendMessage(new TextComponent(plugin.invalidBotName.replace("%BOT%", bot)));
-            }
+            bac = new BotsAndChannels(plugin, sender, args[1], args[2]);
+            idx = 3;
+        } else if (args.length == 2) {
+            bac = new BotsAndChannels(plugin, sender);
+            idx = 1;
         } else {
-            sender.sendMessage(new TextComponent(fullUsage));
+            sender.sendMessage(fullUsage);
+            return;
         }
+        if (bac.bot.size() > 0 && bac.channel.size() > 0) {
+            for (String botName : bac.bot) {
+                for (String channelName : bac.channel) {
+                    for (int i = idx; i < args.length; i++) {
+                        plugin.ircBots.get(botName).voice(channelName, args[i]);
+                        sender.sendMessage("Giving voice status to "
+                                + ChatColor.WHITE + args[i]
+                                + ChatColor.RESET + " on "
+                                + ChatColor.WHITE + channelName);
+                    }
+                }
+            }
+        }        
     }
 
     @Override

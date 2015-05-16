@@ -31,6 +31,7 @@ public class GamePluginMessageListener
             return;
         }
         if (bungeeChatServer == null) {
+            plugin.logDebug("[receievePluginMessage]: BungeeChatBungee not found.");
             return;
         }
         byte[] bytes = event.getData();
@@ -39,7 +40,7 @@ public class GamePluginMessageListener
             return;
         }
         */
-
+        
         ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
         ChatMessage cm = new ChatMessage(in);        
         

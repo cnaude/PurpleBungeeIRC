@@ -20,25 +20,27 @@ public class ChatMessage {
     private String playerGroup = "";
 
     public ChatMessage(ByteArrayDataInput in) {
-        channel = in.readUTF();
-        message = in.readUTF();
-        sender = in.readUTF();
-        try {
-            heroColor = in.readUTF();
-            heroNick = in.readUTF();
+        channel = readUTF(in);
+        message = readUTF(in);
+        sender = readUTF(in);
 
-            playerPrefix = in.readUTF();
-            playerSuffix = in.readUTF();
-            groupPrefix = in.readUTF();
-            groupSuffix = in.readUTF();
-            playerGroup = in.readUTF();
-        } catch (IllegalStateException ex) {
+        heroColor = readUTF(in);
+        heroNick = readUTF(in);
 
-        }
+        playerPrefix = readUTF(in);
+        playerSuffix = readUTF(in);
+        groupPrefix = readUTF(in);
+        groupSuffix = readUTF(in);
+        playerGroup = readUTF(in);
+
     }
 
-    public ChatMessage() {
-
+    private String readUTF(ByteArrayDataInput in) {
+        try {
+            return in.readUTF();
+        } catch (IllegalStateException ex) {
+        }
+        return "";
     }
 
     public void setMessage(String s) {

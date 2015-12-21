@@ -1,6 +1,7 @@
 package com.cnaude.purpleirc.Utilities;
 
 import com.cnaude.purpleirc.ChatMessage;
+import com.cnaude.purpleirc.MvChatMessage;
 import com.cnaude.purpleirc.PurpleBot;
 import com.cnaude.purpleirc.PurpleIRC;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -282,6 +283,28 @@ public class ChatTokenizer {
                 .replace("%HERONICK%", cm.getHeroNick())
                 .replace("%HEROCOLOR%", plugin.colorConverter.gameColorsToIrc(cm.getHeroColor()))
                 .replace("%CHANNEL%", cm.getChannel());
+    }
+
+    public String chatMvTokenizer(ProxiedPlayer player, MvChatMessage cm, String template) {
+        return gameChatToIRCTokenizer(player, template, cm.getMessage())
+                .replace("%MVCHANNEL%", cm.getChannel())
+                .replace("%CHANNEL%", cm.getChannel());
+    }
+
+    public String ircChatToMVChatTokenizer(PurpleBot ircBot, User user, org.pircbotx.Channel channel, String template, String message, String hChannel) {
+        String ircNick = user.getNick();
+        String tmpl;
+        ProxiedPlayer player = this.getPlayer(ircNick);
+        if (player != null) {
+            tmpl = playerTokenizer(player, template);
+        } else {
+            tmpl = playerTokenizer(ircNick, template);
+        }
+        return plugin.colorConverter.ircColorsToGame(ircUserTokenizer(tmpl, user)
+                .replace("%MVCHANNEL%", hChannel)
+                .replace("%NICKPREFIX%", ircBot.getNickPrefix(user, channel))
+                .replace("%MESSAGE%", message)
+                .replace("%CHANNEL%", channel.getName()));
     }
 
     /**

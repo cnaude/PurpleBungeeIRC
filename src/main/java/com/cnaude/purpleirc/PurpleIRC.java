@@ -1,40 +1,9 @@
 package com.cnaude.purpleirc;
 
 import com.cnaude.purpleirc.Commands.IRCCommandInterface;
-import com.cnaude.purpleirc.GameListeners.GamePlayerChatListener;
-import com.cnaude.purpleirc.GameListeners.GamePlayerJoinListener;
-import com.cnaude.purpleirc.GameListeners.GamePlayerQuitListener;
-import com.cnaude.purpleirc.GameListeners.GamePluginMessageListener;
-import com.cnaude.purpleirc.GameListeners.GameServerSwitchListener;
-import com.cnaude.purpleirc.Utilities.CaseInsensitiveMap;
-import com.cnaude.purpleirc.Utilities.ChatTokenizer;
-import com.cnaude.purpleirc.Utilities.ColorConverter;
-import com.cnaude.purpleirc.Utilities.IRCMessageHandler;
-import com.cnaude.purpleirc.Utilities.Query;
-import com.cnaude.purpleirc.Utilities.RegexGlobber;
+import com.cnaude.purpleirc.GameListeners.*;
+import com.cnaude.purpleirc.Utilities.*;
 import com.google.common.base.Joiner;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.management.ManagementFactory;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -46,6 +15,15 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import org.pircbotx.IdentServer;
+
+import java.io.*;
+import java.lang.management.ManagementFactory;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.text.Collator;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -123,6 +101,10 @@ public class PurpleIRC extends Plugin {
     private final File cacheFile;
     public HashMap<String, IRCCommandInterface> commands;
     public ArrayList<String> sortedCommands;
+    private CaseInsensitiveMap<CaseInsensitiveMap<String>> mvChannelMessages;
+    private CaseInsensitiveMap<CaseInsensitiveMap<String>> mvActionMessages;
+    private CaseInsensitiveMap<CaseInsensitiveMap<String>> ircMvChannelMessages;
+    private CaseInsensitiveMap<CaseInsensitiveMap<String>> ircMvActionMessages;
 
     public PurpleIRC() {
         this.sortedCommands = new ArrayList<>();
@@ -135,6 +117,10 @@ public class PurpleIRC extends Plugin {
         this.ircHeroActionChannelMessages = new CaseInsensitiveMap<>();
         this.heroChannelMessages = new CaseInsensitiveMap<>();
         this.heroActionChannelMessages = new CaseInsensitiveMap<>();
+        this.mvChannelMessages = new CaseInsensitiveMap<>();
+        this.mvActionMessages = new CaseInsensitiveMap<>();
+        this.ircMvActionMessages = new CaseInsensitiveMap<>();
+        this.ircMvChannelMessages = new CaseInsensitiveMap<>();
         this.serverMaxCounts = new HashMap<>();
         this.displayNameCache = new CaseInsensitiveMap<>();
         this.cacheFile = new File("plugins/PurpleIRC/displayName.cache");
@@ -720,5 +706,44 @@ public class PurpleIRC extends Plugin {
             logError("Problem saving to " + configFile.getName() + ": " + ex.getMessage());
         }
     }
-        
+
+    public String getMineverseChannelTemplate(String botNick, String channel)
+    {
+        String tmpl = getMvTemplate(mvChannelMessages, botNick, channel);
+        if (tmpl.isEmpty()) {
+            return getMsgTemplate(MAINCONFIG, TemplateName.HERO_CHAT);
+        }
+        return getMvTemplate(mvChannelMessages, botNick, channel);
+    }
+
+    public String getMvTemplate(CaseInsensitiveMap<CaseInsensitiveMap<String>> mv,
+                                  String botName, String hChannel) {
+        if (mv.containsKey(botName)) {
+            if (mv.get(botName).containsKey(hChannel)) {
+                return mv.get(botName).get(hChannel);
+            }
+        }
+        if (mv.containsKey(MAINCONFIG)) {
+            if (mv.get(MAINCONFIG).containsKey(hChannel)) {
+                return mv.get(MAINCONFIG).get(hChannel);
+            }
+        }
+        return "";
+    }
+
+    public String getIRCMVChatChannelTemplate(String botName, String hChannel) {
+        String tmpl = getHeroTemplate(ircHeroChannelMessages, botName, hChannel);
+        if (tmpl.isEmpty()) {
+            return getMsgTemplate(MAINCONFIG, TemplateName.IRC_HERO_CHAT);
+        }
+        return getHeroTemplate(ircHeroChannelMessages, botName, hChannel);
+    }
+
+    public String getIRCMVActionChannelTemplate(String botName, String hChannel) {
+        String tmpl = getHeroTemplate(ircHeroActionChannelMessages, botName, hChannel);
+        if (tmpl.isEmpty()) {
+            return getMsgTemplate(MAINCONFIG, TemplateName.IRC_HERO_ACTION);
+        }
+        return getHeroTemplate(ircHeroActionChannelMessages, botName, hChannel);
+    }
 }

@@ -109,6 +109,7 @@ public final class PurpleBot {
     private final String fileName;
     String version;
     String finger;
+    final String regex = ".*(https?|ftp|file)://.*";
 
     private final ScheduledTask bt;
 
@@ -767,6 +768,9 @@ public final class PurpleBot {
 
     /**
      * Called from normal game chat listener
+     *
+     * @param player
+     * @param message
      */
     public void gameChat(ProxiedPlayer player, String message) {
         if (!this.isConnected()) {
@@ -1677,7 +1681,21 @@ public final class PurpleBot {
                 }
             }
         }
-        return message;
+        String strings[] = message.split(" ");
+        for (int x = 0; x < strings.length; x++) {
+            if (strings[x].matches(regex)) {
+                strings[x] = ChatColor.stripColor(strings[x]);
+            }
+        }
+        StringBuilder builder = new StringBuilder();
+        for (String string : strings) {
+            if (builder.length() > 0) {
+                builder.append(" ");
+            }
+            builder.append(string);
+        }
+
+        return builder.toString();
     }
 
     // Broadcast chat messages from IRC
@@ -1971,6 +1989,10 @@ public final class PurpleBot {
 
     /**
      * Broadcast topic changes from IRC
+     *
+     * @param user
+     * @param channel
+     * @param message
      */
     public void broadcastIRCTopic(User user, org.pircbotx.Channel channel, String message) {
         if (isMessageEnabled(channel, TemplateName.IRC_TOPIC)) {

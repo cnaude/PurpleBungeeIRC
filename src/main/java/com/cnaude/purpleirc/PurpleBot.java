@@ -758,12 +758,8 @@ public final class PurpleBot {
     }
 
     private boolean isPlayerInValidWorld(ProxiedPlayer player, String channelName) {
-        if (worldList.containsKey(channelName)) {
-            if (worldList.get(channelName).contains("*")) {
-                return true;
-            }
-        }
-        return false;
+        // There does not appear to be a way get the player's world info in bungeecord
+        return true;
     }
 
     /**
@@ -2023,6 +2019,7 @@ public final class PurpleBot {
 
     /**
      * Broadcast disconnect messages from IRC
+     * @param nick
      */
     public void broadcastIRCDisconnect(String nick) {
         plugin.broadcast("[" + nick + "] Disconnected from IRC server.", "irc.message.disconnect");
@@ -2030,6 +2027,7 @@ public final class PurpleBot {
 
     /**
      * Broadcast connect messages from IRC
+     * @param nick
      */
     public void broadcastIRCConnect(String nick) {
         plugin.broadcast("[" + nick + "] Connected to IRC server.", "irc.message.connect");

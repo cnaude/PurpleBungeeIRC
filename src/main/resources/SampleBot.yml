@@ -72,9 +72,6 @@ channels:
   # Use %2E instead of dots in the channel names.
   # Example: minecraft%2Etest == minecraft.test  
   '#minecraft-test':
-    # worlds we listen to for this channel
-    worlds:
-    - '*'
     # autojoin - Join the channel automatically on connect
     autojoin: true
     # modes - Channel modes to set

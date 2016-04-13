@@ -208,7 +208,14 @@ public class ChatTokenizer {
         String worldAlias = "";
         String jobShort = "";
         String job = "";
-        String serverName = player.getServer().getInfo().getName();
+        String serverName;
+        try {
+            serverName = player.getServer().getInfo().getName();
+        } catch (Exception ex) {
+            plugin.logDebug(ex.getMessage());
+            serverName = "";
+        }
+
         if (playerIP == null) {
             playerIP = "";
         }

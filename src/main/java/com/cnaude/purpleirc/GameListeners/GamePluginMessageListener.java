@@ -5,7 +5,7 @@ import com.cnaude.purpleirc.PurpleBot;
 import com.cnaude.purpleirc.PurpleIRC;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
-import com.jumanjicraft.BungeeChatServer.BungeeChatServer;
+import com.jumanjicraft.bungeechat.BungeeChat;
 import java.io.IOException;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -18,11 +18,11 @@ public class GamePluginMessageListener
         implements Listener {
 
     final private PurpleIRC plugin;
-    final private BungeeChatServer bungeeChatServer;
+    final private BungeeChat bungeeChatServer;
 
     public GamePluginMessageListener(PurpleIRC plugin) {
         this.plugin = plugin;
-        this.bungeeChatServer = (BungeeChatServer) plugin.getProxy().getPluginManager().getPlugin("BungeeChatBungee");
+        this.bungeeChatServer = (BungeeChat) plugin.getProxy().getPluginManager().getPlugin("BungeeChatBungee");
     }
 
     @EventHandler

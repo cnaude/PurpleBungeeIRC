@@ -59,10 +59,11 @@
         </dependency>
         
         <!-- Herochat -->
+        
         <dependency>
-            <groupId>com.cnaude.bungeechatproxy</groupId>
-            <artifactId>BungeeChatProxy</artifactId>
-            <version>0.2</version>
+            <groupId>com.cnaude.herochat</groupId>
+            <artifactId>HerochatBungeeBridge</artifactId>
+            <version>1.1.0</version>
         </dependency>
 
     </dependencies>

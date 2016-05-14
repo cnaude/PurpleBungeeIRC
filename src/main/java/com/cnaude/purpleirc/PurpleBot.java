@@ -110,6 +110,7 @@ public final class PurpleBot {
     String version;
     String finger;
     final String regex = ".*(https?|ftp|file)://.*";
+    private CommandSender zncSender;
 
     private final ScheduledTask bt;
 
@@ -441,6 +442,24 @@ public final class PurpleBot {
                 bot.sendRaw().rawLineNow(message);
             }
         });
+    }
+
+    public void znc(final CommandSender sender, final String message) {
+        zncSender = sender;
+        plugin.getProxy().getScheduler().runAsync(plugin, new Runnable() {
+            @Override
+            public void run() {
+                bot.sendRaw().rawLineNow("znc " + message);
+            }
+        });
+    }
+
+    public void zncResponse(String message) {
+        if (zncSender != null) {
+            zncSender.sendMessage(message);
+        } else {
+            plugin.logInfo(message);
+        }
     }
 
     public void asyncIdentify(final String password) {
@@ -2019,6 +2038,7 @@ public final class PurpleBot {
 
     /**
      * Broadcast disconnect messages from IRC
+     *
      * @param nick
      */
     public void broadcastIRCDisconnect(String nick) {
@@ -2027,6 +2047,7 @@ public final class PurpleBot {
 
     /**
      * Broadcast connect messages from IRC
+     *
      * @param nick
      */
     public void broadcastIRCConnect(String nick) {

@@ -66,6 +66,7 @@ public class CommandHandlers extends Command {
         commands.put("voice", new Voice(plugin));
         commands.put("whois", new Whois(plugin));
         commands.put("help", new Help(plugin));
+        commands.put("znc", new Znc(plugin));
 
         for (String s : commands.keySet()) {
             sortedCommands.add(s);

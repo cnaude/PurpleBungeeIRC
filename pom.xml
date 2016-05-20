@@ -135,27 +135,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>  
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.8</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <configuration>
-                            <target>                                                                              
-                                <copy file="../${project.name}/target/${project.name}-${project.version}.jar" tofile="../${project.name}/target/${project.name}.jar"/>
-                                <exec dir="../${project.name}/target" executable="scp">
-                                    <arg line="${project.name}.jar cnaude@giraffe.lan:bungee/plugins/"/>
-                                </exec>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>        
+            </plugin>       
         </plugins>
     </build>
             

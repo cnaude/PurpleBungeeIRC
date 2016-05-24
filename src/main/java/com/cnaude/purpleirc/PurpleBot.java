@@ -1502,6 +1502,8 @@ public final class PurpleBot {
             if (user.getChannels() != null) {
                 if (user.isIrcop()) {
                     return plugin.ircNickPrefixIrcOp;
+                } else if (user.getChannelsOwnerIn().contains(channel)) {
+                    return plugin.ircNickPrefixOwner;
                 } else if (user.getChannelsSuperOpIn().contains(channel)) {
                     return plugin.ircNickPrefixSuperOp;
                 } else if (user.getChannelsOpIn().contains(channel)) {

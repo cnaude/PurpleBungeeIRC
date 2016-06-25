@@ -41,6 +41,9 @@ public class PartListener extends ListenerAdapter {
 
         if (ircBot.isValidChannel(channel.getName())) {
             ircBot.broadcastIRCPart(user, channel);
+            if (plugin.tabListHook != null) {
+                plugin.tabListHook.remFromTabList(user.getNick());
+            }
         }
     }
 }

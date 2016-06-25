@@ -3,6 +3,7 @@ version: ${project.version}
 description: ${project.description}
 author: cnaude
 main: com.cnaude.purpleirc.PurpleIRC
+softDepends: ['BungeeTabListPlus']
 permissions:
   'irc.reloadconfig':
     description: Gives player access to the /irc reloadconfig.

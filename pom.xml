@@ -30,6 +30,11 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+        
+        <repository>
+            <id>codecrafter47-repo</id>
+            <url>http://nexus.codecrafter47.dyndns.eu/content/repositories/public/</url>
+        </repository>
     </repositories>
     
     <dependencies>       
@@ -65,6 +70,13 @@
             <artifactId>HerochatBungeeBridge</artifactId>
             <version>1.1.0</version>
         </dependency>
+        
+        <dependency>
+            <groupId>codecrafter47.bungeetablistplus</groupId>
+            <artifactId>bungeetablistplus-api-bungee</artifactId>
+            <version>2.4.3</version>
+            <scope>provided</scope>
+        </dependency>
 
     </dependencies>
 
@@ -98,7 +110,7 @@
                 </configuration>
             </plugin>
 
-             <plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>2.4.3</version>

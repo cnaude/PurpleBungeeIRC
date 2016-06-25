@@ -100,6 +100,9 @@ public final class PurpleBot {
     public CaseInsensitiveMap<Collection<String>> worldList;
     public CaseInsensitiveMap<Collection<String>> muteList;
     public CaseInsensitiveMap<Collection<String>> enabledMessages;
+    public CaseInsensitiveMap<String> userPrefixes;
+    public CaseInsensitiveMap<CaseInsensitiveMap<String>> firstOccurrenceReplacements;
+    public String defaultCustomPrefix;
     public CaseInsensitiveMap<CaseInsensitiveMap<CaseInsensitiveMap<String>>> commandMap;
     public ArrayList<CommandSender> whoisSenders;
     public List<String> channelCmdNotifyRecipients;
@@ -130,6 +133,8 @@ public final class PurpleBot {
         this.channelCmdNotifyIgnore = new ArrayList<>();
         this.commandMap = new CaseInsensitiveMap<>();
         this.enabledMessages = new CaseInsensitiveMap<>();
+        this.firstOccurrenceReplacements = new CaseInsensitiveMap<>();
+        this.userPrefixes = new CaseInsensitiveMap<>();
         this.muteList = new CaseInsensitiveMap<>();
         this.worldList = new CaseInsensitiveMap<>();
         this.opsList = new CaseInsensitiveMap<>();
@@ -555,6 +560,27 @@ public final class PurpleBot {
 
             channelCmdNotifyMode = config.getString("command-notify.mode", "msg");
             plugin.logDebug(" channelCmdNotifyMode => " + channelCmdNotifyMode);
+
+            for (String s : config.getStringList("custom-prefixes")) {
+                String pair[] = s.split(" ", 2);
+                if (pair.length > 0) {
+                    userPrefixes.put(pair[0], ChatColor.translateAlternateColorCodes('&', pair[1]));
+                }
+            }
+            for (String key : userPrefixes.keySet()) {
+                plugin.logDebug(" CustomPrefix: " + key + " => " + userPrefixes.get(key));
+            }
+            defaultCustomPrefix = ChatColor.translateAlternateColorCodes('&', config.getString("custom-prefix-default", "[IRC]"));
+
+            for (String s : config.getStringList("replace-first-occurrences")) {
+                String pair[] = s.split(" ", 3);
+                if (pair.length > 2) {
+                    CaseInsensitiveMap rfo = new CaseInsensitiveMap<>();
+                    rfo.put(pair[1], pair[2]);
+                    firstOccurrenceReplacements.put(pair[0], rfo);
+                    plugin.logDebug("ReplaceFirstOccurence: " + pair[0] + " => " + pair[1] + " => " + pair[2]);
+                }
+            }
 
             // build command notify recipient list            
             for (String recipient : config.getStringList("command-notify.recipients")) {
@@ -1565,6 +1591,9 @@ public final class PurpleBot {
                 //plugin.logDebug("O: " + name);
                 if (!users.contains(name)) {
                     plugin.logDebug("Removing " + name + " from list.");
+                    if (plugin.tabListHook != null) {
+                        plugin.tabListHook.remFromTabList(name);
+                    }
                 }
             }
             channelNicks.remove(channelName);

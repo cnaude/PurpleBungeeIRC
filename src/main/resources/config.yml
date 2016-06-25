@@ -98,10 +98,12 @@ strip-game-colors: false
 strip-irc-colors: false
 # Strip IRC background colors (recommend leaving this as true)
 strip-irc-bg-colors: true
-# Add IRC names to in-game tab list
+# Add IRC names to in-game tab list (Requires BungeeTabPlus)
 custom-tab-list: false
-# Nothing to see here
+# Custom tab prefix
 custom-tab-prefix: '[I] '
+# Custom tab icon
+custom-tab-icon: 'MHF_ArrowRight'
 # IRC nick must be an exact match to a player name for token expanding
 nick-exact-match: true
 # IRC nick prefixes (can include & color codes)

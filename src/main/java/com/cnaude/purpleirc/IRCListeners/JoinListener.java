@@ -6,6 +6,7 @@ package com.cnaude.purpleirc.IRCListeners;
 
 import com.cnaude.purpleirc.PurpleBot;
 import com.cnaude.purpleirc.PurpleIRC;
+import java.util.concurrent.TimeUnit;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
 import org.pircbotx.hooks.ListenerAdapter;
@@ -36,9 +37,9 @@ public class JoinListener extends ListenerAdapter {
      */
     @Override
     public void onJoin(JoinEvent event) {
-        Channel channel = event.getChannel();
-        String channelName = channel.getName();
-        User user = event.getUser();
+        final Channel channel = event.getChannel();
+        final String channelName = channel.getName();
+        final User user = event.getUser();
 
         if (!ircBot.isValidChannel(channel.getName())) {
             plugin.logDebug("Invalid channel: " + channelName);
@@ -67,6 +68,18 @@ public class JoinListener extends ListenerAdapter {
                     ircBot.asyncRawlineNow(ircBot.joinMsg.get(channelName));
                 }
             }
+            if (plugin.tabListHook != null) {
+                plugin.tabListHook.updateTabList();
+            }
         }
+        plugin.getProxy().getScheduler().schedule(plugin, new Runnable() {
+            @Override
+            public void run() {
+                if (plugin.tabListHook != null) {
+                    plugin.tabListHook.addToTabList(user.getNick(), ircBot, channel);
+                }
+            }
+        }, 2, TimeUnit.SECONDS);
+
     }
 }

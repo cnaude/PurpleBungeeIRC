@@ -62,7 +62,7 @@ public class ChatTokenizer {
             plugin.logDebug("ircChatToGameTokenizer: null player: " + ircNick);
             tmpl = playerTokenizer(ircNick, template);
         }
-        return plugin.colorConverter.ircColorsToGame(tmpl
+        return plugin.colorConverter.ircColorsToGame(ircUserTokenizer(tmpl, user, ircBot)
                 .replace("%NAME%", ircNick)
                 .replace("%NICKPREFIX%", ircBot.getNickPrefix(user, channel))
                 .replace("%MESSAGE%", message)
@@ -307,7 +307,7 @@ public class ChatTokenizer {
         } else {
             tmpl = playerTokenizer(ircNick, template);
         }
-        return plugin.colorConverter.ircColorsToGame(ircUserTokenizer(tmpl, user)
+        return plugin.colorConverter.ircColorsToGame(ircUserTokenizer(tmpl, user, ircBot)
                 .replace("%MVCHANNEL%", hChannel)
                 .replace("%NICKPREFIX%", ircBot.getNickPrefix(user, channel))
                 .replace("%MESSAGE%", message)
@@ -334,18 +334,19 @@ public class ChatTokenizer {
         } else {
             tmpl = playerTokenizer(ircNick, template);
         }
-        return plugin.colorConverter.ircColorsToGame(ircUserTokenizer(tmpl, user)
+        return plugin.colorConverter.ircColorsToGame(ircUserTokenizer(tmpl, user, ircBot)
                 .replace("%HEROCHANNEL%", hChannel)
                 .replace("%NICKPREFIX%", ircBot.getNickPrefix(user, channel))
                 .replace("%MESSAGE%", message)
                 .replace("%CHANNEL%", channel.getName()));
     }
 
-    public String ircUserTokenizer(String template, User user) {
+    public String ircUserTokenizer(String template, User user, PurpleBot ircBot) {
         String host = user.getHostmask();
         String server = user.getServer();
         String away = user.getAwayMessage();
         String ircNick = user.getNick();
+        String customPrefix = ircBot.defaultCustomPrefix;
         if (host == null) {
             host = "";
         }
@@ -355,7 +356,18 @@ public class ChatTokenizer {
         if (away == null) {
             away = "";
         }
+        plugin.logDebug("customPrefix before: " + customPrefix);
+        if (!ircBot.userPrefixes.isEmpty()) {
+            for (String key : ircBot.userPrefixes.keySet()) {
+                if (key.equalsIgnoreCase(user.getNick()) || ircBot.checkUserMask(user, key)) {
+                    customPrefix = ircBot.userPrefixes.get(key);
+                    break;
+                }
+            }
+        }
+        plugin.logDebug("customPrefix after: " + customPrefix);
         return template.replace("%HOST%", host)
+                .replace("%CUSTOMPREFIX%", customPrefix)
                 .replace("%NAME%", ircNick)
                 .replace("%SERVER%", server)
                 .replace("%AWAY%", away);

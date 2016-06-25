@@ -2,6 +2,7 @@ package com.cnaude.purpleirc;
 
 import com.cnaude.purpleirc.Commands.IRCCommandInterface;
 import com.cnaude.purpleirc.GameListeners.*;
+import com.cnaude.purpleirc.Hooks.BungeeTabListPlusHook;
 import com.cnaude.purpleirc.Utilities.*;
 import com.google.common.base.Joiner;
 import net.md_5.bungee.api.ChatColor;
@@ -45,7 +46,7 @@ public class PurpleIRC extends Plugin {
     private final CaseInsensitiveMap<CaseInsensitiveMap<String>> ircHeroActionChannelMessages;
     private final CaseInsensitiveMap<CaseInsensitiveMap<String>> heroChannelMessages;
     private final CaseInsensitiveMap<CaseInsensitiveMap<String>> heroActionChannelMessages;
-    private final HashMap<ServerInfo,Integer> serverMaxCounts;
+    private final HashMap<ServerInfo, Integer> serverMaxCounts;
     public String defaultPlayerSuffix,
             defaultPlayerPrefix,
             defaultPlayerGroup,
@@ -53,6 +54,7 @@ public class PurpleIRC extends Plugin {
             defaultPlayerWorld,
             defaultGroupSuffix,
             customTabPrefix,
+            customTabIcon,
             heroChatEmoteFormat,
             listFormat,
             listSeparator,
@@ -63,6 +65,7 @@ public class PurpleIRC extends Plugin {
             ircNickPrefixOp,
             ircNickPrefixHalfOp,
             ircNickPrefixVoice;
+    public boolean customTabList;
     private final CaseInsensitiveMap<String> displayNameCache;
 
     public ArrayList<String> kickedPlayers = new ArrayList<>();
@@ -96,16 +99,17 @@ public class PurpleIRC extends Plugin {
     public IRCMessageHandler ircMessageHandler;
     public CommandQueueWatcher commandQueue;
     public CommandHandlers commandHandlers;
+    public BungeeTabListPlusHook tabListHook;
     Configuration mainConfig;
 
     public ChatTokenizer tokenizer;
     private final File cacheFile;
     public HashMap<String, IRCCommandInterface> commands;
     public ArrayList<String> sortedCommands;
-    private CaseInsensitiveMap<CaseInsensitiveMap<String>> mvChannelMessages;
-    private CaseInsensitiveMap<CaseInsensitiveMap<String>> mvActionMessages;
-    private CaseInsensitiveMap<CaseInsensitiveMap<String>> ircMvChannelMessages;
-    private CaseInsensitiveMap<CaseInsensitiveMap<String>> ircMvActionMessages;
+    private final CaseInsensitiveMap<CaseInsensitiveMap<String>> mvChannelMessages;
+    private final CaseInsensitiveMap<CaseInsensitiveMap<String>> mvActionMessages;
+    private final CaseInsensitiveMap<CaseInsensitiveMap<String>> ircMvChannelMessages;
+    private final CaseInsensitiveMap<CaseInsensitiveMap<String>> ircMvActionMessages;
 
     public PurpleIRC() {
         this.sortedCommands = new ArrayList<>();
@@ -125,7 +129,6 @@ public class PurpleIRC extends Plugin {
         this.serverMaxCounts = new HashMap<>();
         this.displayNameCache = new CaseInsensitiveMap<>();
         this.cacheFile = new File("plugins/PurpleIRC/displayName.cache");
-
     }
 
     /**
@@ -166,6 +169,9 @@ public class PurpleIRC extends Plugin {
         ircMessageHandler = new IRCMessageHandler(this);
         commandQueue = new CommandQueueWatcher(this);
         updateServerCache(this);
+        if (customTabList && this.getProxy().getPluginManager().getPlugin("BungeeTabListPlus") != null) {
+            this.tabListHook = new BungeeTabListPlusHook(this);
+        }
     }
 
     /**
@@ -353,7 +359,9 @@ public class PurpleIRC extends Plugin {
         ircConnCheckInterval = mainConfig.getLong("conn-check-interval");
         ircChannelCheckInterval = mainConfig.getLong("channel-check-interval");
 
-        customTabPrefix = ChatColor.translateAlternateColorCodes('&', mainConfig.getString("custom-tab-prefix", "[IRC] "));
+        customTabPrefix = ChatColor.translateAlternateColorCodes('&', mainConfig.getString("custom-tab-prefix", ""));
+        customTabList = mainConfig.getBoolean("custom-tab-list", false);
+        customTabIcon = mainConfig.getString("custom-tab-icon", "MHF_ArrowRight");
         logDebug("custom-tab-prefix: " + customTabPrefix);
     }
 
@@ -582,7 +590,7 @@ public class PurpleIRC extends Plugin {
             }
 
             String[] data = str.toString().split("§");
-            maxPlayers = Integer.parseInt(data[data.length-1]);
+            maxPlayers = Integer.parseInt(data[data.length - 1]);
         } catch (UnknownHostException e) {
             logInfo(e.getMessage());
             return;
@@ -709,8 +717,7 @@ public class PurpleIRC extends Plugin {
         }
     }
 
-    public String getMineverseChannelTemplate(String botNick, String channel)
-    {
+    public String getMineverseChannelTemplate(String botNick, String channel) {
         String tmpl = getMvTemplate(mvChannelMessages, botNick, channel);
         if (tmpl.isEmpty()) {
             return getMsgTemplate(MAINCONFIG, TemplateName.HERO_CHAT);
@@ -719,7 +726,7 @@ public class PurpleIRC extends Plugin {
     }
 
     public String getMvTemplate(CaseInsensitiveMap<CaseInsensitiveMap<String>> mv,
-                                  String botName, String hChannel) {
+            String botName, String hChannel) {
         if (mv.containsKey(botName)) {
             if (mv.get(botName).containsKey(hChannel)) {
                 return mv.get(botName).get(hChannel);

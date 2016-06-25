@@ -42,6 +42,9 @@ public class KickListener extends ListenerAdapter {
 
         if (ircBot.isValidChannel(channel.getName())) {
             ircBot.broadcastIRCKick(recipient, user, event.getReason(), channel);
+            if (plugin.tabListHook != null) {
+                plugin.tabListHook.remFromTabList(recipient.getNick());
+            }
         }
     }
 }

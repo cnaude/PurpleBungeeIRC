@@ -45,6 +45,7 @@ public class GamePlayerJoinListener implements Listener {
                     if (event.getPlayer().getServer() != null) {
                         plugin.updateServerCache(event.getPlayer().getServer().getInfo());
                     }
+
                 }
             }
         }, 2, TimeUnit.SECONDS);

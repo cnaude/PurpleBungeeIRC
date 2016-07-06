@@ -45,8 +45,12 @@ public class IRCMessageHandler {
             plugin.logDebug("User is muted. Ignoring message from " + user.getNick() + ": " + message);
             return;
         }
-        String command = message.split(" ")[0].substring(ircBot.commandPrefix.length());
-        
+        plugin.logDebug("commandPrefix.length(): " + ircBot.commandPrefix.length());
+        String command = message.split(" ")[0];
+        if (command.length() > ircBot.commandPrefix.length()) {
+            command = command.substring(ircBot.commandPrefix.length());
+        }
+
         if (message.startsWith(ircBot.commandPrefix) && command.matches("^\\w.*")) {
 
             String commandArgs = null;
@@ -93,7 +97,7 @@ public class IRCMessageHandler {
                             for (ServerInfo si : plugin.getProxy().getServers().values()) {
                                 sendMessage(ircBot, target, plugin.getMCPlayers(si, ircBot, myChannel), ctcpResponse);
                             }
-                            
+
                             break;
                         case "@uptime":
                             sendMessage(ircBot, target, plugin.getMCUptime(), ctcpResponse);
@@ -118,20 +122,20 @@ public class IRCMessageHandler {
                             break;
                         default:
                             if (commandArgs == null) {
-                                    commandArgs = "";
-                                }
-                                if (gameCommand.contains("%ARGS%")) {
-                                    gameCommand = gameCommand.replace("%ARGS%", commandArgs);
-                                }
-                                if (gameCommand.contains("%NAME%")) {
-                                    gameCommand = gameCommand.replace("%NAME%", user.getNick());
-                                }
-                                plugin.logDebug("GM: \"" + gameCommand.trim() + "\"");
-                                try {
-                                    plugin.commandQueue.add(new IRCCommand(new IRCCommandSender(ircBot, target, plugin, ctcpResponse), gameCommand.trim()));
-                                } catch (Exception ex) {
-                                    plugin.logError(ex.getMessage());
-                                }
+                                commandArgs = "";
+                            }
+                            if (gameCommand.contains("%ARGS%")) {
+                                gameCommand = gameCommand.replace("%ARGS%", commandArgs);
+                            }
+                            if (gameCommand.contains("%NAME%")) {
+                                gameCommand = gameCommand.replace("%NAME%", user.getNick());
+                            }
+                            plugin.logDebug("GM: \"" + gameCommand.trim() + "\"");
+                            try {
+                                plugin.commandQueue.add(new IRCCommand(new IRCCommandSender(ircBot, target, plugin, ctcpResponse), gameCommand.trim()));
+                            } catch (Exception ex) {
+                                plugin.logError(ex.getMessage());
+                            }
                             break;
                     }
                 } else {

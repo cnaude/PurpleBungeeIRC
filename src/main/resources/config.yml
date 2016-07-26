@@ -87,6 +87,7 @@ message-format:
   default-player-world: 'world'
   default-player-group: ''  
 # Format for the @list command in IRC
+list-one-line: false
 list-format: '[&9%SERVER%&r] &2Online &r(%COUNT%/%MAX%): %PLAYERS%'
 list-separator: ', '
 list-player: '%NAME%'

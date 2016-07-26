@@ -56,7 +56,7 @@ public class PurpleIRC extends Plugin {
             customTabPrefix,
             customTabIcon,
             heroChatEmoteFormat,
-            listFormat,
+            listFormat,            
             listSeparator,
             listPlayer,
             ircNickPrefixIrcOp,
@@ -66,6 +66,7 @@ public class PurpleIRC extends Plugin {
             ircNickPrefixHalfOp,
             ircNickPrefixVoice;
     public boolean customTabList;
+    public boolean listSingleLine;
     private final CaseInsensitiveMap<String> displayNameCache;
 
     public ArrayList<String> kickedPlayers = new ArrayList<>();
@@ -351,6 +352,7 @@ public class PurpleIRC extends Plugin {
         ircNickPrefixHalfOp = ChatColor.translateAlternateColorCodes('&', mainConfig.getString("nick-prefixes.halfop", "%"));
         ircNickPrefixVoice = ChatColor.translateAlternateColorCodes('&', mainConfig.getString("nick-prefixes.voice", "+"));
 
+        listSingleLine = mainConfig.getBoolean("list-single-line", false);
         listFormat = ChatColor.translateAlternateColorCodes('&', mainConfig.getString("list-format", ""));
         listSeparator = ChatColor.translateAlternateColorCodes('&', mainConfig.getString("list-separator", ""));
         listPlayer = ChatColor.translateAlternateColorCodes('&', mainConfig.getString("list-player", ""));

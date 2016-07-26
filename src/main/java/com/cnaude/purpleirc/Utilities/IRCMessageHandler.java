@@ -94,8 +94,18 @@ public class IRCMessageHandler {
                 if (isValidMode(modes, user, channel)) {
                     switch (gameCommand) {
                         case "@list":
-                            for (ServerInfo si : plugin.getProxy().getServers().values()) {
-                                sendMessage(ircBot, target, plugin.getMCPlayers(si, ircBot, myChannel), ctcpResponse);
+                            if (plugin.listSingleLine) {
+                                String concatList = "";
+                                for (ServerInfo si : plugin.getProxy().getServers().values()) {
+                                    concatList += plugin.getMCPlayers(si, ircBot, myChannel);
+                                    
+                                }
+                                sendMessage(ircBot, target, concatList, ctcpResponse);
+
+                            } else {
+                                for (ServerInfo si : plugin.getProxy().getServers().values()) {
+                                    sendMessage(ircBot, target, plugin.getMCPlayers(si, ircBot, myChannel), ctcpResponse);
+                                }
                             }
 
                             break;

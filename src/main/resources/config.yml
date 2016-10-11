@@ -10,7 +10,8 @@ channel-check-interval: 5
 # The following macro tokens are also supported.
 #  %SERVER% 
 #  %NAME% 
-#  %NICKPREFIX%
+#  %NICKPREFIX% - Nick prefix (op, voice etc...)
+#  %CUSTOMPREFIX% - Custom IRC prefix (See custom-prefixes in bot yml)
 #  %DISPLAYNAME% 
 #  %PLAYERIP% - IP address of a player
 #  %CHANNEL% 

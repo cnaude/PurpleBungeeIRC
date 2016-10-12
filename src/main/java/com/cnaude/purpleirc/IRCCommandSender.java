@@ -72,18 +72,18 @@ public class IRCCommandSender implements CommandSender {
 
     @Override
     public void sendMessage(BaseComponent... bcs) {
-        TextComponent tc = new TextComponent(bcs);
-        plugin.logDebug("sendMessage[bcs]: " + tc.getText());
-        ircBot.messageQueue.add(new IRCMessage(target,
-                plugin.colorConverter.gameColorsToIrc(tc.getText()), ctcpResponse));
+        for (BaseComponent bc : bcs) {
+            plugin.logDebug("sendMessage[bcs]: " + bc.toPlainText());
+            ircBot.messageQueue.add(new IRCMessage(target,
+                    plugin.colorConverter.gameColorsToIrc(bc.toPlainText()), ctcpResponse));
+        }
     }
 
     @Override
     public void sendMessage(BaseComponent bc) {
-        TextComponent tc = new TextComponent(bc);
-        plugin.logDebug("sendMessage[bc]: " + tc.getText());
+        plugin.logDebug("sendMessage[bc]: " + bc.toPlainText());
         ircBot.messageQueue.add(new IRCMessage(target,
-                plugin.colorConverter.gameColorsToIrc(tc.getText()), ctcpResponse));
+                plugin.colorConverter.gameColorsToIrc(bc.toPlainText()), ctcpResponse));
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.cnaude.purpleirc;
 import java.util.Collection;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
-
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  *
@@ -28,7 +28,7 @@ public class IRCCommandSender implements CommandSender {
                 plugin.colorConverter.gameColorsToIrc(message), ctcpResponse));
     }
 
-     /**
+    /**
      *
      * @param ircBot
      * @param target
@@ -51,8 +51,6 @@ public class IRCCommandSender implements CommandSender {
         return "CONSOLE";
     }
 
-    
-
     /**
      *
      * @param arg0
@@ -74,12 +72,18 @@ public class IRCCommandSender implements CommandSender {
 
     @Override
     public void sendMessage(BaseComponent... bcs) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        TextComponent tc = new TextComponent(bcs);
+        plugin.logDebug("sendMessage[bcs]: " + tc.getText());
+        ircBot.messageQueue.add(new IRCMessage(target,
+                plugin.colorConverter.gameColorsToIrc(tc.getText()), ctcpResponse));
     }
 
     @Override
     public void sendMessage(BaseComponent bc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        TextComponent tc = new TextComponent(bc);
+        plugin.logDebug("sendMessage[bc]: " + tc.getText());
+        ircBot.messageQueue.add(new IRCMessage(target,
+                plugin.colorConverter.gameColorsToIrc(tc.getText()), ctcpResponse));
     }
 
     @Override

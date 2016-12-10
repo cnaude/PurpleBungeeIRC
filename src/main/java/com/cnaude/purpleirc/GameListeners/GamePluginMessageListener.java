@@ -27,6 +27,7 @@ public class GamePluginMessageListener
 
     @EventHandler
     public void receievePluginMessage(PluginMessageEvent event) throws IOException {
+        plugin.logDebug("Received event from PluginMessageEvent");
         if (!event.getTag().equalsIgnoreCase("BungeeChat")) {
             return;
         }
@@ -56,6 +57,7 @@ public class GamePluginMessageListener
         if (player != null) {
             if (player.hasPermission("irc.message.gamechat")) {
                 for (PurpleBot ircBot : plugin.ircBots.values()) {
+                    plugin.logDebug("Calling heroChat from receievePluginMessage for " + ircBot.botNick);
                     ircBot.heroChat(player, cm);
                 }
             }

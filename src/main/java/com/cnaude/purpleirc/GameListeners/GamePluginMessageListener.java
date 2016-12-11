@@ -36,6 +36,8 @@ public class GamePluginMessageListener implements Listener {
 
         ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
         ChatMessage cm = new ChatMessage(in);
+        plugin.logDebug("Previous token: " + previousToken);
+        plugin.logDebug("New token: " + cm.getToken());
         if (cm.getToken().equals(previousToken)) {
             plugin.logDebug("[" + cm.getToken() + "] Duplicate message detected. Dropping.");
             return;

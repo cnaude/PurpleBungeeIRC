@@ -1786,7 +1786,7 @@ public final class PurpleBot {
                 out.writeUTF(rawHCMessage);
                 for (ServerInfo server : this.plugin.getProxy().getServers().values()) {
                     if (!server.getPlayers().isEmpty()) {
-                        server.sendData("BungeeChat", out.toByteArray());
+                        server.sendData("BungeeCord", out.toByteArray());
                     }
                 }
             }

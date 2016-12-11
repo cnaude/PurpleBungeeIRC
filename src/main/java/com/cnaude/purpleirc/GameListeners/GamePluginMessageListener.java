@@ -30,7 +30,10 @@ public class GamePluginMessageListener
         if (!event.getTag().equalsIgnoreCase("BungeeChat")) {
             return;
         }
-        plugin.logDebug("Received BungeeChat event from PluginMessageEvent");
+        plugin.logDebug("Received BungeeChat event from PluginMessageEvent: " + event.isCancelled());
+        if (event.isCancelled()) {
+            plugin.logDebug("Ignoring cancelled event.");
+        }
         if (bungeeChatServer == null) {
             plugin.logDebug("[receievePluginMessage]: BungeeChatBungee not found.");
             return;

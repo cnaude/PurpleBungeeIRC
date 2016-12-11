@@ -20,7 +20,7 @@ public class GamePluginMessageListener implements Listener {
 
     public GamePluginMessageListener(PurpleIRC plugin) {
         this.plugin = plugin;
-        this.previousToken = "";
+        this.previousToken = String.valueOf(System.currentTimeMillis());
     }
 
     @EventHandler
@@ -41,7 +41,7 @@ public class GamePluginMessageListener implements Listener {
             return;
         }
         previousToken = cm.getToken();
-        
+
         ProxiedPlayer player = null;
         cm.setMessage(ChatColor.translateAlternateColorCodes('&', cm.getMessage()));
         for (ServerInfo server : plugin.getProxy().getServers().values()) {

@@ -13,19 +13,17 @@ import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
-public class GamePluginMessageListener implements Listener {
+public class BungeeHerochatListener implements Listener {
 
     final private PurpleIRC plugin;
-    private String previousToken;
 
-    public GamePluginMessageListener(PurpleIRC plugin) {
+    public BungeeHerochatListener(PurpleIRC plugin) {
         this.plugin = plugin;
-        this.previousToken = String.valueOf(System.currentTimeMillis());
     }
 
     @EventHandler
     public void receievePluginMessage(PluginMessageEvent event) throws IOException {
-        if (!event.getTag().equalsIgnoreCase("BungeeChat")) {
+        if (!event.getTag().equalsIgnoreCase("BungeeHeroChat")) {
             return;
         }
         plugin.logDebug("Received BungeeChat event from PluginMessageEvent: " + event.isCancelled());
@@ -36,13 +34,6 @@ public class GamePluginMessageListener implements Listener {
 
         ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
         ChatMessage cm = new ChatMessage(in);
-        plugin.logDebug("Previous token: " + previousToken);
-        plugin.logDebug("New token: " + cm.getToken());
-        if (cm.getToken().equals(previousToken)) {
-            plugin.logDebug("[" + cm.getToken() + "] Duplicate message detected. Dropping.");
-            return;
-        }
-        previousToken = cm.getToken();
 
         ProxiedPlayer player = null;
         cm.setMessage(ChatColor.translateAlternateColorCodes('&', cm.getMessage()));

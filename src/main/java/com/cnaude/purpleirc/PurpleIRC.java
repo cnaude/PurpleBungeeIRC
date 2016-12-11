@@ -158,7 +158,7 @@ public class PurpleIRC extends Plugin {
         this.getProxy().getPluginManager().registerListener(this, new GamePlayerJoinListener(this));
         this.getProxy().getPluginManager().registerListener(this, new GamePlayerQuitListener(this));
         this.getProxy().getPluginManager().registerListener(this, new GameServerSwitchListener(this));
-        this.getProxy().getPluginManager().registerListener(this, new GamePluginMessageListener(this));
+        this.getProxy().getPluginManager().registerListener(this, new BungeeHerochatListener(this));
         regexGlobber = new RegexGlobber();
         tokenizer = new ChatTokenizer(this);
         commandHandlers = new CommandHandlers(this);

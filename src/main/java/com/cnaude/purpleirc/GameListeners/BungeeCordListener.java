@@ -13,17 +13,17 @@ import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
-public class BungeeHerochatListener implements Listener {
+public class BungeeCordListener implements Listener {
 
     final private PurpleIRC plugin;
 
-    public BungeeHerochatListener(PurpleIRC plugin) {
+    public BungeeCordListener(PurpleIRC plugin) {
         this.plugin = plugin;
     }
 
     @EventHandler
     public void receievePluginMessage(PluginMessageEvent event) throws IOException {
-        if (!event.getTag().equalsIgnoreCase("BungeeHeroChat")) {
+        if (!event.getTag().equalsIgnoreCase("BungeeCord")) {
             return;
         }
         plugin.logDebug("Received BungeeChat event from PluginMessageEvent: " + event.isCancelled());
@@ -34,6 +34,9 @@ public class BungeeHerochatListener implements Listener {
 
         ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
         ChatMessage cm = new ChatMessage(in);
+        if (!cm.getTag().equals("PurpleBungeeIRC")) {
+            plugin.logDebug("Dropping non PurpleBungeeIRC message.");
+        }
 
         ProxiedPlayer player = null;
         cm.setMessage(ChatColor.translateAlternateColorCodes('&', cm.getMessage()));

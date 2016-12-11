@@ -8,6 +8,7 @@ import com.google.common.io.ByteArrayDataInput;
  */
 public class ChatMessage {
 
+    private String tag = "";
     private String message = "";
     private String channel = "";
     private String sender = "";
@@ -20,6 +21,8 @@ public class ChatMessage {
     private String playerGroup = "";
 
     public ChatMessage(ByteArrayDataInput in) {
+        tag = readUTF(in);
+        
         channel = readUTF(in);
         message = readUTF(in);
         sender = readUTF(in);
@@ -42,6 +45,10 @@ public class ChatMessage {
         } catch (IllegalStateException ex) {
         }
         return "";
+    }
+    
+    public void setTag(String s) {
+        this.tag = s;
     }
 
     public void setMessage(String s) {
@@ -74,6 +81,10 @@ public class ChatMessage {
 
     public void setGroupPrefix(String s) {
         this.groupPrefix = s;
+    }
+    
+    public String getTag() {
+        return tag;
     }
 
     public void setGroupSuffix(String s) {

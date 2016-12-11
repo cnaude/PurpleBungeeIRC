@@ -27,10 +27,10 @@ public class GamePluginMessageListener
 
     @EventHandler
     public void receievePluginMessage(PluginMessageEvent event) throws IOException {
-        plugin.logDebug("Received event from PluginMessageEvent");
         if (!event.getTag().equalsIgnoreCase("BungeeChat")) {
             return;
         }
+        plugin.logDebug("Received BungeeChat event from PluginMessageEvent");
         if (bungeeChatServer == null) {
             plugin.logDebug("[receievePluginMessage]: BungeeChatBungee not found.");
             return;

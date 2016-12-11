@@ -827,8 +827,7 @@ public final class PurpleBot {
                 asyncIRCMessage(channelName, plugin.tokenizer
                         .gameChatToIRCTokenizer(player, plugin.getMsgTemplate(botNick, TemplateName.GAME_CHAT), message));
             } else {
-                plugin.logDebug("Ignoring message due to "
-                        + TemplateName.GAME_CHAT + " not being listed.");
+                plugin.logDebug("Message type " + TemplateName.GAME_CHAT + " is not enabled. Ignoring message.");
             }
         }
     }

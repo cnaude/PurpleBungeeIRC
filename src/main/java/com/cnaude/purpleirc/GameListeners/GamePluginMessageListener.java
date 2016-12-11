@@ -5,7 +5,6 @@ import com.cnaude.purpleirc.PurpleBot;
 import com.cnaude.purpleirc.PurpleIRC;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
-import com.jumanjicraft.bungeechat.BungeeChat;
 import java.io.IOException;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -14,15 +13,12 @@ import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
-public class GamePluginMessageListener
-        implements Listener {
+public class GamePluginMessageListener implements Listener {
 
     final private PurpleIRC plugin;
-    final private BungeeChat bungeeChatServer;
 
     public GamePluginMessageListener(PurpleIRC plugin) {
         this.plugin = plugin;
-        this.bungeeChatServer = (BungeeChat) plugin.getProxy().getPluginManager().getPlugin("BungeeChatBungee");
     }
 
     @EventHandler
@@ -34,20 +30,11 @@ public class GamePluginMessageListener
         if (event.isCancelled()) {
             plugin.logDebug("Ignoring cancelled event.");
         }
-        if (bungeeChatServer == null) {
-            plugin.logDebug("[receievePluginMessage]: BungeeChatBungee not found.");
-            return;
-        }
         byte[] bytes = event.getData();
-        /*
-        if (!bungeeChatServer.shouldBroadcast(ByteStreams.newDataInput(event.getData()).readUTF())) {
-            return;
-        }
-        */
-        
+
         ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
-        ChatMessage cm = new ChatMessage(in);        
-        
+        ChatMessage cm = new ChatMessage(in);
+
         ProxiedPlayer player = null;
         cm.setMessage(ChatColor.translateAlternateColorCodes('&', cm.getMessage()));
         for (ServerInfo server : plugin.getProxy().getServers().values()) {

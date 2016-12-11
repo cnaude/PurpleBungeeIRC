@@ -26,7 +26,7 @@ public class MineverseChatListener
     @EventHandler
     public void receievePluginMessage(PluginMessageEvent event) throws IOException
     {
-        if (!event.getTag().equalsIgnoreCase("BungeeChat")) {
+        if (!event.getTag().equalsIgnoreCase("BungeeCord")) {
             return;
         }
         byte[] bytes = event.getData();

@@ -7,7 +7,9 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import java.io.IOException;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
@@ -20,20 +22,25 @@ public class BungeeCordListener implements Listener {
     }
 
     @EventHandler
-    public void receievePluginMessage(String pluginChannel, ProxiedPlayer player, byte[] bytes) throws IOException {
-        if (!pluginChannel.equalsIgnoreCase("BungeeCord")) {
+    public void receievePluginMessage(PluginMessageEvent event) throws IOException {
+        plugin.logDebug("Received event from PluginMessageEvent");
+        if (!event.getTag().equalsIgnoreCase("BungeeChat")) {
             return;
         }
+        byte[] bytes = event.getData();
 
         ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
         ChatMessage cm = new ChatMessage(in);
-        plugin.logDebug("Received BungeeChat event from PluginMessageEvent: " + cm.getSubChannel());
-        if (!cm.getSubChannel().equals("PurpleBungeeIRC")) {
-            plugin.logDebug("Dropping non PurpleBungeeIRC message.");
-        }
 
+        ProxiedPlayer player = null;
         cm.setMessage(ChatColor.translateAlternateColorCodes('&', cm.getMessage()));
-
+        for (ServerInfo server : plugin.getProxy().getServers().values()) {
+            for (ProxiedPlayer p : server.getPlayers()) {
+                if (p.getName().equals(cm.getSender())) {
+                    player = p;
+                }
+            }
+        }
         if (player != null) {
             if (player.hasPermission("irc.message.gamechat")) {
                 for (PurpleBot ircBot : plugin.ircBots.values()) {
@@ -42,5 +49,7 @@ public class BungeeCordListener implements Listener {
                 }
             }
         }
+
     }
+
 }

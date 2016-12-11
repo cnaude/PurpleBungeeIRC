@@ -842,6 +842,10 @@ public final class PurpleBot {
         if (!this.isConnected()) {
             return;
         }
+        if (!cm.getSubChannel().equals("PurpleBungeeIRC")) {
+            plugin.logDebug("Wrong subChannel: " + cm.getSubChannel());
+            return;
+        }
         for (String channelName : botChannels) {
             if (!isPlayerInValidWorld(player, channelName)) {
                 continue;
@@ -1437,7 +1441,7 @@ public final class PurpleBot {
                         + " IRC topic for " + ChatColor.WHITE + channelName
                         + ChatColor.RESET + ": \""
                         + ChatColor.WHITE + plugin.colorConverter
-                        .ircColorsToGame(activeTopic.get(channelName))
+                                .ircColorsToGame(activeTopic.get(channelName))
                         + ChatColor.RESET + "\""));
             }
         }
@@ -1781,14 +1785,16 @@ public final class PurpleBot {
             String rawHCMessage = filterMessage(
                     plugin.tokenizer.ircChatToHeroChatTokenizer(this, user, channel, tmpl, message, hChannel), myChannel);
             if (!rawHCMessage.isEmpty()) {
+
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();
                 out.writeUTF(hChannel);
                 out.writeUTF(rawHCMessage);
                 for (ServerInfo server : this.plugin.getProxy().getServers().values()) {
                     if (!server.getPlayers().isEmpty()) {
-                        server.sendData("BungeeCord", out.toByteArray());
+                        server.sendData("BungeeChat", out.toByteArray());
                     }
                 }
+
             }
         } else {
             plugin.logDebug("NOPE we can't broadcast to HeroChat due to " + TemplateName.IRC_HERO_CHAT + " disabled");
@@ -1820,7 +1826,7 @@ public final class PurpleBot {
                 out.writeUTF(ComponentSerializer.toString(TextComponent.fromLegacyText(rawMVMessage)));
                 for (ServerInfo server : this.plugin.getProxy().getServers().values()) {
                     if (!server.getPlayers().isEmpty()) {
-                        server.sendData("BungeeChat", out.toByteArray());
+                        server.sendData("BungeeCord", out.toByteArray());
                     }
                 }
             }
@@ -1906,7 +1912,7 @@ public final class PurpleBot {
                 out.writeUTF(rawHCMessage);
                 for (ServerInfo server : this.plugin.getProxy().getServers().values()) {
                     if (!server.getPlayers().isEmpty()) {
-                        server.sendData("BungeeChat", out.toByteArray());
+                        server.sendData("BungeeCord", out.toByteArray());
                     }
                 }
             }
@@ -1928,7 +1934,7 @@ public final class PurpleBot {
                 out.writeUTF(ComponentSerializer.toString(TextComponent.fromLegacyText(rawMVMessage)));
                 for (ServerInfo server : this.plugin.getProxy().getServers().values()) {
                     if (!server.getPlayers().isEmpty()) {
-                        server.sendData("BungeeChat", out.toByteArray());
+                        server.sendData("BungeeCord", out.toByteArray());
                     }
                 }
             }
@@ -2251,4 +2257,5 @@ public final class PurpleBot {
             }
         }
     }
+
 }

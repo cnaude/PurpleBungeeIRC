@@ -102,6 +102,7 @@ public class PurpleIRC extends Plugin {
     public CommandHandlers commandHandlers;
     public BungeeTabListPlusHook tabListHook;
     Configuration mainConfig;
+    BungeeCordListener bungeeCordListener;
 
     public ChatTokenizer tokenizer;
     private final File cacheFile;
@@ -158,7 +159,8 @@ public class PurpleIRC extends Plugin {
         this.getProxy().getPluginManager().registerListener(this, new GamePlayerJoinListener(this));
         this.getProxy().getPluginManager().registerListener(this, new GamePlayerQuitListener(this));
         this.getProxy().getPluginManager().registerListener(this, new GameServerSwitchListener(this));
-        this.getProxy().getPluginManager().registerListener(this, new BungeeCordListener(this));
+        bungeeCordListener = new BungeeCordListener(this);
+        this.getProxy().getPluginManager().registerListener(this, bungeeCordListener);
         regexGlobber = new RegexGlobber();
         tokenizer = new ChatTokenizer(this);
         commandHandlers = new CommandHandlers(this);

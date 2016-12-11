@@ -18,6 +18,7 @@ public class ChatMessage {
     private String groupPrefix = "";
     private String groupSuffix = "";
     private String playerGroup = "";
+    private String token = "";
 
     public ChatMessage(ByteArrayDataInput in) {
         channel = readUTF(in);
@@ -32,6 +33,8 @@ public class ChatMessage {
         groupPrefix = readUTF(in);
         groupSuffix = readUTF(in);
         playerGroup = readUTF(in);
+
+        token = readUTF(in);
 
     }
 
@@ -83,6 +86,10 @@ public class ChatMessage {
         this.playerGroup = s;
     }
 
+    public void setToken(String s) {
+        this.token = s;
+    }
+
     public String getMessage() {
         return message;
     }
@@ -121,5 +128,9 @@ public class ChatMessage {
 
     public String getPlayerGroup() {
         return playerGroup;
+    }
+
+    public String getToken() {
+        return token;
     }
 }

@@ -16,9 +16,11 @@ import net.md_5.bungee.event.EventHandler;
 public class GamePluginMessageListener implements Listener {
 
     final private PurpleIRC plugin;
+    private String previousToken;
 
     public GamePluginMessageListener(PurpleIRC plugin) {
         this.plugin = plugin;
+        this.previousToken = "";
     }
 
     @EventHandler
@@ -34,7 +36,12 @@ public class GamePluginMessageListener implements Listener {
 
         ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
         ChatMessage cm = new ChatMessage(in);
-
+        if (cm.getToken().equals(previousToken)) {
+            plugin.logDebug("Duplicate message detected. Dropping.");
+            return;
+        }
+        previousToken = cm.getToken();
+        
         ProxiedPlayer player = null;
         cm.setMessage(ChatColor.translateAlternateColorCodes('&', cm.getMessage()));
         for (ServerInfo server : plugin.getProxy().getServers().values()) {

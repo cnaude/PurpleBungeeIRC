@@ -8,7 +8,7 @@ import com.google.common.io.ByteArrayDataInput;
  */
 public class ChatMessage {
 
-    private String tag = "";
+    private String subChannel = "";
     private String message = "";
     private String channel = "";
     private String sender = "";
@@ -21,7 +21,7 @@ public class ChatMessage {
     private String playerGroup = "";
 
     public ChatMessage(ByteArrayDataInput in) {
-        tag = readUTF(in);
+        subChannel = readUTF(in);
         
         channel = readUTF(in);
         message = readUTF(in);
@@ -47,8 +47,8 @@ public class ChatMessage {
         return "";
     }
     
-    public void setTag(String s) {
-        this.tag = s;
+    public void setSubChannel(String s) {
+        this.subChannel = s;
     }
 
     public void setMessage(String s) {
@@ -83,8 +83,8 @@ public class ChatMessage {
         this.groupPrefix = s;
     }
     
-    public String getTag() {
-        return tag;
+    public String getSubChannel() {
+        return subChannel;
     }
 
     public void setGroupSuffix(String s) {

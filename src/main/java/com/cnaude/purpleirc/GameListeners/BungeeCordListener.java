@@ -34,7 +34,7 @@ public class BungeeCordListener implements Listener {
 
         ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
         ChatMessage cm = new ChatMessage(in);
-        if (!cm.getTag().equals("PurpleBungeeIRC")) {
+        if (!cm.getSubChannel().equals("PurpleBungeeIRC")) {
             plugin.logDebug("Dropping non PurpleBungeeIRC message.");
         }
 

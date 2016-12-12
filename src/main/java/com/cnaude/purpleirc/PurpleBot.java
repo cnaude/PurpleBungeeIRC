@@ -6,6 +6,8 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -31,6 +33,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Chris Naude
@@ -840,10 +844,6 @@ public final class PurpleBot {
      */
     public void heroChat(ProxiedPlayer player, ChatMessage cm) {
         if (!this.isConnected()) {
-            return;
-        }
-        if (!cm.getSubChannel().equals("PurpleBungeeIRC")) {
-            plugin.logDebug("Wrong subChannel: " + cm.getSubChannel());
             return;
         }
         for (String channelName : botChannels) {
@@ -1787,11 +1787,21 @@ public final class PurpleBot {
             if (!rawHCMessage.isEmpty()) {
 
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();
+
+                /* SubChannel */
+                out.writeUTF("PurpleBungeeIRC");
+
+                /* Herochat tokens */
                 out.writeUTF(hChannel);
                 out.writeUTF(rawHCMessage);
+
                 for (ServerInfo server : this.plugin.getProxy().getServers().values()) {
+                    plugin.logDebug("Server: " + server.getName());
                     if (!server.getPlayers().isEmpty()) {
-                        server.sendData("BungeeChat", out.toByteArray());
+                        plugin.logDebug("Sending data");
+                        server.sendData("BungeeCord", out.toByteArray());
+                    } else {
+                        plugin.logDebug("Not sending data");
                     }
                 }
 

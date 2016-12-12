@@ -160,10 +160,11 @@ public class PurpleIRC extends Plugin {
         this.getProxy().getPluginManager().registerListener(this, new GamePlayerQuitListener(this));
         this.getProxy().getPluginManager().registerListener(this, new GameServerSwitchListener(this));
         bungeeCordListener = new BungeeCordListener(this);
+        getProxy().registerChannel("BungeeCord");
         this.getProxy().getPluginManager().registerListener(this, bungeeCordListener);
         regexGlobber = new RegexGlobber();
         tokenizer = new ChatTokenizer(this);
-        commandHandlers = new CommandHandlers(this);
+        commandHandlers = new CommandHandlers(this);    
         getProxy().getPluginManager().registerCommand(this, commandHandlers);
         loadBots();
         createSampleBot();
@@ -182,6 +183,7 @@ public class PurpleIRC extends Plugin {
      */
     @Override
     public void onDisable() {
+        getProxy().unregisterChannel("BungeeCord");
         if (channelWatcher != null) {
             logDebug("Disabling channelWatcher ...");
             channelWatcher.cancel();

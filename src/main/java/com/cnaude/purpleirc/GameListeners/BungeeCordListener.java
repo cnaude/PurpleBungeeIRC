@@ -23,7 +23,8 @@ public class BungeeCordListener implements Listener {
 
     @EventHandler
     public void receievePluginMessage(PluginMessageEvent event) throws IOException {
-        plugin.logDebug("Received event from PluginMessageEvent");
+        plugin.logDebug("Received event from PluginMessageEvent: [r: "
+                + event.getReceiver() + "] [s: " + event.getSender() + "]");
         if (!event.getTag().equalsIgnoreCase("BungeeCord")) {
             return;
         }
@@ -34,8 +35,8 @@ public class BungeeCordListener implements Listener {
         ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
         ChatMessage cm = new ChatMessage(in);
         plugin.logDebug("Received message: [s: " + cm.getSubChannel() + "]");
-        if (cm.getSubChannel().equals("PurpleBungeeIRC")) {            
-            plugin.logDebug("SubChannel: " + cm.getSubChannel());            
+        if (cm.getSubChannel().equals("PurpleBungeeIRC")) {
+            plugin.logDebug("SubChannel: " + cm.getSubChannel());
             ProxiedPlayer player = null;
             cm.setMessage(ChatColor.translateAlternateColorCodes('&', cm.getMessage()));
             for (ServerInfo server : plugin.getProxy().getServers().values()) {

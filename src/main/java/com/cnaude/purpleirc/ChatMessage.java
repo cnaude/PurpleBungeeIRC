@@ -19,12 +19,11 @@ public class ChatMessage {
     private String groupPrefix = "";
     private String groupSuffix = "";
     private String playerGroup = "";
-    private long timestamp = 0;
 
     public ChatMessage(ByteArrayDataInput in) {
-        
+
         subChannel = readUTF(in);
-        
+
         channel = readUTF(in);
         message = readUTF(in);
         sender = readUTF(in);
@@ -37,8 +36,6 @@ public class ChatMessage {
         groupPrefix = readUTF(in);
         groupSuffix = readUTF(in);
         playerGroup = readUTF(in);
-        
-        timestamp = in.readLong();
 
     }
 
@@ -49,7 +46,7 @@ public class ChatMessage {
         }
         return "";
     }
-    
+
     public void setSubChannel(String s) {
         this.subChannel = s;
     }
@@ -93,10 +90,7 @@ public class ChatMessage {
     public void setGroup(String s) {
         this.playerGroup = s;
     }
-    public void setTimestamp(long t) {
-        this.timestamp = t;
-    }
-    
+
     public String getSubChannel() {
         return subChannel;
     }
@@ -139,10 +133,6 @@ public class ChatMessage {
 
     public String getPlayerGroup() {
         return playerGroup;
-    }
-    
-    public long getTimestamp() {
-        return timestamp;
     }
 
 }

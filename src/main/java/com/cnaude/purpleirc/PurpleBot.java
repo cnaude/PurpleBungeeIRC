@@ -372,18 +372,6 @@ public final class PurpleBot {
         });
     }
 
-    public void asyncIRCMessage(final String target, final String message, long timestamp) {
-        plugin.logDebug("Entering aysncIRCMessage");
-        messageQueue.add(new IRCMessage(target, plugin.colorConverter.
-                gameColorsToIrc(message), false, timestamp));
-    }
-
-    public void asyncCTCPMessage(final String target, final String message, long timestamp) {
-        plugin.logDebug("Entering asyncCTCPMessage");
-        messageQueue.add(new IRCMessage(target, plugin.colorConverter
-                .gameColorsToIrc(message), true, timestamp));
-    }
-
     public void asyncIRCMessage(final String target, final String message) {
         plugin.logDebug("Entering aysncIRCMessage");
         messageQueue.add(new IRCMessage(target, plugin.colorConverter.
@@ -861,9 +849,12 @@ public final class PurpleBot {
             plugin.logDebug("HC Channel: " + cm.getChannel());
             if (isMessageEnabled(channelName, "hero-" + cm.getChannel() + "-chat")
                     || isMessageEnabled(channelName, TemplateName.HERO_CHAT)) {
-                asyncIRCMessage(channelName, plugin.tokenizer
-                        .chatHeroTokenizer(player, cm,
-                                plugin.getHeroChatChannelTemplate(botNick, cm.getChannel())), cm.getTimestamp());
+                asyncIRCMessage(
+                        channelName, plugin.tokenizer.chatHeroTokenizer(
+                                player, cm, plugin.getHeroChatChannelTemplate(botNick, cm.getChannel()
+                                )
+                        )
+                );
             } else {
                 plugin.logDebug("Player " + player.getName() + " is in \""
                         + cm.getChannel() + "\" but hero-" + cm.getChannel() + "-chat is disabled.");

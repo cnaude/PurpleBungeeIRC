@@ -104,16 +104,6 @@ public class IRCMessageQueueWatcher {
      * @param ircMessage
      */
     public void add(IRCMessage ircMessage) {
-        if (!queue.isEmpty()) {
-            IRCMessage imHead = queue.peek();
-            if (imHead.ctcpResponse == ircMessage.ctcpResponse
-                    && imHead.message.equals(ircMessage.message)
-                    && imHead.target.equals(ircMessage.target)
-                    && imHead.timestamp == ircMessage.timestamp) {
-                plugin.logDebug("Dropping duplicate message.");
-                return;
-            }
-        }
         queue.offer(ircMessage);
     }
 

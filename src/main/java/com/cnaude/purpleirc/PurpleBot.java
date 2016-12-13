@@ -1903,13 +1903,10 @@ public final class PurpleBot {
                     plugin.tokenizer.ircChatToHeroChatTokenizer(this, user, channel, tmpl, message, hChannel), myChannel);
             if (!rawHCMessage.isEmpty()) {
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                out.writeUTF("CHAT");
                 out.writeUTF(hChannel);
                 out.writeUTF(rawHCMessage);
-                for (ServerInfo server : this.plugin.getProxy().getServers().values()) {
-                    if (!server.getPlayers().isEmpty()) {
-                        server.sendData("BungeeCord", out.toByteArray());
-                    }
-                }
+                plugin.transmitMessage(out.toByteArray(), "PurpleBungeeIRC");
             }
         }
         if (enabledMessages.get(myChannel).contains(TemplateName.IRC_MV_CHAT)) {

@@ -1798,7 +1798,7 @@ public final class PurpleBot {
                 out.writeUTF("CHAT");
                 out.writeUTF(hChannel);
                 out.writeUTF(rawHCMessage);
-                plugin.transmitMessage(out.toByteArray(), "PurpleBungeeIRC_FromBungee");
+                plugin.transmitMessage(out.toByteArray(), "PurpleBungeeIRC");
             }
         } else {
             plugin.logDebug("NOPE we can't broadcast to HeroChat due to " + TemplateName.IRC_HERO_CHAT + " disabled");

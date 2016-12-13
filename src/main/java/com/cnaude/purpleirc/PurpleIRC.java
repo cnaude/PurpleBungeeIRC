@@ -5,6 +5,8 @@ import com.cnaude.purpleirc.GameListeners.*;
 import com.cnaude.purpleirc.Hooks.BungeeTabListPlusHook;
 import com.cnaude.purpleirc.Utilities.*;
 import com.google.common.base.Joiner;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -760,5 +762,23 @@ public class PurpleIRC extends Plugin {
             return getMsgTemplate(MAINCONFIG, TemplateName.IRC_HERO_ACTION);
         }
         return getHeroTemplate(ircHeroActionChannelMessages, botName, hChannel);
+    }
+    
+    protected void transmitMessage(byte[] data, String subChannel) {
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("Forward");
+        out.writeUTF("ALL");
+        out.writeUTF(subChannel);
+        out.writeShort(data.length);
+        out.write(data);
+        for (ServerInfo server : getProxy().getServers().values()) {
+            logDebug("Server: " + server.getName());
+            if (!server.getPlayers().isEmpty()) {
+                logDebug("Sending data");
+                server.sendData("BungeeCord", out.toByteArray());
+            } else {
+                logDebug("Not sending data");
+            }
+        }
     }
 }

@@ -56,13 +56,13 @@ public class IRCMessageQueueWatcher {
         if (ircMessage != null) {
             plugin.logDebug("[" + queue.size() + "]: queueAndSend message detected");
             for (String s : cleanupAndSplitMessage(ircMessage.message)) {
-            if (ircMessage.ctcpResponse) {
+                if (ircMessage.ctcpResponse) {
                     blockingCTCPMessage(ircMessage.target, s);
-            } else {
+                } else {
                     blockingIRCMessage(ircMessage.target, s);
+                }
             }
         }
-    }
     }
 
     private void blockingIRCMessage(final String target, final String message) {
@@ -104,6 +104,16 @@ public class IRCMessageQueueWatcher {
      * @param ircMessage
      */
     public void add(IRCMessage ircMessage) {
+        if (!queue.isEmpty()) {
+            IRCMessage imHead = queue.peek();
+            if (imHead.ctcpResponse == ircMessage.ctcpResponse
+                    && imHead.message.equals(ircMessage.message)
+                    && imHead.target.equals(ircMessage.target)
+                    && imHead.timestamp == ircMessage.timestamp) {
+                plugin.logDebug("Dropping duplicate message.");
+                return;
+            }
+        }
         queue.offer(ircMessage);
     }
 

@@ -6,8 +6,6 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -33,8 +31,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Chris Naude
@@ -374,6 +370,18 @@ public final class PurpleBot {
                 }
             }
         });
+    }
+
+    public void asyncIRCMessage(final String target, final String message, long timestamp) {
+        plugin.logDebug("Entering aysncIRCMessage");
+        messageQueue.add(new IRCMessage(target, plugin.colorConverter.
+                gameColorsToIrc(message), false, timestamp));
+    }
+
+    public void asyncCTCPMessage(final String target, final String message, long timestamp) {
+        plugin.logDebug("Entering asyncCTCPMessage");
+        messageQueue.add(new IRCMessage(target, plugin.colorConverter
+                .gameColorsToIrc(message), true, timestamp));
     }
 
     public void asyncIRCMessage(final String target, final String message) {
@@ -854,7 +862,8 @@ public final class PurpleBot {
             if (isMessageEnabled(channelName, "hero-" + cm.getChannel() + "-chat")
                     || isMessageEnabled(channelName, TemplateName.HERO_CHAT)) {
                 asyncIRCMessage(channelName, plugin.tokenizer
-                        .chatHeroTokenizer(player, cm, plugin.getHeroChatChannelTemplate(botNick, cm.getChannel())));
+                        .chatHeroTokenizer(player, cm,
+                                plugin.getHeroChatChannelTemplate(botNick, cm.getChannel())), cm.getTimestamp());
             } else {
                 plugin.logDebug("Player " + player.getName() + " is in \""
                         + cm.getChannel() + "\" but hero-" + cm.getChannel() + "-chat is disabled.");
@@ -1785,26 +1794,11 @@ public final class PurpleBot {
             String rawHCMessage = filterMessage(
                     plugin.tokenizer.ircChatToHeroChatTokenizer(this, user, channel, tmpl, message, hChannel), myChannel);
             if (!rawHCMessage.isEmpty()) {
-
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();
-
-                /* SubChannel */
-                out.writeUTF("PurpleBungeeIRC");
-
-                /* Herochat tokens */
+                out.writeUTF("CHAT");
                 out.writeUTF(hChannel);
                 out.writeUTF(rawHCMessage);
-
-                for (ServerInfo server : this.plugin.getProxy().getServers().values()) {
-                    plugin.logDebug("Server: " + server.getName());
-                    if (!server.getPlayers().isEmpty()) {
-                        plugin.logDebug("Sending data");
-                        server.sendData("BungeeCord", out.toByteArray());
-                    } else {
-                        plugin.logDebug("Not sending data");
-                    }
-                }
-
+                plugin.transmitMessage(out.toByteArray(), "PurpleBungeeIRC_FromBungee");
             }
         } else {
             plugin.logDebug("NOPE we can't broadcast to HeroChat due to " + TemplateName.IRC_HERO_CHAT + " disabled");

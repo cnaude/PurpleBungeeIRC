@@ -27,30 +27,30 @@ public class BungeeCordListener implements Listener {
         if (!event.getTag().equalsIgnoreCase("BungeeCord")) {
             return;
         }
+
         byte[] bytes = event.getData();
 
+        // Process messages from PurpleBungeeIRC via BungeeCord
         ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
         ChatMessage cm = new ChatMessage(in);
-        plugin.logDebug("SubChannel: " + cm.getSubChannel());
-        if (!cm.getSubChannel().equals("PurpleBungeeIRC")) {
-            plugin.logDebug("Invalid SubChannel");
-            return;
-        }
-
-        ProxiedPlayer player = null;
-        cm.setMessage(ChatColor.translateAlternateColorCodes('&', cm.getMessage()));
-        for (ServerInfo server : plugin.getProxy().getServers().values()) {
-            for (ProxiedPlayer p : server.getPlayers()) {
-                if (p.getName().equals(cm.getSender())) {
-                    player = p;
+        plugin.logDebug("Received message: [s: " + cm.getSubChannel() + "]");
+        if (cm.getSubChannel().equals("PurpleBungeeIRC_FromBukkit")) {            
+            plugin.logDebug("SubChannel: " + cm.getSubChannel());            
+            ProxiedPlayer player = null;
+            cm.setMessage(ChatColor.translateAlternateColorCodes('&', cm.getMessage()));
+            for (ServerInfo server : plugin.getProxy().getServers().values()) {
+                for (ProxiedPlayer p : server.getPlayers()) {
+                    if (p.getName().equals(cm.getSender())) {
+                        player = p;
+                    }
                 }
             }
-        }
-        if (player != null) {
-            if (player.hasPermission("irc.message.gamechat")) {
-                for (PurpleBot ircBot : plugin.ircBots.values()) {
-                    plugin.logDebug("Calling heroChat from receievePluginMessage for " + ircBot.botNick);
-                    ircBot.heroChat(player, cm);
+            if (player != null) {
+                if (player.hasPermission("irc.message.gamechat")) {
+                    for (PurpleBot ircBot : plugin.ircBots.values()) {
+                        plugin.logDebug("Calling heroChat from receievePluginMessage for " + ircBot.botNick);
+                        ircBot.heroChat(player, cm);
+                    }
                 }
             }
         }

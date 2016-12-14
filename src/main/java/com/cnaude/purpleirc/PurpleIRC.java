@@ -114,6 +114,7 @@ public class PurpleIRC extends Plugin {
     private final CaseInsensitiveMap<CaseInsensitiveMap<String>> mvActionMessages;
     private final CaseInsensitiveMap<CaseInsensitiveMap<String>> ircMvChannelMessages;
     private final CaseInsensitiveMap<CaseInsensitiveMap<String>> ircMvActionMessages;
+    public String ircMinecraftServerName;
 
     public PurpleIRC() {
         this.sortedCommands = new ArrayList<>();
@@ -371,6 +372,7 @@ public class PurpleIRC extends Plugin {
         customTabList = mainConfig.getBoolean("custom-tab-list", false);
         customTabIcon = mainConfig.getString("custom-tab-icon", "MHF_ArrowRight");
         logDebug("custom-tab-prefix: " + customTabPrefix);
+        ircMinecraftServerName = mainConfig.getString("irc-minecraft-server-name", "Webchat");
     }
 
     private void loadBots() {

@@ -3,6 +3,7 @@ package com.cnaude.purpleirc.Hooks;
 import codecrafter47.bungeetablistplus.api.bungee.BungeeTabListPlusAPI;
 import codecrafter47.bungeetablistplus.api.bungee.FakePlayerManager;
 import codecrafter47.bungeetablistplus.api.bungee.tablist.FakePlayer;
+import com.cnaude.purpleirc.IRCServerInfo;
 import com.cnaude.purpleirc.PurpleBot;
 import com.cnaude.purpleirc.PurpleIRC;
 import java.util.Collection;
@@ -60,7 +61,7 @@ public class BungeeTabListPlusHook {
             }
         }
         plugin.logDebug("[addToTabList] [fp]: " + displayName);
-        ServerInfo server = (ServerInfo) plugin.getProxy().getServers().values().toArray()[0];
+        ServerInfo server = new IRCServerInfo(plugin.ircMinecraftServerName);
         FakePlayer fakePlayer = fakePlayerManager.createFakePlayer(displayName, server);
         fakePlayer.setPing(47);
         if (!plugin.customTabIcon.isEmpty()) {

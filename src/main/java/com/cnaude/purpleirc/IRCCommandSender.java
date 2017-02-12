@@ -3,7 +3,6 @@ package com.cnaude.purpleirc;
 import java.util.Collection;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  *

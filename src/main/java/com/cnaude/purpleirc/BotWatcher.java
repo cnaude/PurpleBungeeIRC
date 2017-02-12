@@ -25,12 +25,11 @@ public class BotWatcher {
             public void run() {
                 for (PurpleBot ircBot : plugin.ircBots.values()) {
                     if (ircBot.isConnectedBlocking()) {
-                        //plugin.logDebug("[" + ircBot.botNick + "] CONNECTED");
                         ircBot.setConnected(true);
                     } else {
                         ircBot.setConnected(false);
                         if (ircBot.autoConnect) {
-                            plugin.logInfo("[" + ircBot.botNick + "] NOT CONNECTED");
+                            plugin.logDebug("[" + ircBot.botNick + "] Attempting reconnect...");
                             ircBot.reload();
                         }
                     }

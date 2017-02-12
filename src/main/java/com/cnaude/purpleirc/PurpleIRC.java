@@ -89,6 +89,7 @@ public class PurpleIRC extends Plugin {
     private boolean stripGameColors;
     private boolean stripIRCColors;
     private boolean stripIRCBackgroundColors;
+    private boolean stripGameColorsFromIrc;
     private boolean listSortByName;
     public boolean exactNickMatch;
     public boolean ignoreChatCancel;
@@ -336,9 +337,10 @@ public class PurpleIRC extends Plugin {
         stripGameColors = mainConfig.getBoolean("strip-game-colors", false);
         stripIRCColors = mainConfig.getBoolean("strip-irc-colors", false);
         stripIRCBackgroundColors = mainConfig.getBoolean("strip-irc-bg-colors", true);
+        stripGameColorsFromIrc = mainConfig.getBoolean("strip-game-colors-from-irc", true);
         exactNickMatch = mainConfig.getBoolean("nick-exact-match", true);
         ignoreChatCancel = mainConfig.getBoolean("ignore-chat-cancel", false);
-        colorConverter = new ColorConverter(this, stripGameColors, stripIRCColors, stripIRCBackgroundColors);
+        colorConverter = new ColorConverter(this, stripGameColors, stripIRCColors, stripIRCBackgroundColors, stripGameColorsFromIrc);
         logDebug("strip-game-colors: " + stripGameColors);
         logDebug("strip-irc-colors: " + stripIRCColors);
 

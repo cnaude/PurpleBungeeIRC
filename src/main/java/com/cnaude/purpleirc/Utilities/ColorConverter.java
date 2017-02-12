@@ -18,6 +18,7 @@ public class ColorConverter {
     private final boolean stripGameColors;
     private final boolean stripIRCColors;
     private final boolean stripIRCBackgroundColors;
+    private final boolean stripGameColorsFromIrc;
     private final EnumMap<ChatColor, String> ircColorMap = new EnumMap<>(ChatColor.class);
     private final HashMap<String, ChatColor> gameColorMap = new HashMap<>();
     private final Pattern bgColorPattern;
@@ -26,15 +27,18 @@ public class ColorConverter {
 
     /**
      *
-     * @param plugin
+     * @param plugin the PurpleIRC plugin
      * @param stripGameColors
      * @param stripIRCColors
      * @param stripIRCBackgroundColors
+     * @param stripGameColorsFromIrc
      */
-    public ColorConverter(PurpleIRC plugin, boolean stripGameColors, boolean stripIRCColors, boolean stripIRCBackgroundColors) {
+    public ColorConverter(PurpleIRC plugin, boolean stripGameColors, 
+            boolean stripIRCColors, boolean stripIRCBackgroundColors, boolean stripGameColorsFromIrc) {
         this.stripGameColors = stripGameColors;
         this.stripIRCColors = stripIRCColors;
         this.stripIRCBackgroundColors = stripIRCBackgroundColors;
+        this.stripGameColorsFromIrc = stripGameColorsFromIrc;
         this.plugin = plugin;
         buildDefaultColorMaps();
         this.bgColorPattern = Pattern.compile("((\\u0003\\d+),\\d+)");
@@ -65,7 +69,7 @@ public class ColorConverter {
      * @param message
      * @return
      */
-    public String ircColorsToGame(String message) {
+    public String ircColorsToGame(String message) {        
         Matcher matcher;
         if (stripIRCBackgroundColors) {
             matcher = bgColorPattern.matcher(message);
@@ -89,6 +93,51 @@ public class ColorConverter {
             message = message.replace(matcher.group(1), matcher.group(2));
         }
 
+        String m[] = message.split("");
+        message = "";
+
+        int bold = 0;
+        int underline = 0;
+        int italic = 0;
+        int reverse = 0;
+        for (String s : m) {
+            switch (s) {
+                case Colors.NORMAL:
+                    bold=0;
+                    underline=0;
+                    italic=0;
+                    reverse=0;                    
+                    break;
+                case Colors.BOLD:
+                    bold++;
+                    if (bold % 2 == 0) {
+                        s = Colors.NORMAL;                        
+                    }
+                    break;
+                case Colors.UNDERLINE:
+                    underline++;
+                    if (underline % 2 == 0) {
+                        s = Colors.NORMAL;                        
+                    }
+                    break;
+                case Colors.ITALIC:
+                    italic++;
+                    if (italic % 2 == 0) {
+                        s = Colors.NORMAL;                        
+                    }
+                    break;
+                case Colors.REVERSE:
+                    reverse++;
+                    if (reverse % 2 == 0) {
+                        s = Colors.NORMAL;                        
+                    }
+                    break;
+                default:                    
+                    break;
+            }
+            message = message + s;
+        }
+
         if (stripIRCColors) {
             return Colors.removeFormattingAndColors(message);
         } else {
@@ -105,6 +154,11 @@ public class ColorConverter {
         ChatColor chatColor;
         try {
             chatColor = ChatColor.valueOf(gameColor.toUpperCase());
+            if (ircColor.equalsIgnoreCase("strip") && ircColorMap.containsKey(chatColor)) {
+                plugin.logDebug("addIrcColorMap: " + ircColor + " => " + gameColor);
+                ircColorMap.remove(chatColor);
+                return;
+            }
         } catch (Exception ex) {
             plugin.logError("Invalid game color: " + gameColor);
             return;
@@ -116,6 +170,11 @@ public class ColorConverter {
     }
 
     public void addGameColorMap(String ircColor, String gameColor) {
+        if (gameColor.equalsIgnoreCase("strip") && gameColorMap.containsKey(getIrcColor(ircColor))) {
+            plugin.logDebug("addGameColorMap: " + ircColor + " => " + gameColor);
+            gameColorMap.remove(getIrcColor(ircColor));
+            return;
+        }
         ChatColor chatColor;
         try {
             chatColor = ChatColor.valueOf(gameColor.toUpperCase());
@@ -160,6 +219,8 @@ public class ColorConverter {
         ircColorMap.put(ChatColor.YELLOW, Colors.YELLOW);
         ircColorMap.put(ChatColor.WHITE, Colors.WHITE);
         ircColorMap.put(ChatColor.RESET, Colors.NORMAL);
+        //ircColorMap.put(ChatColor.ITALIC, Colors.REVERSE);
+        ircColorMap.put(ChatColor.ITALIC, Colors.ITALIC);
 
         gameColorMap.put(Colors.BLACK, ChatColor.BLACK);
         gameColorMap.put(Colors.BLUE, ChatColor.BLUE);
@@ -180,5 +241,7 @@ public class ColorConverter {
         gameColorMap.put(Colors.UNDERLINE, ChatColor.UNDERLINE);
         gameColorMap.put(Colors.WHITE, ChatColor.WHITE);
         gameColorMap.put(Colors.YELLOW, ChatColor.YELLOW);
+        //gameColorMap.put(Colors.REVERSE, ChatColor.ITALIC);
+        gameColorMap.put(Colors.ITALIC, ChatColor.ITALIC);
     }
 }

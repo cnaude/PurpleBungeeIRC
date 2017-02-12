@@ -3,6 +3,7 @@ package com.cnaude.purpleirc;
 import java.util.Collection;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  *
@@ -71,11 +72,11 @@ public class IRCCommandSender implements CommandSender {
 
     @Override
     public void sendMessage(BaseComponent... bcs) {
-        for (BaseComponent bc : bcs) {
-            plugin.logDebug("sendMessage[bcs]: " + bc.toPlainText());
+        String message = TextComponent.toLegacyText(bcs);
+            plugin.logDebug("sendMessage[bcs]: " + message);
             ircBot.messageQueue.add(new IRCMessage(target,
-                    plugin.colorConverter.gameColorsToIrc(bc.toPlainText()), ctcpResponse));
-        }
+                    plugin.colorConverter.gameColorsToIrc(message), ctcpResponse));
+        
     }
 
     @Override

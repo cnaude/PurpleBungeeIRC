@@ -42,6 +42,7 @@ message-format:
   game-death: '[&2%SERVER%&r] %MESSAGE%'    
   game-kick: '[&2%SERVER%&r] %MESSAGE%: %REASON%'
   game-join: '[&2%SERVER%&r] %NAME% joined the game.'
+  game-connected: '[&2%SERVER%&r] %NAME% connected to the server.'
   game-switch: '[&2%SERVER%&r] %NAME% joined the server.'
   game-quit: '[&2%SERVER%&r] %NAME% left the game.'
   game-command: '[&2%SERVER%&r] Command detected by %NAME%: %COMMAND% %PARAMS%'

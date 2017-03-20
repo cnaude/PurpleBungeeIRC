@@ -155,7 +155,12 @@ public class ChatTokenizer {
         if (message == null) {
             message = "";
         }
+        String serverName = "";
+        if (player.getServer() != null) {
+            serverName = player.getServer().getInfo().getName();
+        }
         return plugin.colorConverter.gameColorsToIrc(playerTokenizer(player, template)
+                .replace("%SERVERNAME%", serverName)
                 .replace("%MESSAGE%", message));
     }
 

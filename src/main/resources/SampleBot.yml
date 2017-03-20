@@ -111,6 +111,7 @@ channels:
     - game-death
     - game-kick
     #- game-join
+    - game-connected
     - game-switch
     - game-quit
     - game-mode

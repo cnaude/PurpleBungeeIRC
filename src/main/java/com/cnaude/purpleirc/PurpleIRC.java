@@ -161,6 +161,7 @@ public class PurpleIRC extends Plugin {
         }
         this.getProxy().getPluginManager().registerListener(this, new GamePlayerChatListener(this));
         this.getProxy().getPluginManager().registerListener(this, new GamePlayerJoinListener(this));
+        this.getProxy().getPluginManager().registerListener(this, new GameServerConnectedListener(this));
         this.getProxy().getPluginManager().registerListener(this, new GamePlayerQuitListener(this));
         this.getProxy().getPluginManager().registerListener(this, new GameServerSwitchListener(this));
         bungeeCordListener = new BungeeCordListener(this);

@@ -40,10 +40,9 @@ public class GameServerConnectedListener implements Listener {
         plugin.getProxy().getScheduler().schedule(plugin, new Runnable() {
             @Override
             public void run() {
-                String serverName = event.getServer().getInfo().getName();
-                for (PurpleBot ircBot : plugin.ircBots.values()) {
-                    ircBot.gameServerConnected(event.getPlayer(), "connected");
-                    if (event.getPlayer().getServer() != null) {
+                if (event.getPlayer().getServer() != null) {
+                    for (PurpleBot ircBot : plugin.ircBots.values()) {
+                        ircBot.gameServerConnected(event.getPlayer(), "connected");
                         plugin.updateServerCache(event.getPlayer().getServer().getInfo());
                     }
 

@@ -32,7 +32,7 @@ public class GamePlayerQuitListener implements Listener {
      */
     @EventHandler
     public void onPlayerDisconnectEvent(PlayerDisconnectEvent event) {
-        plugin.logDebug("QUIT: " + event.getPlayer().getName());        
+        plugin.logDebug("QUIT: " + event.getPlayer().getName());
         if (plugin.kickedPlayers.contains(event.getPlayer().getName())) {
             plugin.kickedPlayers.remove(event.getPlayer().getName());
             plugin.logDebug("Player "
@@ -40,8 +40,10 @@ public class GamePlayerQuitListener implements Listener {
                     + " was in the recently kicked list. Not sending quit message.");
             return;
         }
-        for (PurpleBot ircBot : plugin.ircBots.values()) {
-            ircBot.gameQuit(event.getPlayer(), "quit server");
+        if (event.getPlayer().getServer() != null) {
+            for (PurpleBot ircBot : plugin.ircBots.values()) {
+                ircBot.gameQuit(event.getPlayer(), "quit server");
+            }
         }
     }
 }

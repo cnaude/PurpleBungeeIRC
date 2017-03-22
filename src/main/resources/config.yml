@@ -117,6 +117,8 @@ nick-prefixes:
     op: '&c@'
     halfop: '&3%'
     voice: '&2+'
+# Minecraft server name (For BungeeTabListplus)
+irc-minecraft-server-name: Webchat
 # See http://site.pircbotx.googlecode.com/hg/apidocs/org/pircbotx/Colors.html for IRC color names
 # See http://jd.bukkit.org/rb/doxygen/d7/dc0/enumorg_1_1bukkit_1_1ChatColor.html for game color names
 # Game to IRC color map: Game Color Code => IRC Color Code

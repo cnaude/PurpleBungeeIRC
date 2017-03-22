@@ -40,7 +40,7 @@ public class GamePlayerJoinListener implements Listener {
         plugin.getProxy().getScheduler().schedule(plugin, new Runnable() {
             @Override
             public void run() {
-                if (event.getPlayer().getServer() != null) {
+                if (event.getPlayer().isConnected()) {
                     for (PurpleBot ircBot : plugin.ircBots.values()) {
                         ircBot.gameJoin(event.getPlayer(), "joined");
                         plugin.updateServerCache(event.getPlayer().getServer().getInfo());

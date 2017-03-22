@@ -110,8 +110,7 @@ channels:
     - game-chat
     - game-death
     - game-kick
-    #- game-join
-    - game-connected
+    - game-join
     - game-switch
     - game-quit
     - game-mode

@@ -14,7 +14,6 @@ public class TemplateName {
     public final static String GAME_SEND = "game-send";
     public final static String GAME_DEATH = "game-death";
     public final static String GAME_JOIN = "game-join";
-    public final static String GAME_CONECTED = "game-connected";
     public final static String GAME_SWITCH = "game-switch";
     public final static String GAME_QUIT = "game-quit";
     public final static String GAME_KICK = "game-kick";

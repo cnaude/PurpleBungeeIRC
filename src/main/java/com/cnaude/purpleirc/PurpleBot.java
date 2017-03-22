@@ -991,30 +991,6 @@ public final class PurpleBot {
         }
     }
     
-        /**
-     *
-     * @param player
-     * @param message
-     */
-    public void gameServerConnected(ProxiedPlayer player, String message) {
-        if (!this.isConnected()) {
-            return;
-        }
-        for (String channelName : botChannels) {
-            if (isMessageEnabled(channelName, TemplateName.GAME_CONECTED)) {
-                if (!isPlayerInValidWorld(player, channelName)) {
-                    return;
-                }
-                asyncIRCMessage(channelName, plugin.tokenizer
-                        .gameChatToIRCTokenizer(player, plugin.getMsgTemplate(
-                                botNick, TemplateName.GAME_CONECTED), message));
-            } else {
-                plugin.logDebug("Not sending join message due to "
-                        + TemplateName.GAME_CONECTED + " being disabled");
-            }
-        }
-    }
-
     /**
      *
      * @param player

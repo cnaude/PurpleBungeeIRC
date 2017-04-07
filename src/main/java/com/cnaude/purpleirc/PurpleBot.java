@@ -770,8 +770,9 @@ public final class PurpleBot {
                         CaseInsensitiveMap<String> optionPair = new CaseInsensitiveMap<>();
                         String commandKey = "channels." + enChannelName + ".commands." + command + ".";
                         optionPair.put("modes", config.getString(commandKey + "modes", "*"));
-                        optionPair.put("private", config.getString(commandKey + "private", "false"));
+                        optionPair.put("private", config.getString(commandKey + "private", "false"));                        
                         optionPair.put("ctcp", config.getString(commandKey + "ctcp", "false"));
+                        optionPair.put("notice", config.getString(commandKey + "notice", "false"));
                         optionPair.put("game_command", config.getString(commandKey + "game_command", "@help"));
                         optionPair.put("private_listen", config.getString(commandKey + "private_listen", "true"));
                         optionPair.put("channel_listen", config.getString(commandKey + "channel_listen", "true"));

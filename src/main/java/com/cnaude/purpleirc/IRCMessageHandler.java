@@ -85,6 +85,9 @@ public class IRCMessageHandler {
                 if (Boolean.parseBoolean(ircBot.commandMap.get(channelName).get(command).get("notice"))) {
                     responseType = Type.NOTICE;
                 }
+                plugin.logDebug("  ctcp: " + ircBot.commandMap.get(channelName).get(command).get("ctcp"));
+                plugin.logDebug("  notice: " + ircBot.commandMap.get(channelName).get(command).get("notice"));
+                plugin.logDebug("  private: " + ircBot.commandMap.get(channelName).get(command).get("private"));
 
                 plugin.logDebug(gameCommand + ":" + modes + ":" + privateCommand);
 

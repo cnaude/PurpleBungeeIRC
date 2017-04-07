@@ -1,6 +1,8 @@
 package com.cnaude.purpleirc;
 
+import com.cnaude.purpleirc.IRCMessage.Type;
 import java.util.Collection;
+import java.util.Collections;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -15,7 +17,7 @@ public class IRCCommandSender implements CommandSender {
     private final PurpleBot ircBot;
     private final String target;
     private final PurpleIRC plugin;
-    private final boolean ctcpResponse;
+    private final Type responseType;
 
     /**
      *
@@ -25,7 +27,7 @@ public class IRCCommandSender implements CommandSender {
     public void sendMessage(String message) {
         plugin.logDebug("sendMessage[single]: " + message);
         ircBot.messageQueue.add(new IRCMessage(target,
-                plugin.colorConverter.gameColorsToIrc(message), ctcpResponse));
+                plugin.colorConverter.gameColorsToIrc(message), responseType));
     }
 
     /**
@@ -33,31 +35,32 @@ public class IRCCommandSender implements CommandSender {
      * @param ircBot
      * @param target
      * @param plugin
-     * @param ctcpResponse
+     * @param responseType
      */
-    public IRCCommandSender(PurpleBot ircBot, String target, PurpleIRC plugin, boolean ctcpResponse) {
+    public IRCCommandSender(PurpleBot ircBot, String target, PurpleIRC plugin, Type responseType) {
         this.target = target;
         this.ircBot = ircBot;
         this.plugin = plugin;
-        this.ctcpResponse = ctcpResponse;
-    }
-
+        this.responseType = responseType;
+        }
+    
     /**
      *
      * @return
      */
     @Override
     public String getName() {
-        return "CONSOLE";
+        return "PurpleBot";
     }
 
     /**
      *
-     * @param arg0
+     * @param perm
      * @return
      */
     @Override
-    public boolean hasPermission(final String arg0) {
+    public boolean hasPermission(final String perm) {
+        plugin.logDebug("IRCCommandSender hasPermssion: " + perm);
         return true;
     }
 
@@ -66,48 +69,48 @@ public class IRCCommandSender implements CommandSender {
         for (String message : strings) {
             plugin.logDebug("sendMessage[multi]: " + message);
             ircBot.messageQueue.add(new IRCMessage(target,
-                    plugin.colorConverter.gameColorsToIrc(message), ctcpResponse));
+                    plugin.colorConverter.gameColorsToIrc(message), responseType));
         }
     }
 
     @Override
     public void sendMessage(BaseComponent... bcs) {
         String message = TextComponent.toLegacyText(bcs);
-            plugin.logDebug("sendMessage[bcs]: " + message);
-            ircBot.messageQueue.add(new IRCMessage(target,
-                    plugin.colorConverter.gameColorsToIrc(message), ctcpResponse));
-        
+        plugin.logDebug("sendMessage[bcs]: " + message);
+        ircBot.messageQueue.add(new IRCMessage(target,
+                plugin.colorConverter.gameColorsToIrc(message), responseType));
+
     }
 
     @Override
     public void sendMessage(BaseComponent bc) {
         plugin.logDebug("sendMessage[bc]: " + bc.toPlainText());
         ircBot.messageQueue.add(new IRCMessage(target,
-                plugin.colorConverter.gameColorsToIrc(bc.toPlainText()), ctcpResponse));
+                plugin.colorConverter.gameColorsToIrc(bc.toPlainText()), responseType));
     }
 
     @Override
     public Collection<String> getGroups() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return Collections.emptySet();
     }
 
     @Override
     public void addGroups(String... strings) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Console may not have groups");
     }
 
     @Override
     public void removeGroups(String... strings) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Console may not have groups");
     }
 
     @Override
     public void setPermission(String string, boolean bln) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Console has all permissions");
     }
 
     @Override
     public Collection<String> getPermissions() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return Collections.emptySet();
     }
 }

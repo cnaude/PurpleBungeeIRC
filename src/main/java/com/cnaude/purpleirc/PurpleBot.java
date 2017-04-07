@@ -1,6 +1,9 @@
 package com.cnaude.purpleirc;
 
 import com.cnaude.purpleirc.IRCListeners.*;
+import static com.cnaude.purpleirc.IRCMessage.Type.CTCP;
+import static com.cnaude.purpleirc.IRCMessage.Type.MESSAGE;
+import static com.cnaude.purpleirc.IRCMessage.Type.NOTICE;
 import com.cnaude.purpleirc.Utilities.CaseInsensitiveMap;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSortedSet;
@@ -374,14 +377,20 @@ public final class PurpleBot {
 
     public void asyncIRCMessage(final String target, final String message) {
         plugin.logDebug("Entering aysncIRCMessage");
-        messageQueue.add(new IRCMessage(target, plugin.colorConverter.
-                gameColorsToIrc(message), false));
+        IRCMessage ircMessage = new IRCMessage(target, plugin.colorConverter.gameColorsToIrc(message), MESSAGE);
+        messageQueue.add(ircMessage);
     }
 
     public void asyncCTCPMessage(final String target, final String message) {
         plugin.logDebug("Entering asyncCTCPMessage");
-        messageQueue.add(new IRCMessage(target, plugin.colorConverter
-                .gameColorsToIrc(message), true));
+        IRCMessage ircMessage = new IRCMessage(target, plugin.colorConverter.gameColorsToIrc(message), CTCP);
+        messageQueue.add(ircMessage);
+    }
+
+    public void asyncNoticeMessage(final String target, final String message) {
+        plugin.logDebug("Entering asyncNoticeMessage");
+        IRCMessage ircMessage = new IRCMessage(target, plugin.colorConverter.gameColorsToIrc(message), NOTICE);
+        messageQueue.add(ircMessage);
     }
 
     public void blockingIRCMessage(final String target, final String message) {

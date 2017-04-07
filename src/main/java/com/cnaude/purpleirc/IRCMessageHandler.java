@@ -1,10 +1,7 @@
-package com.cnaude.purpleirc.Utilities;
+package com.cnaude.purpleirc;
 
-import com.cnaude.purpleirc.IRCCommand;
-import com.cnaude.purpleirc.IRCCommandSender;
-import com.cnaude.purpleirc.PurpleBot;
-import com.cnaude.purpleirc.PurpleIRC;
-import com.cnaude.purpleirc.TemplateName;
+import com.cnaude.purpleirc.IRCMessage.Type;
+import com.cnaude.purpleirc.Utilities.CaseInsensitiveMap;
 import com.google.common.base.Joiner;
 import java.text.Collator;
 import java.util.ArrayList;
@@ -40,8 +37,8 @@ public class IRCMessageHandler {
      */
     public void processMessage(PurpleBot ircBot, User user, Channel channel, String message, boolean privateMessage) {
         plugin.logDebug("processMessage: " + message);
-        String myChannel = channel.getName();
-        if (ircBot.muteList.get(myChannel).contains(user.getNick())) {
+        String channelName = channel.getName();
+        if (ircBot.muteList.get(channelName).contains(user.getNick())) {
             plugin.logDebug("User is muted. Ignoring message from " + user.getNick() + ": " + message);
             return;
         }
@@ -61,11 +58,11 @@ public class IRCMessageHandler {
 
             plugin.logDebug(message);
             String target = channel.getName();
-            if (ircBot.commandMap.get(myChannel).containsKey(command)) {
+            if (ircBot.commandMap.get(channelName).containsKey(command)) {
                 boolean privateListen = Boolean.parseBoolean(ircBot.commandMap
-                        .get(myChannel).get(command).get("private_listen"));
+                        .get(channelName).get(command).get("private_listen"));
                 boolean channelListen = Boolean.parseBoolean(ircBot.commandMap
-                        .get(myChannel).get(command).get("channel_listen"));
+                        .get(channelName).get(command).get("channel_listen"));
                 plugin.logDebug("privateListen: " + privateListen);
                 plugin.logDebug("channelListen: " + channelListen);
                 if (privateMessage && !privateListen) {
@@ -77,11 +74,17 @@ public class IRCMessageHandler {
                     return;
                 }
 
-                String gameCommand = (String) ircBot.commandMap.get(myChannel).get(command).get("game_command");
-                String modes = (String) ircBot.commandMap.get(myChannel).get(command).get("modes");
-                String perm = (String) ircBot.commandMap.get(myChannel).get(command).get("perm");
-                boolean privateCommand = Boolean.parseBoolean(ircBot.commandMap.get(myChannel).get(command).get("private"));
-                boolean ctcpResponse = Boolean.parseBoolean(ircBot.commandMap.get(myChannel).get(command).get("ctcp"));
+                String gameCommand = (String) ircBot.commandMap.get(channelName).get(command).get("game_command");
+                String modes = (String) ircBot.commandMap.get(channelName).get(command).get("modes");
+                String perm = (String) ircBot.commandMap.get(channelName).get(command).get("perm");
+                boolean privateCommand = Boolean.parseBoolean(ircBot.commandMap.get(channelName).get(command).get("private"));
+                Type responseType = Type.MESSAGE;
+                if (Boolean.parseBoolean(ircBot.commandMap.get(channelName).get(command).get("ctcp"))) {
+                    responseType = Type.CTCP;
+                }
+                if (Boolean.parseBoolean(ircBot.commandMap.get(channelName).get(command).get("notice"))) {
+                    responseType = Type.NOTICE;
+                }
 
                 plugin.logDebug(gameCommand + ":" + modes + ":" + privateCommand);
 
@@ -97,23 +100,23 @@ public class IRCMessageHandler {
                             if (plugin.listSingleLine) {
                                 String concatList = "";
                                 for (ServerInfo si : plugin.getProxy().getServers().values()) {
-                                    concatList += plugin.getMCPlayers(si, ircBot, myChannel);
+                                    concatList += plugin.getMCPlayers(si, ircBot, channelName);
                                     
                                 }
-                                sendMessage(ircBot, target, concatList, ctcpResponse);
+                                sendMessage(ircBot, target, concatList, responseType);
 
                             } else {
                                 for (ServerInfo si : plugin.getProxy().getServers().values()) {
-                                    sendMessage(ircBot, target, plugin.getMCPlayers(si, ircBot, myChannel), ctcpResponse);
+                                    sendMessage(ircBot, target, plugin.getMCPlayers(si, ircBot, channelName), responseType);
                                 }
                             }
 
                             break;
                         case "@uptime":
-                            sendMessage(ircBot, target, plugin.getMCUptime(), ctcpResponse);
+                            sendMessage(ircBot, target, plugin.getMCUptime(), responseType);
                             break;
                         case "@help":
-                            sendMessage(ircBot, target, getCommands(ircBot.commandMap, myChannel), ctcpResponse);
+                            sendMessage(ircBot, target, getCommands(ircBot.commandMap, channelName), responseType);
                             break;
                         case "@chat":
                             ircBot.broadcastChat(user, channel, commandArgs, false);
@@ -125,10 +128,10 @@ public class IRCMessageHandler {
                             ircBot.playerChat(user, channel, target, commandArgs);
                             break;
                         case "@clearqueue":
-                            sendMessage(ircBot, target, ircBot.messageQueue.clearQueue(), ctcpResponse);
+                            sendMessage(ircBot, target, ircBot.messageQueue.clearQueue(), responseType);
                             break;
                         case "@query":
-                            sendMessage(ircBot, target, plugin.getRemotePlayers(commandArgs), ctcpResponse);
+                            sendMessage(ircBot, target, plugin.getRemotePlayers(commandArgs), responseType);
                             break;
                         default:
                             if (commandArgs == null) {
@@ -142,7 +145,7 @@ public class IRCMessageHandler {
                             }
                             plugin.logDebug("GM: \"" + gameCommand.trim() + "\"");
                             try {
-                                plugin.commandQueue.add(new IRCCommand(new IRCCommandSender(ircBot, target, plugin, ctcpResponse), gameCommand.trim()));
+                                plugin.commandQueue.add(new IRCCommand(new IRCCommandSender(ircBot, target, plugin, responseType), gameCommand.trim()));
                             } catch (Exception ex) {
                                 plugin.logError(ex.getMessage());
                             }
@@ -156,7 +159,7 @@ public class IRCMessageHandler {
                             .replace("%CMDPREFIX%", ircBot.commandPrefix));
                 }
             } else {
-                if (privateMessage || ircBot.invalidCommandPrivate.get(myChannel)) {
+                if (privateMessage || ircBot.invalidCommandPrivate.get(channelName)) {
                     target = user.getNick();
                 }
                 plugin.logDebug("Invalid command: " + command);
@@ -165,19 +168,19 @@ public class IRCMessageHandler {
                         .replace("%NICK%", user.getNick())
                         .replace("%CMDPREFIX%", ircBot.commandPrefix);
                 if (!invalidIrcCommand.isEmpty()) {
-                    if (ircBot.invalidCommandCTCP.get(myChannel)) {
+                    if (ircBot.invalidCommandCTCP.get(channelName)) {
                         ircBot.blockingCTCPMessage(target, invalidIrcCommand);
                     } else {
                         ircBot.asyncIRCMessage(target, invalidIrcCommand);
                     }
                 }
-                if (ircBot.enabledMessages.get(myChannel).contains(TemplateName.INVALID_IRC_COMMAND)) {
+                if (ircBot.enabledMessages.get(channelName).contains(TemplateName.INVALID_IRC_COMMAND)) {
                     plugin.logDebug("Invalid IRC command dispatched for broadcast...");
                     ircBot.broadcastChat(user, channel, message, false);
                 }
             }
         } else {
-            if (ircBot.ignoreIRCChat.get(myChannel)) {
+            if (ircBot.ignoreIRCChat.get(channelName)) {
                 plugin.logDebug("Message NOT dispatched for broadcast due to \"ignore-irc-chat\" being true ...");
                 return;
             }
@@ -216,13 +219,20 @@ public class IRCMessageHandler {
         return modeOkay;
     }
 
-    private void sendMessage(PurpleBot ircBot, String target, String message, boolean ctcpResponse) {
-        if (ctcpResponse) {
-            plugin.logDebug("Sending message to target: " + target + " => " + message);
-            ircBot.asyncCTCPMessage(target, message);
-        } else {
-            plugin.logDebug("Sending message to target: " + target + " => " + message);
-            ircBot.asyncIRCMessage(target, message);
+    private void sendMessage(PurpleBot ircBot, String target, String message, Type responseType) {
+        switch (responseType) {
+            case CTCP:
+                plugin.logDebug("Sending message to target: " + target + " => " + message);
+                ircBot.asyncCTCPMessage(target, message);
+                break;
+            case MESSAGE:
+                plugin.logDebug("Sending message to target: " + target + " => " + message);
+                ircBot.asyncIRCMessage(target, message);
+                break;
+            case NOTICE:
+                plugin.logDebug("Sending notice to target: " + target + " => " + message);
+                ircBot.asyncNoticeMessage(target, message);
+                break;
         }
     }
 

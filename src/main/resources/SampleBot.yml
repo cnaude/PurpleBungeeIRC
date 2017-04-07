@@ -188,6 +188,7 @@ channels:
         modes: '*'
         private: false
         ctcp: false
+        notice: false
         game_command: '@chat'
         private_listen: true
         channel_listen: true
@@ -195,6 +196,7 @@ channels:
         modes: '*'
         private: false
         ctcp: false
+        notice: false
         game_command: '@ochat'   
         private_listen: true
         channel_listen: true
@@ -202,6 +204,7 @@ channels:
         modes: '*'
         private: false
         ctcp: false
+        notice: false
         game_command: '@hchat'   
         private_listen: true
         channel_listen: true  
@@ -209,6 +212,7 @@ channels:
         modes: '*'
         private: true
         ctcp: false
+        notice: false
         game_command: '@msg'
         private_listen: true
         channel_listen: true
@@ -216,6 +220,7 @@ channels:
         modes: '*'
         private: false
         ctcp: false
+        notice: false
         game_command: '@list'        
         private_listen: true
         channel_listen: true
@@ -223,6 +228,7 @@ channels:
         modes: '*'
         private: false
         ctcp: false
+        notice: false
         game_command: '@help'
         private_listen: true
         channel_listen: true
@@ -230,6 +236,7 @@ channels:
         modes: '*'
         private: false
         ctcp: false
+        notice: false
         game_command: '@uptime'        
         private_listen: true
         channel_listen: true
@@ -237,6 +244,7 @@ channels:
         modes: '*'
         private: false
         ctcp: false
+        notice: false
         game_command: version        
         private_listen: true
         channel_listen: true
@@ -244,6 +252,7 @@ channels:
         modes: '*'
         private: false
         ctcp: false
+        notice: false
         game_command: lag   
         private_listen: true
         channel_listen: true
@@ -251,6 +260,7 @@ channels:
         modes: '*'
         private: true
         ctcp: false
+        notice: false
         game_command: lagmem        
         private_listen: true
         channel_listen: true
@@ -258,6 +268,7 @@ channels:
         modes: 'o'
         private: false
         ctcp: false
+        notice: false
         game_command: 'gamemode %ARGS%'
         private_listen: true
         channel_listen: true

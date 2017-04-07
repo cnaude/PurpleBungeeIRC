@@ -50,7 +50,10 @@ public class CommandQueueWatcher {
         if (ircCommand != null) {
             try {
                 plugin.logDebug("Dispatching command as IRCCommandSender: " + ircCommand.getGameCommand());
-                plugin.getProxy().getPluginManager().dispatchCommand(ircCommand.getIRCCommandSender(), ircCommand.getGameCommand());
+                boolean success = plugin.getProxy().getPluginManager().dispatchCommand(
+                        ircCommand.getIRCCommandSender(),
+                        ircCommand.getGameCommand());
+                plugin.logDebug("Command success?: " + success);
             } catch (Exception ce) {
                 plugin.logError("Error running command: " + ce.getMessage());
             }

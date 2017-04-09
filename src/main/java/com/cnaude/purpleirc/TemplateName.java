@@ -57,4 +57,6 @@ public class TemplateName {
     public final static String IRC_ESS_HELPOP = "irc-ess-helpop";
 
     public static final String IRC_MV_CHAT = "irc-mv-chat";
+    
+    public final static String LOG_TAILER = "log-tailer";
 }

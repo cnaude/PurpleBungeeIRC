@@ -275,6 +275,12 @@ public class ChatTokenizer {
                 .replace("%MESSAGE%", message)
         );
     }
+    
+    public String logTailerTokenizer(String file, String line, String template) {
+        return plugin.colorConverter.gameColorsToIrc(template
+                .replace("%FILE%", file)
+                .replace("%LINE%", line));
+    }
 
     /**
      * Herochat to IRC

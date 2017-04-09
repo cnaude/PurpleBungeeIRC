@@ -1,6 +1,18 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2014 cnaude
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.cnaude.purpleirc.IRCListeners;
 
@@ -13,7 +25,7 @@ import org.pircbotx.hooks.events.KickEvent;
 
 /**
  *
- * @author cnaude
+ * @author Chris Naude
  */
 public class KickListener extends ListenerAdapter {
 
@@ -22,7 +34,7 @@ public class KickListener extends ListenerAdapter {
 
     /**
      *
-     * @param plugin
+     * @param plugin the PurpleIRC plugin
      * @param ircBot
      */
     public KickListener(PurpleIRC plugin, PurpleBot ircBot) {
@@ -37,14 +49,23 @@ public class KickListener extends ListenerAdapter {
     @Override
     public void onKick(KickEvent event) {
         Channel channel = event.getChannel();
+        String channelName = channel.getName();
         User recipient = event.getRecipient();
         User user = event.getUser();
-
-        if (ircBot.isValidChannel(channel.getName())) {
-            ircBot.broadcastIRCKick(recipient, user, event.getReason(), channel);
-            if (plugin.tabListHook != null) {
-                plugin.tabListHook.remFromTabList(recipient.getNick());
+        
+        if (recipient.getNick().equalsIgnoreCase(ircBot.botNick)) {
+            plugin.logDebug("onKick: " + recipient.getNick());
+            if (ircBot.joinOnKick) {
+                plugin.logDebug("onKick: rejoining");
+                if (ircBot.channelPassword.get(channelName).isEmpty()) {
+                    ircBot.asyncJoinChannel(channelName);
+                } else {
+                    ircBot.asyncJoinChannel(channelName, ircBot.channelPassword.get(channelName));
+                }
+            } else {
+                plugin.logDebug("onKick: NOT rejoining");
             }
         }
+
     }
 }

@@ -58,7 +58,7 @@ public class PurpleIRC extends Plugin {
             customTabPrefix,
             customTabIcon,
             heroChatEmoteFormat,
-            listFormat,            
+            listFormat,
             listSeparator,
             listPlayer,
             ircNickPrefixIrcOp,
@@ -168,7 +168,7 @@ public class PurpleIRC extends Plugin {
         this.getProxy().getPluginManager().registerListener(this, bungeeCordListener);
         regexGlobber = new RegexGlobber();
         tokenizer = new ChatTokenizer(this);
-        commandHandlers = new CommandHandlers(this);    
+        commandHandlers = new CommandHandlers(this);
         getProxy().getPluginManager().registerCommand(this, commandHandlers);
         loadBots();
         createSampleBot();
@@ -563,7 +563,7 @@ public class PurpleIRC extends Plugin {
                 m = "Players on " + host + "("
                         + players.length
                         + "): " + Joiner.on(", ")
-                        .join(players);
+                                .join(players);
             }
             return m;
         } else {
@@ -729,6 +729,31 @@ public class PurpleIRC extends Plugin {
         }
     }
 
+    /**
+     *
+     * @param botName
+     * @param channelName
+     * @param template
+     * @return
+     */
+    public String getMessageTemplate(String botName, String channelName, String template) {
+        if (messageTmpl.containsKey(botName + "." + channelName)) {
+            if (messageTmpl.get(botName + "." + channelName).containsKey(template)) {
+                return messageTmpl.get(botName + "." + channelName).get(template);
+            }
+        }
+        if (messageTmpl.containsKey(botName)) {
+            if (messageTmpl.get(botName).containsKey(template)) {
+                return messageTmpl.get(botName).get(template);
+            }
+        }
+        if (messageTmpl.get(MAINCONFIG).containsKey(template)) {
+            return messageTmpl.get(MAINCONFIG).get(template);
+        }
+        logDebug("No such template: " + template);
+        return "";
+    }
+
     public String getMineverseChannelTemplate(String botNick, String channel) {
         String tmpl = getMvTemplate(mvChannelMessages, botNick, channel);
         if (tmpl.isEmpty()) {
@@ -767,7 +792,7 @@ public class PurpleIRC extends Plugin {
         }
         return getHeroTemplate(ircHeroActionChannelMessages, botName, hChannel);
     }
-    
+
     protected void transmitMessage(byte[] data, String subChannel) {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Forward");

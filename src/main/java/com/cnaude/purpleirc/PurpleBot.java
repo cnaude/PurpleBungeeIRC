@@ -78,7 +78,7 @@ public final class PurpleBot {
     public ArrayList<String> botChannels;
     public CaseInsensitiveMap<Collection<String>> channelNicks;
     public CaseInsensitiveMap<Collection<String>> tabIgnoreNicks;
-    public CaseInsensitiveMap<Collection<String>> filters;
+    public CaseInsensitiveMap<Collection<String>> filters;    
     public CaseInsensitiveMap<String> channelPassword;
     public CaseInsensitiveMap<String> channelTopic;
     public CaseInsensitiveMap<Boolean> channelTopicChanserv;
@@ -116,7 +116,15 @@ public final class PurpleBot {
     String version;
     String finger;
     final String regex = ".*(https?|ftp|file)://.*";
+    // file tailer variables
+    public ArrayList<String> tailerFilters;
+    private final List<LogTailer> tailers;
+    private boolean tailerEnabled;
+    private final List<String> tailerFiles;
+    private String tailerRecipient;
+    private boolean tailerCtcp;
     private CommandSender zncSender;
+    public boolean joinOnKick;
 
     private final ScheduledTask bt;
 
@@ -154,6 +162,7 @@ public final class PurpleBot {
         this.channelModes = new CaseInsensitiveMap<>();
         this.activeTopic = new CaseInsensitiveMap<>();
         this.channelTopic = new CaseInsensitiveMap<>();
+        this.tailerFilters = new ArrayList<>();
         this.channelPassword = new CaseInsensitiveMap<>();
         this.tabIgnoreNicks = new CaseInsensitiveMap<>();
         this.filters = new CaseInsensitiveMap<>();
@@ -164,7 +173,9 @@ public final class PurpleBot {
         this.enableMessageFiltering = new CaseInsensitiveMap<>();
         this.plugin = plugin;
         this.file = file;
-        whoisSenders = new ArrayList<>();
+        this.whoisSenders = new ArrayList<>();
+        this.tailers = new ArrayList<>();
+        this.tailerFiles = new ArrayList<>();
         loadConfig();
         addListeners();
         version = plugin.getDescription().getName() + ", "
@@ -242,6 +253,12 @@ public final class PurpleBot {
             plugin.logInfo("Auto-connect is disabled. To connect: /irc connect " + bot.getNick());
         }
         plugin.logInfo("Max line length: " + configBuilder.getMaxLineLength());
+        if (tailerEnabled && !tailerFiles.isEmpty() && !tailerRecipient.isEmpty()) {
+            for (String tailerFile : tailerFiles) {
+                LogTailer tailer = new LogTailer(this, plugin, tailerRecipient, tailerCtcp, tailerFile);
+                tailers.add(tailer);
+            }
+        }
     }
 
     private void addListeners() {
@@ -436,6 +453,18 @@ public final class PurpleBot {
             }
         });
     }
+    
+    public void asyncJoinChannel(final String channelName) {
+        if (!this.isConnected()) {
+            return;
+        }
+        plugin.getProxy().getScheduler().runAsync(plugin, new Runnable() {
+            @Override
+            public void run() {
+                bot.sendIRC().joinChannel(channelName);
+            }
+        });
+    }
 
     public void asyncNotice(final String target, final String message) {
         if (!this.isConnected()) {
@@ -563,6 +592,7 @@ public final class PurpleBot {
             enabledMessages.clear();
             worldList.clear();
             commandMap.clear();
+            tailerFilters.clear();
 
             channelCmdNotifyEnabled = config.getBoolean("command-notify.enabled", false);
             plugin.logDebug(" CommandNotifyEnabled => " + channelCmdNotifyEnabled);
@@ -612,6 +642,28 @@ public final class PurpleBot {
             if (channelCmdNotifyIgnore.isEmpty()) {
                 plugin.logInfo(" No command-notify ignores defined.");
             }
+            
+            // load tailer settings
+            tailerEnabled = config.getBoolean("file-tailer.enabled", false);
+
+            joinOnKick = config.getBoolean("join-on-kick", true);
+
+            String tailerFile = config.getString("file-tailer.file", "server.log");
+            if (!tailerFiles.contains(tailerFile)) {
+                tailerFiles.add(tailerFile);
+                plugin.logDebug(" Tailer File => " + tailerFile);
+            }
+            for (String f : config.getStringList("file-tailer.extra_files")) {
+                if (!tailerFiles.contains(f)) {
+                    tailerFiles.add(f);
+                }
+                plugin.logDebug(" Tailer File => " + f);
+            }
+            if (tailerFiles.isEmpty()) {
+                plugin.logInfo(" No command recipients defined.");
+            }
+            tailerRecipient = config.getString("file-tailer.recipient", "");
+            tailerCtcp = config.getBoolean("file-tailer.ctcp", false);
 
             plugin.logInfo("Channels: " + config.getKeys().toString());
 
@@ -770,7 +822,7 @@ public final class PurpleBot {
                         CaseInsensitiveMap<String> optionPair = new CaseInsensitiveMap<>();
                         String commandKey = "channels." + enChannelName + ".commands." + command + ".";
                         optionPair.put("modes", config.getString(commandKey + "modes", "*"));
-                        optionPair.put("private", config.getString(commandKey + "private", "false"));                        
+                        optionPair.put("private", config.getString(commandKey + "private", "false"));
                         optionPair.put("ctcp", config.getString(commandKey + "ctcp", "false"));
                         optionPair.put("notice", config.getString(commandKey + "notice", "false"));
                         optionPair.put("game_command", config.getString(commandKey + "game_command", "@help"));
@@ -1000,7 +1052,7 @@ public final class PurpleBot {
             }
         }
     }
-    
+
     /**
      *
      * @param player

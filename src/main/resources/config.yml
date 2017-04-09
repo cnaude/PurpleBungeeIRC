@@ -87,7 +87,9 @@ message-format:
   default-group-suffix: ''
   default-group-prefix: ''
   default-player-world: 'world'
-  default-player-group: ''  
+  default-player-group: ''
+  # Log tailer format
+  log-tailer: '[LOG: %FILE%] %LINE%'
 # Format for the @list command in IRC
 list-single-line: false
 list-format: '[&9%SERVER%&r] &2Online &r(%COUNT%/%MAX%): %PLAYERS%'

@@ -52,7 +52,7 @@ public class KickListener extends ListenerAdapter {
         String channelName = channel.getName();
         User recipient = event.getRecipient();
         User user = event.getUser();
-        
+
         if (recipient.getNick().equalsIgnoreCase(ircBot.botNick)) {
             plugin.logDebug("onKick: " + recipient.getNick());
             if (ircBot.joinOnKick) {
@@ -65,6 +65,10 @@ public class KickListener extends ListenerAdapter {
             } else {
                 plugin.logDebug("onKick: NOT rejoining");
             }
+        }
+
+        if (ircBot.isValidChannel(channel.getName())) {
+            ircBot.broadcastIRCKick(recipient, user, event.getReason(), channel);
         }
 
     }

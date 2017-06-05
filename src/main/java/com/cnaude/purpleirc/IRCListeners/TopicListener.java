@@ -34,6 +34,7 @@ public class TopicListener extends ListenerAdapter {
     @Override
     public void onTopic(TopicEvent event) {
         Channel channel = event.getChannel();
+        String myChannel = channel.getName();
         User user = event.getUser();
 
         if (ircBot.isValidChannel(channel.getName())) {
@@ -47,7 +48,7 @@ public class TopicListener extends ListenerAdapter {
                             .replace("%CHANNEL%", channel.getName()));
                     plugin.logDebug("Sending topic notification due to " 
                             + TemplateName.IRC_TOPIC + " being true: " + message);
-                    plugin.broadcast(message, "irc.message.topic");
+                    plugin.broadcast(message, myChannel, "irc.message.topic");
                 }
             }
             ircBot.activeTopic.put(channel.getName(), event.getTopic());

@@ -49,7 +49,7 @@ public class NickChangeListener extends ListenerAdapter {
                             plugin.getMsgTemplate(ircBot.botNick, TemplateName.IRC_NICK_CHANGE)
                             .replace("%NEWNICK%", newNick)
                             .replace("%OLDNICK%", oldNick)
-                            .replace("%CHANNEL%", channelName)), "irc.message.nickchange");
+                            .replace("%CHANNEL%", channelName)), channelName, "irc.message.nickchange");
                 }
                 if (plugin.tabListHook != null) {
                     plugin.tabListHook.remFromTabList(oldNick);

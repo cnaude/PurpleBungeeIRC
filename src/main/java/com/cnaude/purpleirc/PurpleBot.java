@@ -1951,7 +1951,7 @@ public final class PurpleBot {
         if (enabledMessages.get(myChannel).contains(TemplateName.IRC_ACTION)) {
             plugin.broadcast(plugin.tokenizer.ircChatToGameTokenizer(
                     this, user, channel, plugin.getMsgTemplate(botNick,
-                            TemplateName.IRC_ACTION), message), "irc.message.action");
+                            TemplateName.IRC_ACTION), message), myChannel, "irc.message.action");
         } else {
             plugin.logDebug("Ignoring action due to "
                     + TemplateName.IRC_ACTION + " is false");
@@ -2007,8 +2007,7 @@ public final class PurpleBot {
         if (enabledMessages.get(myChannel).contains(TemplateName.IRC_KICK)) {
             plugin.broadcast(plugin.tokenizer.ircKickTokenizer(
                     this, recipient, kicker, reason, channel, plugin.getMsgTemplate(
-                            botNick, TemplateName.IRC_KICK)),
-                    "irc.message.kick");
+                            botNick, TemplateName.IRC_KICK)), myChannel, "irc.message.kick");
         }
     }
 
@@ -2027,10 +2026,11 @@ public final class PurpleBot {
      * @param channel
      */
     public void broadcastIRCMode(User user, String mode, org.pircbotx.Channel channel) {
+        String myChannel = channel.getName();
         if (isMessageEnabled(channel, TemplateName.IRC_MODE)) {
             plugin.broadcast(plugin.tokenizer.ircModeTokenizer(this, user, mode,
                     channel, plugin.getMsgTemplate(botNick,
-                            TemplateName.IRC_MODE)), "irc.message.mode");
+                            TemplateName.IRC_MODE)), myChannel, "irc.message.mode");
         }
     }
 
@@ -2042,10 +2042,11 @@ public final class PurpleBot {
      * @param channel
      */
     public void broadcastIRCNotice(User user, String message, String notice, org.pircbotx.Channel channel) {
+        String myChannel = channel.getName();
         if (isMessageEnabled(channel, TemplateName.IRC_NOTICE)) {
             plugin.broadcast(plugin.tokenizer.ircNoticeTokenizer(this, user,
                     message, notice, channel, plugin.getMsgTemplate(botNick,
-                            TemplateName.IRC_NOTICE)), "irc.message.notice");
+                            TemplateName.IRC_NOTICE)), myChannel, "irc.message.notice");
         }
     }
 
@@ -2055,11 +2056,12 @@ public final class PurpleBot {
      * @param channel
      */
     public void broadcastIRCJoin(User user, org.pircbotx.Channel channel) {
+        String myChannel = channel.getName();
         if (isMessageEnabled(channel, TemplateName.IRC_JOIN)) {
             plugin.logDebug("[broadcastIRCJoin] Broadcasting join message because "
                     + TemplateName.IRC_JOIN + " is true.");
             plugin.broadcast(plugin.tokenizer.chatIRCTokenizer(
-                    this, user, channel, plugin.getMsgTemplate(botNick, TemplateName.IRC_JOIN)), "irc.message.join");
+                    this, user, channel, plugin.getMsgTemplate(botNick, TemplateName.IRC_JOIN)), myChannel, "irc.message.join");
         } else {
             plugin.logDebug("[broadcastIRCJoin] NOT broadcasting join message because irc-join is false.");
         }
@@ -2067,12 +2069,13 @@ public final class PurpleBot {
     }
 
     public void broadcastIRCPart(User user, org.pircbotx.Channel channel) {
+        String myChannel = channel.getName();
         if (isMessageEnabled(channel, TemplateName.IRC_PART)) {
             String message = plugin.tokenizer.chatIRCTokenizer(
                     this, user, channel, plugin.getMsgTemplate(botNick, TemplateName.IRC_PART));
             plugin.logDebug("[broadcastIRCPart]  Broadcasting part message because "
                     + TemplateName.IRC_PART + " is true: " + message);
-            plugin.broadcast(message, "irc.message.part");
+            plugin.broadcast(message, myChannel, "irc.message.part");
         } else {
             plugin.logDebug("[broadcastIRCPart] NOT broadcasting part message because "
                     + TemplateName.IRC_PART + " is false.");
@@ -2080,12 +2083,13 @@ public final class PurpleBot {
     }
 
     public void broadcastIRCQuit(User user, org.pircbotx.Channel channel, String reason) {
+        String myChannel = channel.getName();
         if (isMessageEnabled(channel, TemplateName.IRC_QUIT)) {
             plugin.logDebug("[broadcastIRCQuit] Broadcasting quit message because "
                     + TemplateName.IRC_QUIT + " is true.");
             plugin.broadcast(plugin.tokenizer.chatIRCTokenizer(
                     this, user, channel, plugin.getMsgTemplate(botNick, TemplateName.IRC_QUIT))
-                    .replace("%REASON%", reason), "irc.message.quit");
+                    .replace("%REASON%", reason), myChannel, "irc.message.quit");
         } else {
             plugin.logDebug("[broadcastIRCQuit] NOT broadcasting quit message because "
                     + TemplateName.IRC_QUIT + " is false.");
@@ -2100,9 +2104,10 @@ public final class PurpleBot {
      * @param message
      */
     public void broadcastIRCTopic(User user, org.pircbotx.Channel channel, String message) {
+        String myChannel = channel.getName();
         if (isMessageEnabled(channel, TemplateName.IRC_TOPIC)) {
             plugin.broadcast(plugin.tokenizer.chatIRCTokenizer(
-                    this, user, channel, plugin.getMsgTemplate(botNick, TemplateName.IRC_TOPIC)), "irc.message.topic");
+                    this, user, channel, plugin.getMsgTemplate(botNick, TemplateName.IRC_TOPIC)), myChannel, "irc.message.topic");
         }
     }
 
@@ -2132,7 +2137,7 @@ public final class PurpleBot {
      * @param nick
      */
     public void broadcastIRCDisconnect(String nick) {
-        plugin.broadcast("[" + nick + "] Disconnected from IRC server.", "irc.message.disconnect");
+        plugin.broadcast("[" + nick + "] Disconnected from IRC server.", "", "irc.message.disconnect");
     }
 
     /**
@@ -2141,7 +2146,7 @@ public final class PurpleBot {
      * @param nick
      */
     public void broadcastIRCConnect(String nick) {
-        plugin.broadcast("[" + nick + "] Connected to IRC server.", "irc.message.connect");
+        plugin.broadcast("[" + nick + "] Connected to IRC server.", "", "irc.message.connect");
     }
 
     /**

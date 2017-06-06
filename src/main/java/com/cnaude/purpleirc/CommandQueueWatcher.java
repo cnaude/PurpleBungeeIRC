@@ -16,9 +16,11 @@
  */
 package com.cnaude.purpleirc;
 
+import com.cnaude.purpleirc.Events.IRCCommandEvent;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 
 /**
@@ -57,6 +59,7 @@ public class CommandQueueWatcher {
             } catch (Exception ce) {
                 plugin.logError("Error running command: " + ce.getMessage());
             }
+            ProxyServer.getInstance().getPluginManager().callEvent(new IRCCommandEvent(ircCommand));
         }
     }
 

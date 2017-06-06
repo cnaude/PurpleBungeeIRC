@@ -4,7 +4,7 @@ import com.cnaude.purpleirc.Commands.IRCCommandInterface;
 import com.cnaude.purpleirc.GameListeners.*;
 import com.cnaude.purpleirc.Hooks.BungeeTabListPlusHook;
 import com.cnaude.purpleirc.Utilities.*;
-import com.cnaude.purpleirc.events.IRCMessageEvent;
+import com.cnaude.purpleirc.Events.IRCMessageEvent;
 import com.google.common.base.Joiner;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;

@@ -6,7 +6,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- BungeeCord API Version, change if out dated -->
-        <bungeecord.version>1152</bungeecord.version>
+        <bungeecord.version>1242</bungeecord.version>
         <build.number>SNAPSHOT</build.number>
     </properties>
 

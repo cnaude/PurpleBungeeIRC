@@ -1,7 +1,6 @@
 package com.cnaude.purpleirc.Utilities;
 
 import com.cnaude.purpleirc.ChatMessage;
-import com.cnaude.purpleirc.MultiChatMessage;
 import com.cnaude.purpleirc.MvChatMessage;
 import com.cnaude.purpleirc.PurpleBot;
 import com.cnaude.purpleirc.PurpleIRC;
@@ -307,12 +306,6 @@ public class ChatTokenizer {
     public String chatMvTokenizer(ProxiedPlayer player, MvChatMessage cm, String template) {
         return gameChatToIRCTokenizer(player, template, cm.getMessage())
                 .replace("%MVCHANNEL%", cm.getChannel())
-                .replace("%CHANNEL%", cm.getChannel());
-    }
-    
-    public String multiChatTokenizer(ProxiedPlayer player, MultiChatMessage cm, String template) {
-        return gameChatToIRCTokenizer(player, template, cm.getMessage())
-                .replace("%MCCHANNEL%", cm.getChannel())
                 .replace("%CHANNEL%", cm.getChannel());
     }
 

@@ -34,6 +34,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.pircbotx.cap.SASLCapHandler;
 
 /**
  * @author Chris Naude
@@ -49,6 +50,7 @@ public final class PurpleBot {
     public boolean autoConnect;
     public boolean ssl;
     public boolean tls;
+    public boolean sasl;
     public boolean trustAllCerts;
     public boolean sendRawMessageOnConnect;
     public boolean showMOTD;
@@ -71,6 +73,8 @@ public final class PurpleBot {
     public String commandPrefix;
     public String quitMessage;
     public String botIdentPassword;
+    public String saslUsername;
+    public String saslPassword;
     public String rawMessage;
     public String channelCmdNotifyMode;
     public String partInvalidChannelsMsg;
@@ -78,7 +82,7 @@ public final class PurpleBot {
     public ArrayList<String> botChannels;
     public CaseInsensitiveMap<Collection<String>> channelNicks;
     public CaseInsensitiveMap<Collection<String>> tabIgnoreNicks;
-    public CaseInsensitiveMap<Collection<String>> filters;    
+    public CaseInsensitiveMap<Collection<String>> filters;
     public CaseInsensitiveMap<String> channelPassword;
     public CaseInsensitiveMap<String> channelTopic;
     public CaseInsensitiveMap<Boolean> channelTopicChanserv;
@@ -212,6 +216,10 @@ public final class PurpleBot {
         if (!botIdentPassword.isEmpty()) {
             plugin.logInfo("Setting IdentPassword ...");
             configBuilder.setNickservPassword(botIdentPassword);
+        }
+        if (sasl) {
+            plugin.logInfo("Enabling SASL ...");
+            configBuilder.addCapHandler(new SASLCapHandler(saslUsername, saslPassword));
         }
         if (tls) {
             plugin.logInfo("Enabling TLS ...");
@@ -453,7 +461,7 @@ public final class PurpleBot {
             }
         });
     }
-    
+
     public void asyncJoinChannel(final String channelName) {
         if (!this.isConnected()) {
             return;
@@ -543,6 +551,7 @@ public final class PurpleBot {
             autoConnect = config.getBoolean("autoconnect", true);
             ssl = config.getBoolean("ssl", false);
             tls = config.getBoolean("tls", false);
+            sasl = config.getBoolean("sasl", false);
             trustAllCerts = config.getBoolean("trust-all-certs", false);
             sendRawMessageOnConnect = config.getBoolean("raw-message-on-connect", false);
             rawMessage = config.getString("raw-message", "");
@@ -569,6 +578,8 @@ public final class PurpleBot {
             botServerPort = config.getInt("port");
             botServerPass = config.getString("password", "");
             botIdentPassword = config.getString("ident-password", "");
+            saslUsername = config.getString("sasl-username", "");
+            saslPassword = config.getString("sasl-password", "");
             commandPrefix = config.getString("command-prefix", ".");
             chatDelay = config.getLong("message-delay", 1000);
             plugin.logDebug("Message Delay => " + chatDelay);
@@ -642,7 +653,7 @@ public final class PurpleBot {
             if (channelCmdNotifyIgnore.isEmpty()) {
                 plugin.logInfo(" No command-notify ignores defined.");
             }
-            
+
             // load tailer settings
             tailerEnabled = config.getBoolean("file-tailer.enabled", false);
 

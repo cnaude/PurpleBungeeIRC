@@ -13,9 +13,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */package com.cnaude.purpleirc.Commands;
+ */
+package com.cnaude.purpleirc.Commands;
 
+import com.cnaude.purpleirc.PurpleBot;
 import com.cnaude.purpleirc.PurpleIRC;
+import java.util.ArrayList;
+import java.util.List;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -24,19 +28,19 @@ import net.md_5.bungee.api.chat.TextComponent;
  *
  * @author cnaude
  */
-public class Join implements IRCCommandInterface {
+public class Nickserv implements IRCCommandInterface {
 
     private final PurpleIRC plugin;
-    private final String usage = "[bot] [channel] ([password])";
-    private final String desc = "Join IRC channel.";
-    private final String name = "join";
+    private final String usage = "([bot]) [message]";
+    private final String desc = "Send nickserv message to the IRC server.";
+    private final String name = "nickserv";
     private final String fullUsage = ChatColor.WHITE + "Usage: " + ChatColor.GOLD + "/irc " + name + " " + usage; 
 
     /**
      *
      * @param plugin
      */
-    public Join(PurpleIRC plugin) {
+    public Nickserv(PurpleIRC plugin) {
         this.plugin = plugin;
     }
 
@@ -47,20 +51,22 @@ public class Join implements IRCCommandInterface {
      */
     @Override
     public void dispatch(CommandSender sender, String[] args) {
-        if (args.length >= 3) {
-            String bot = args[1];
-            String channelName = args[2];
-            String password = "";
-            if (args.length >= 4) {
-                for (int i = 3; i < args.length; i++) {
-                    password = password + " " + args[i];
-                }
-            }
-            if (plugin.ircBots.containsKey(bot)) {
-                plugin.ircBots.get(bot).asyncJoinChannel(channelName, password);
-                sender.sendMessage(new TextComponent(ChatColor.WHITE + "Joining " + channelName + "..."));
+        if (args.length >= 2) {
+            int msgIdx = 1;
+            List<PurpleBot> myBots = new ArrayList<>();
+            if (plugin.ircBots.containsKey(args[1])) {
+                myBots.add(plugin.ircBots.get(args[1]));
+                msgIdx = 2;
             } else {
-                sender.sendMessage(new TextComponent(plugin.invalidBotName.replace("%BOT%", bot)));
+                myBots.addAll(plugin.ircBots.values());
+            }
+            for (PurpleBot ircBot : myBots) {
+                String msg = "";
+                for (int i = msgIdx; i < args.length; i++) {
+                    msg = msg + " " + args[i];
+                }
+                plugin.logDebug("Sending nickserv to the server: " + msg.substring(1));
+                ircBot.asyncRawlineNow("nickserv " + msg.substring(1));                  
             }
         } else {
             sender.sendMessage(new TextComponent(fullUsage));

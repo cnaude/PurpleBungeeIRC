@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 cnaude
+ * Copyright (C) 2014 - 2017 cnaude
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -98,4 +98,5 @@ public class IRCMessageEvent extends Event {
     public void setMessage(String message) {
         this.message = message;
     }
+
 }

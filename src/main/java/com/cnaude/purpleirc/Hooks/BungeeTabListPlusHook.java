@@ -2,6 +2,7 @@ package com.cnaude.purpleirc.Hooks;
 
 import codecrafter47.bungeetablistplus.api.bungee.BungeeTabListPlusAPI;
 import codecrafter47.bungeetablistplus.api.bungee.FakePlayerManager;
+import codecrafter47.bungeetablistplus.api.bungee.Icon;
 import codecrafter47.bungeetablistplus.api.bungee.tablist.FakePlayer;
 import com.cnaude.purpleirc.IRCServerInfo;
 import com.cnaude.purpleirc.PurpleBot;
@@ -64,8 +65,8 @@ public class BungeeTabListPlusHook {
         ServerInfo server = new IRCServerInfo(plugin.ircMinecraftServerName);
         FakePlayer fakePlayer = fakePlayerManager.createFakePlayer(displayName, server);
         fakePlayer.setPing(47);
-        if (!plugin.customTabIcon.isEmpty()) {
-            fakePlayer.setSkin(BungeeTabListPlusAPI.getSkinForPlayer(plugin.customTabIcon));
+        if (!plugin.customTabIcon.isEmpty()) {            
+            fakePlayer.setIcon(Icon.DEFAULT);
         }
 
     }

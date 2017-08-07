@@ -3,6 +3,7 @@ package com.cnaude.purpleirc.GameListeners;
 import com.cnaude.purpleirc.PurpleBot;
 import com.cnaude.purpleirc.PurpleIRC;
 import java.util.concurrent.TimeUnit;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -40,12 +41,21 @@ public class GamePlayerJoinListener implements Listener {
         plugin.getProxy().getScheduler().schedule(plugin, new Runnable() {
             @Override
             public void run() {
-                if (event.getPlayer().isConnected()) {
+                if (!event.getPlayer().isConnected()) {
+                    return;
+                }
+                ServerInfo si;
+                try {
+                    si = event.getPlayer().getServer().getInfo();
+                } catch (Exception ex) {
+                    plugin.logDebug("onPostLogin: " + ex.getMessage());
+                    return;
+                }
+                if (si != null) {
                     for (PurpleBot ircBot : plugin.ircBots.values()) {
                         ircBot.gameJoin(event.getPlayer(), "joined");
                         plugin.updateServerCache(event.getPlayer().getServer().getInfo());
                     }
-
                 }
             }
         }, 2, TimeUnit.SECONDS);

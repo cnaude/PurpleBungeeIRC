@@ -151,7 +151,7 @@ public class PurpleIRC extends Plugin {
         this.ircMvChannelMessages = new CaseInsensitiveMap<>();
         this.serverMaxCounts = new HashMap<>();
         this.displayNameCache = new CaseInsensitiveMap<>();
-        this.cacheFile = new File("plugins/PurpleIRC/displayName.cache");
+        this.cacheFile = new File("plugins/PurpleBungeeIRC/displayName.cache");
     }
 
     /**
@@ -676,9 +676,10 @@ public class PurpleIRC extends Plugin {
     public void saveDisplayNameCache() {
         BufferedWriter writer;
         try {
+            cacheFile.createNewFile();
             writer = new BufferedWriter(new FileWriter(cacheFile));
         } catch (IOException ex) {
-            logError(ex.getMessage());
+            logError("new FileWriter: " + ex.getMessage());
             return;
         }
 
@@ -689,12 +690,13 @@ public class PurpleIRC extends Plugin {
             }
             writer.close();
         } catch (IOException ex) {
-            logError(ex.getMessage());
+            logError("write: " + ex.getMessage());
         }
     }
 
     public void loadDisplayNameCache() {
         try {
+            cacheFile.createNewFile();
             try (BufferedReader in = new BufferedReader(new FileReader(cacheFile))) {
                 String line;
                 while ((line = in.readLine()) != null) {
@@ -706,7 +708,7 @@ public class PurpleIRC extends Plugin {
                 }
             }
         } catch (IOException | NumberFormatException e) {
-            logError(e.getMessage());
+            logError("load: " + e.getMessage());
         }
     }
 

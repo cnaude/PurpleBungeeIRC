@@ -19,11 +19,6 @@
 
     <repositories>
         <repository>
-            <id>bungeecord-repo</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </repository>
-         
-        <repository>
             <id>cnaude-repo</id>
             <url>http://cnaude.org/repo/</url>
             <snapshots>
@@ -31,6 +26,11 @@
             </snapshots>
         </repository>
         
+        <repository>
+            <id>bungeecord-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+         
         <repository>
             <id>codecrafter47-repo</id>
             <url>http://nexus.codecrafter47.dyndns.eu/content/repositories/public/</url>

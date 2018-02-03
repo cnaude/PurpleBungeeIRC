@@ -60,9 +60,7 @@ public class TemplateName {
     
     public final static String HERO_ACTION = "hero-action";
     public final static String HERO_CHAT = "hero-chat";
-
-    public final static String MINEVERSE_CHAT = "mv-chat";
-    
+  
     public final static String IRC_HERO_ACTION = "irc-hero-action";
     public final static String IRC_HERO_CHAT = "irc-hero-chat";
     public final static String IRC_HERO_KICK = "irc-hero-kick";
@@ -71,8 +69,14 @@ public class TemplateName {
     public final static String IRC_HERO_QUIT = "irc-hero-quit";
     public final static String IRC_HERO_TOPIC = "irc-hero-topic";   
     public final static String IRC_ESS_HELPOP = "irc-ess-helpop";
+    
+    public final static String BUNGEE_CHAT_JOIN = "bungeechat-join";
+    public final static String BUNGEE_CHAT_LEAVE = "bungeechat-leave";
+    public final static String BUNGEE_CHAT_SWITCH = "bungeechat-switch";
 
     public static final String IRC_MV_CHAT = "irc-mv-chat";
+    
+    public static final String IRC_BC_CHAT = "irc-bc-chat";
     
     public final static String LOG_TAILER = "log-tailer";
 }

@@ -133,6 +133,10 @@ channels:
     - game-switch
     - game-quit
     - game-mode
+    # bungeechat - if you enable these be sure to disable the corresponding message types above
+    #- bungeechat-join
+    #- bungeechat-leave
+    #- bungeechat-switch
     # These messages are sent from IRC to game (see permissions)
     - irc-action
     - irc-chat

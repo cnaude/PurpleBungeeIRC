@@ -1,7 +1,7 @@
 package com.cnaude.purpleirc.Utilities;
 
 import com.cnaude.purpleirc.ChatMessage;
-import com.cnaude.purpleirc.MvChatMessage;
+import com.cnaude.purpleirc.ChatMessages.BungeeChatMessage;
 import com.cnaude.purpleirc.PurpleBot;
 import com.cnaude.purpleirc.PurpleIRC;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -303,13 +303,13 @@ public class ChatTokenizer {
                 .replace("%CHANNEL%", cm.getChannel());
     }
 
-    public String chatMvTokenizer(ProxiedPlayer player, MvChatMessage cm, String template) {
+    public String bungeeChatTokenizer(ProxiedPlayer player, BungeeChatMessage cm, String template) {
         return gameChatToIRCTokenizer(player, template, cm.getMessage())
                 .replace("%MVCHANNEL%", cm.getChannel())
                 .replace("%CHANNEL%", cm.getChannel());
     }
 
-    public String ircChatToMVChatTokenizer(PurpleBot ircBot, User user, org.pircbotx.Channel channel, String template, String message, String hChannel) {
+    public String ircChatToBungeeChatTokenizer(PurpleBot ircBot, User user, org.pircbotx.Channel channel, String template, String message, String bcChannel) {
         String ircNick = user.getNick();
         String tmpl;
         ProxiedPlayer player = this.getPlayer(ircNick);
@@ -319,7 +319,7 @@ public class ChatTokenizer {
             tmpl = playerTokenizer(ircNick, template);
         }
         return plugin.colorConverter.ircColorsToGame(ircUserTokenizer(tmpl, user, ircBot)
-                .replace("%MVCHANNEL%", hChannel)
+                .replace("%BCCHANNEL%", bcChannel)
                 .replace("%NICKPREFIX%", ircBot.getNickPrefix(user, channel))
                 .replace("%MESSAGE%", message)
                 .replace("%CHANNEL%", channel.getName()));

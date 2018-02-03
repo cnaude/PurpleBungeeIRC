@@ -117,7 +117,7 @@ public final class PurpleBot {
     private final CaseInsensitiveMap<Boolean> shortify;
     public CaseInsensitiveMap<String> heroChannel;
     public CaseInsensitiveMap<String> townyChannel;
-    public CaseInsensitiveMap<String> mvChannel;
+    public CaseInsensitiveMap<String> bcChannel;
     public CaseInsensitiveMap<Collection<String>> opsList;
     public CaseInsensitiveMap<Collection<String>> voicesList;
     public CaseInsensitiveMap<Collection<String>> worldList;
@@ -1085,6 +1085,30 @@ public final class PurpleBot {
      * @param player
      * @param message
      */
+    public void bungeeChatJoin(ProxiedPlayer player, String message) {
+        if (!this.isConnected()) {
+            return;
+        }
+        for (String channelName : botChannels) {
+            if (isMessageEnabled(channelName, TemplateName.BUNGEE_CHAT_JOIN)) {
+                if (!isPlayerInValidWorld(player, channelName)) {
+                    return;
+                }
+                asyncIRCMessage(channelName, plugin.tokenizer
+                        .gameChatToIRCTokenizer(player, plugin.getMsgTemplate(
+                                botNick, TemplateName.BUNGEE_CHAT_JOIN), message));
+            } else {
+                plugin.logDebug("Not sending join message due to "
+                        + TemplateName.BUNGEE_CHAT_JOIN + " being disabled");
+            }
+        }
+    }
+
+    /**
+     *
+     * @param player
+     * @param message
+     */
     public void gameServerSwitch(ProxiedPlayer player, String message) {
         if (!this.isConnected()) {
             return;
@@ -1121,6 +1145,27 @@ public final class PurpleBot {
                 asyncIRCMessage(channelName, plugin.tokenizer
                         .gameChatToIRCTokenizer(player, plugin.getMsgTemplate(
                                 botNick, TemplateName.GAME_QUIT), message));
+            }
+        }
+    }
+
+    /**
+     *
+     * @param player
+     * @param message
+     */
+    public void bungeeChatLeave(ProxiedPlayer player, String message) {
+        if (!this.isConnected()) {
+            return;
+        }
+        for (String channelName : botChannels) {
+            if (isMessageEnabled(channelName, TemplateName.BUNGEE_CHAT_LEAVE)) {
+                if (!isPlayerInValidWorld(player, channelName)) {
+                    return;
+                }
+                asyncIRCMessage(channelName, plugin.tokenizer
+                        .gameChatToIRCTokenizer(player, plugin.getMsgTemplate(
+                                botNick, TemplateName.BUNGEE_CHAT_LEAVE), message));
             }
         }
     }
@@ -1893,26 +1938,13 @@ public final class PurpleBot {
                                     TemplateName.IRC_CONSOLE_CHAT), message)));
         }
 
-        if (enabledMessages.get(myChannel).contains(TemplateName.IRC_MV_CHAT)) {
-            String mChannel = mvChannel.get(myChannel);
-            String tmpl = plugin.getIRCMVChatChannelTemplate(botNick, mChannel);
-            String rawMVMessage = filterMessage(
-                    plugin.tokenizer.ircChatToMVChatTokenizer(this, user, channel, tmpl, message, mChannel), myChannel);
-            if (!rawMVMessage.isEmpty()) {
-                ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                out.writeUTF("CHAT");
-                out.writeUTF(mChannel);
-                out.writeUTF(rawMVMessage);
-                out.writeUTF(user.getNick());
-                out.writeUTF(ChatColor.stripColor(rawMVMessage));
-                out.writeUTF(ChatColor.WHITE.toString());
-                out.writeUTF(rawMVMessage);
-                out.writeUTF(ComponentSerializer.toString(TextComponent.fromLegacyText(rawMVMessage)));
-                for (ServerInfo server : this.plugin.getProxy().getServers().values()) {
-                    if (!server.getPlayers().isEmpty()) {
-                        server.sendData("BungeeCord", out.toByteArray());
-                    }
-                }
+        if (enabledMessages.get(myChannel).contains(TemplateName.IRC_BC_CHAT) && plugin.bungeeChatHook != null) {
+            String bChannel = bcChannel.get(myChannel);
+            String tmpl = plugin.getIrcBungeeChatChannelTemplate(botNick, bChannel);
+            String rawBungeeChatMessage = filterMessage(
+                    plugin.tokenizer.ircChatToBungeeChatTokenizer(this, user, channel, tmpl, message, bChannel), myChannel);
+            if (!rawBungeeChatMessage.isEmpty()) {
+                plugin.bungeeChatHook.sendChannelMessage(user, bChannel, message);
             }
         }
     }
@@ -1996,28 +2028,6 @@ public final class PurpleBot {
                 out.writeUTF(hChannel);
                 out.writeUTF(rawHCMessage);
                 plugin.transmitMessage(out.toByteArray(), "PurpleBungeeIRC");
-            }
-        }
-        if (enabledMessages.get(myChannel).contains(TemplateName.IRC_MV_CHAT)) {
-            String mChannel = mvChannel.get(myChannel);
-            String tmpl = plugin.getIRCMVActionChannelTemplate(botNick, mChannel);
-            String rawMVMessage = filterMessage(
-                    plugin.tokenizer.ircChatToMVChatTokenizer(this, user, channel, tmpl, message, mChannel), myChannel);
-            if (!rawMVMessage.isEmpty()) {
-                ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                out.writeUTF("CHAT");
-                out.writeUTF(mChannel);
-                out.writeUTF(rawMVMessage);
-                out.writeUTF(user.getNick());
-                out.writeUTF(ChatColor.stripColor(rawMVMessage));
-                out.writeUTF(ChatColor.WHITE.toString());
-                out.writeUTF(rawMVMessage);
-                out.writeUTF(ComponentSerializer.toString(TextComponent.fromLegacyText(rawMVMessage)));
-                for (ServerInfo server : this.plugin.getProxy().getServers().values()) {
-                    if (!server.getPlayers().isEmpty()) {
-                        server.sendData("BungeeCord", out.toByteArray());
-                    }
-                }
             }
         }
     }
@@ -2322,26 +2332,6 @@ public final class PurpleBot {
         }
         plugin.logInfo("Trying alternate nick " + botNick);
         bot.sendIRC().changeNick(botNick);
-    }
-
-    public void mvChat(ProxiedPlayer player, MvChatMessage cm) {
-        if (!this.isConnected()) {
-            return;
-        }
-        for (String channelName : botChannels) {
-            if (!isPlayerInValidWorld(player, channelName)) {
-                continue;
-            }
-            plugin.logDebug("MV Channel: " + cm.getChannel());
-            if (isMessageEnabled(channelName, "mv-" + cm.getChannel() + "-chat")
-                    || isMessageEnabled(channelName, TemplateName.MINEVERSE_CHAT)) {
-                asyncIRCMessage(channelName, plugin.tokenizer
-                        .chatMvTokenizer(player, cm, plugin.getMineverseChannelTemplate(botNick, cm.getChannel())));
-            } else {
-                plugin.logDebug("Player " + player.getName() + " is in \""
-                        + cm.getChannel() + "\" but mv-" + cm.getChannel() + "-chat is disabled.");
-            }
-        }
     }
 
 }

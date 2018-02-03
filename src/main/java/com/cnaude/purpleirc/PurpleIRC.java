@@ -21,6 +21,7 @@ import com.cnaude.purpleirc.GameListeners.*;
 import com.cnaude.purpleirc.Hooks.BungeeTabListPlusHook;
 import com.cnaude.purpleirc.Utilities.*;
 import com.cnaude.purpleirc.Events.IRCMessageEvent;
+import com.cnaude.purpleirc.Hooks.BungeeChatHook;
 import com.google.common.base.Joiner;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -61,10 +62,19 @@ public class PurpleIRC extends Plugin {
     public static long startTime;
     public boolean identServerEnabled;
     private final CaseInsensitiveMap<HashMap<String, String>> messageTmpl;
+    
+    // Herochat 
     private final CaseInsensitiveMap<CaseInsensitiveMap<String>> ircHeroChannelMessages;
     private final CaseInsensitiveMap<CaseInsensitiveMap<String>> ircHeroActionChannelMessages;
     private final CaseInsensitiveMap<CaseInsensitiveMap<String>> heroChannelMessages;
     private final CaseInsensitiveMap<CaseInsensitiveMap<String>> heroActionChannelMessages;
+    
+    // Bungeechat
+    private final CaseInsensitiveMap<CaseInsensitiveMap<String>> ircBungeeChatChannelMessages;
+    private final CaseInsensitiveMap<CaseInsensitiveMap<String>> ircBungeeChatActionChannelMessages;
+    private final CaseInsensitiveMap<CaseInsensitiveMap<String>> bungeeChatChannelMessages;
+    private final CaseInsensitiveMap<CaseInsensitiveMap<String>> bungeeChatActionChannelMessages;
+    
     private final HashMap<ServerInfo, Integer> serverMaxCounts;
     public String defaultPlayerSuffix,
             defaultPlayerPrefix,
@@ -121,6 +131,7 @@ public class PurpleIRC extends Plugin {
     public CommandQueueWatcher commandQueue;
     public CommandHandlers commandHandlers;
     public BungeeTabListPlusHook tabListHook;
+    public BungeeChatHook bungeeChatHook;
     Configuration mainConfig;
     BungeeCordListener bungeeCordListener;
 
@@ -128,10 +139,7 @@ public class PurpleIRC extends Plugin {
     private final File cacheFile;
     public HashMap<String, IRCCommandInterface> commands;
     public ArrayList<String> sortedCommands;
-    private final CaseInsensitiveMap<CaseInsensitiveMap<String>> mvChannelMessages;
-    private final CaseInsensitiveMap<CaseInsensitiveMap<String>> mvActionMessages;
-    private final CaseInsensitiveMap<CaseInsensitiveMap<String>> ircMvChannelMessages;
-    private final CaseInsensitiveMap<CaseInsensitiveMap<String>> ircMvActionMessages;
+
     public String ircMinecraftServerName;
 
     public PurpleIRC() {
@@ -141,14 +149,17 @@ public class PurpleIRC extends Plugin {
         this.sampleFileName = "SampleBot.yml";
         this.ircBots = new CaseInsensitiveMap<>();
         this.messageTmpl = new CaseInsensitiveMap<>();
+        
         this.ircHeroChannelMessages = new CaseInsensitiveMap<>();
         this.ircHeroActionChannelMessages = new CaseInsensitiveMap<>();
         this.heroChannelMessages = new CaseInsensitiveMap<>();
         this.heroActionChannelMessages = new CaseInsensitiveMap<>();
-        this.mvChannelMessages = new CaseInsensitiveMap<>();
-        this.mvActionMessages = new CaseInsensitiveMap<>();
-        this.ircMvActionMessages = new CaseInsensitiveMap<>();
-        this.ircMvChannelMessages = new CaseInsensitiveMap<>();
+        
+        this.ircBungeeChatActionChannelMessages = new CaseInsensitiveMap<>();
+        this.ircBungeeChatChannelMessages = new CaseInsensitiveMap<>();
+        this.bungeeChatActionChannelMessages = new CaseInsensitiveMap<>();
+        this.bungeeChatChannelMessages = new CaseInsensitiveMap<>();
+        
         this.serverMaxCounts = new HashMap<>();
         this.displayNameCache = new CaseInsensitiveMap<>();
         this.cacheFile = new File("plugins/PurpleBungeeIRC/displayName.cache");
@@ -180,6 +191,11 @@ public class PurpleIRC extends Plugin {
         this.getProxy().getPluginManager().registerListener(this, new GamePlayerJoinListener(this));
         this.getProxy().getPluginManager().registerListener(this, new GamePlayerQuitListener(this));
         this.getProxy().getPluginManager().registerListener(this, new GameServerSwitchListener(this));
+        if (this.getProxy().getPluginManager().getPlugin("BungeeChat") != null) {
+            logInfo("Enabling BungeeChat hooks!"); 
+            this.getProxy().getPluginManager().registerListener(this, new BungeeChatJoinListener(this));
+            this.getProxy().getPluginManager().registerListener(this, new BungeeChatLeaveListener(this));        
+        }
         bungeeCordListener = new BungeeCordListener(this);
         getProxy().registerChannel("BungeeCord");
         this.getProxy().getPluginManager().registerListener(this, bungeeCordListener);
@@ -196,6 +212,9 @@ public class PurpleIRC extends Plugin {
         updateServerCache(this);
         if (customTabList && this.getProxy().getPluginManager().getPlugin("BungeeTabListPlus") != null) {
             this.tabListHook = new BungeeTabListPlusHook(this);
+        }
+        if (this.getProxy().getPluginManager().getPlugin("BungeeChat") != null) {
+            this.bungeeChatHook = new BungeeChatHook(this);
         }
     }
 
@@ -775,43 +794,12 @@ public class PurpleIRC extends Plugin {
         return "";
     }
 
-    public String getMineverseChannelTemplate(String botNick, String channel) {
-        String tmpl = getMvTemplate(mvChannelMessages, botNick, channel);
-        if (tmpl.isEmpty()) {
-            return getMsgTemplate(MAINCONFIG, TemplateName.HERO_CHAT);
-        }
-        return getMvTemplate(mvChannelMessages, botNick, channel);
-    }
-
-    public String getMvTemplate(CaseInsensitiveMap<CaseInsensitiveMap<String>> mv,
-            String botName, String hChannel) {
-        if (mv.containsKey(botName)) {
-            if (mv.get(botName).containsKey(hChannel)) {
-                return mv.get(botName).get(hChannel);
-            }
-        }
-        if (mv.containsKey(MAINCONFIG)) {
-            if (mv.get(MAINCONFIG).containsKey(hChannel)) {
-                return mv.get(MAINCONFIG).get(hChannel);
-            }
-        }
-        return "";
-    }
-
-    public String getIRCMVChatChannelTemplate(String botName, String hChannel) {
+    public String getIrcBungeeChatChannelTemplate(String botName, String hChannel) {
         String tmpl = getHeroTemplate(ircHeroChannelMessages, botName, hChannel);
         if (tmpl.isEmpty()) {
-            return getMsgTemplate(MAINCONFIG, TemplateName.IRC_HERO_CHAT);
+            return getMsgTemplate(MAINCONFIG, TemplateName.IRC_BC_CHAT);
         }
         return getHeroTemplate(ircHeroChannelMessages, botName, hChannel);
-    }
-
-    public String getIRCMVActionChannelTemplate(String botName, String hChannel) {
-        String tmpl = getHeroTemplate(ircHeroActionChannelMessages, botName, hChannel);
-        if (tmpl.isEmpty()) {
-            return getMsgTemplate(MAINCONFIG, TemplateName.IRC_HERO_ACTION);
-        }
-        return getHeroTemplate(ircHeroActionChannelMessages, botName, hChannel);
     }
 
     protected void transmitMessage(byte[] data, String subChannel) {

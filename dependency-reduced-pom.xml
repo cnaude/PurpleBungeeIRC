@@ -47,6 +47,7 @@
                 <includes>
                   <include>com.cnaude.pircbotx</include>
                   <include>commons-codec</include>
+                  <include>commons-io</include>
                 </includes>
               </artifactSet>
               <filters />
@@ -63,27 +64,11 @@
                   <pattern>org.apache.commons.codec</pattern>
                   <shadedPattern>com.cnaude.purpleirc.ext.org.apache.commons.codec</shadedPattern>
                 </relocation>
+                <relocation>
+                  <pattern>org.apache.commons.io</pattern>
+                  <shadedPattern>com.cnaude.purpleirc.ext.org.apache.commons.io</shadedPattern>
+                </relocation>
               </relocations>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.8</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <target>
-                <copy />
-                <exec>
-                  <arg />
-                </exec>
-              </target>
             </configuration>
           </execution>
         </executions>
@@ -92,33 +77,53 @@
   </build>
   <repositories>
     <repository>
+      <snapshots />
+      <id>cnaude-repo</id>
+      <url>http://cnaude.org/repo/</url>
+    </repository>
+    <repository>
       <id>bungeecord-repo</id>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </repository>
     <repository>
-      <snapshots />
-      <id>cnaude-repo</id>
-      <url>http://cnaude.org/repo/</url>
+      <id>codecrafter47-repo</id>
+      <url>http://nexus.codecrafter47.dyndns.eu/content/repositories/public/</url>
+    </repository>
+    <repository>
+      <id>AuraDevelopmentTeam</id>
+      <url>https://maven.jnc.world</url>
     </repository>
   </repositories>
   <dependencies>
     <dependency>
       <groupId>net.md-5</groupId>
       <artifactId>bungeecord-api</artifactId>
-      <version>1133</version>
+      <version>1252</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>net.md-5</groupId>
       <artifactId>bungeecord</artifactId>
-      <version>1133</version>
+      <version>1252</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.cnaude.bungeechatproxy</groupId>
-      <artifactId>BungeeChatProxy</artifactId>
-      <version>0.2</version>
+      <groupId>com.cnaude.herochat</groupId>
+      <artifactId>HerochatBungeeBridge</artifactId>
+      <version>1.1.0</version>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>codecrafter47.bungeetablistplus</groupId>
+      <artifactId>bungeetablistplus-api-bungee</artifactId>
+      <version>2.8.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>dev.aura.bungeechat</groupId>
+      <artifactId>BungeeChat</artifactId>
+      <version>2.1.6.855</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
   <distributionManagement>
@@ -133,7 +138,7 @@
   </distributionManagement>
   <properties>
     <build.number>SNAPSHOT</build.number>
-    <bungeecord.version>1133</bungeecord.version>
+    <bungeecord.version>1252</bungeecord.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

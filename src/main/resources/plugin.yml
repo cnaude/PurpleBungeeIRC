@@ -1,6 +1,6 @@
-name: ${project.name}
-version: ${project.version}
-description: ${project.description}
+name: ${name}
+version: ${version}
+description: ${description}
 author: cnaude
 main: com.cnaude.purpleirc.PurpleIRC
 softDepends: ['BungeeTabListPlus']

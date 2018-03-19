@@ -76,7 +76,8 @@ public class TemplateName {
 
     public static final String IRC_MV_CHAT = "irc-mv-chat";
     
-    public static final String IRC_BC_CHAT = "irc-bc-chat";
+    public static final String IRC_BUNGEECHAT_CHAT = "irc-bungeechat-chat";
+    public static final String IRC_BUNGEECHAT_ACTION = "irc-bungeechat-action";
     
     public final static String LOG_TAILER = "log-tailer";
 }

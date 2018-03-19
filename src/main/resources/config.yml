@@ -80,6 +80,8 @@ message-format:
   bungeechat-switch: '[&2%SERVER%&r] %NAME% joined the server.'
   bungeechat-join: '[&2%SERVER%&r] %NAME% joined the game.'
   bungeechat-leave: '[&2%SERVER%&r] %NAME% left the game.'
+  irc-bungeechat-action: '[&3IRC&r] ***%NAME% %MESSAGE%'
+  irc-bungeechat-chat: '[&3IRC&r]<%NAME%> %MESSAGE%'  
   # Invalid IRC command message
   invalid-irc-command: "I'm sorry '%NICK%' I can't do that. Type '%CMDPREFIX%help' for a list of commands I might respond to."
   no-perm-for-irc-command: "I'm sorry '%NICK%' you are not authorized to do that. Type '%CMDPREFIX%help' for a list of commands I might respond to."

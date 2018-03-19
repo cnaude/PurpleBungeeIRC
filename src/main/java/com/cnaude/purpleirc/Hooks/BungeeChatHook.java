@@ -20,7 +20,7 @@ public class BungeeChatHook {
     PurpleIRC plugin;
     BungeeChatApi instance;
     Plugin bcPlugin;
-    
+
     /**
      *
      * @param plugin the PurpleIRC plugin
@@ -29,15 +29,16 @@ public class BungeeChatHook {
         this.plugin = plugin;
         this.bcPlugin = plugin.getProxy().getPluginManager().getPlugin("BungeeChat");
         if (bcPlugin != null) {
-            this.instance = (BungeeChatApi)bcPlugin;
+            this.instance = (BungeeChatApi) bcPlugin;
         }
         plugin.logInfo("Hooking into " + bcPlugin.getDescription().getName() + " " + bcPlugin.getDescription().getVersion());
     }
-    
+
     public void sendChannelMessage(User user, String channel, String message) {
         BungeeChatContext bcc = new BungeeChatContext();
         bcc.setChannel(channel);
         bcc.setMessage(message);
+        plugin.logDebug("Sending message from " + user.getNick() + " to BungeeChat [" + channel + "]: " + message);
         this.instance.sendChannelMessage(bcc);
     }
 

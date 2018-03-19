@@ -62,19 +62,19 @@ public class PurpleIRC extends Plugin {
     public static long startTime;
     public boolean identServerEnabled;
     private final CaseInsensitiveMap<HashMap<String, String>> messageTmpl;
-    
+
     // Herochat 
     private final CaseInsensitiveMap<CaseInsensitiveMap<String>> ircHeroChannelMessages;
     private final CaseInsensitiveMap<CaseInsensitiveMap<String>> ircHeroActionChannelMessages;
     private final CaseInsensitiveMap<CaseInsensitiveMap<String>> heroChannelMessages;
     private final CaseInsensitiveMap<CaseInsensitiveMap<String>> heroActionChannelMessages;
-    
+
     // Bungeechat
     private final CaseInsensitiveMap<CaseInsensitiveMap<String>> ircBungeeChatChannelMessages;
     private final CaseInsensitiveMap<CaseInsensitiveMap<String>> ircBungeeChatActionChannelMessages;
     private final CaseInsensitiveMap<CaseInsensitiveMap<String>> bungeeChatChannelMessages;
     private final CaseInsensitiveMap<CaseInsensitiveMap<String>> bungeeChatActionChannelMessages;
-    
+
     private final HashMap<ServerInfo, Integer> serverMaxCounts;
     public String defaultPlayerSuffix,
             defaultPlayerPrefix,
@@ -149,17 +149,17 @@ public class PurpleIRC extends Plugin {
         this.sampleFileName = "SampleBot.yml";
         this.ircBots = new CaseInsensitiveMap<>();
         this.messageTmpl = new CaseInsensitiveMap<>();
-        
+
         this.ircHeroChannelMessages = new CaseInsensitiveMap<>();
         this.ircHeroActionChannelMessages = new CaseInsensitiveMap<>();
         this.heroChannelMessages = new CaseInsensitiveMap<>();
         this.heroActionChannelMessages = new CaseInsensitiveMap<>();
-        
+
         this.ircBungeeChatActionChannelMessages = new CaseInsensitiveMap<>();
         this.ircBungeeChatChannelMessages = new CaseInsensitiveMap<>();
         this.bungeeChatActionChannelMessages = new CaseInsensitiveMap<>();
         this.bungeeChatChannelMessages = new CaseInsensitiveMap<>();
-        
+
         this.serverMaxCounts = new HashMap<>();
         this.displayNameCache = new CaseInsensitiveMap<>();
         this.cacheFile = new File("plugins/PurpleBungeeIRC/displayName.cache");
@@ -192,9 +192,9 @@ public class PurpleIRC extends Plugin {
         this.getProxy().getPluginManager().registerListener(this, new GamePlayerQuitListener(this));
         this.getProxy().getPluginManager().registerListener(this, new GameServerSwitchListener(this));
         if (this.getProxy().getPluginManager().getPlugin("BungeeChat") != null) {
-            logInfo("Enabling BungeeChat hooks!"); 
+            logInfo("Enabling BungeeChat hooks!");
             this.getProxy().getPluginManager().registerListener(this, new BungeeChatJoinListener(this));
-            this.getProxy().getPluginManager().registerListener(this, new BungeeChatLeaveListener(this));        
+            this.getProxy().getPluginManager().registerListener(this, new BungeeChatLeaveListener(this));
         }
         bungeeCordListener = new BungeeCordListener(this);
         getProxy().registerChannel("BungeeCord");
@@ -270,7 +270,7 @@ public class PurpleIRC extends Plugin {
         if (messageTmpl.get(MAINCONFIG).containsKey(tmpl)) {
             return messageTmpl.get(MAINCONFIG).get(tmpl);
         }
-        return "INVALID TEMPLATE";
+        return "[" + botName + "]INVALID TEMPLATE: " + tmpl;
     }
 
     public String getMsgTemplate(String tmpl) {
@@ -334,6 +334,10 @@ public class PurpleIRC extends Plugin {
         return getHeroTemplate(ircHeroActionChannelMessages, botName, hChannel);
     }
 
+    /**
+     *
+     * @param config
+     */
     public void loadCustomColors(Configuration config) {
 
         for (String t : config.getSection("irc-color-map").getKeys()) {
@@ -344,8 +348,13 @@ public class PurpleIRC extends Plugin {
         }
     }
 
+    /**
+     *
+     * @param config
+     * @param configName
+     */
     public void loadTemplates(Configuration config, String configName) {
-        messageTmpl.put(configName, new HashMap<String, String>());
+        messageTmpl.put(configName, new HashMap<>());
 
         if (config.getString("message-format") != null) {
             for (String t : config.getSection("message-format").getKeys()) {
@@ -792,14 +801,6 @@ public class PurpleIRC extends Plugin {
         }
         logDebug("No such template: " + template);
         return "";
-    }
-
-    public String getIrcBungeeChatChannelTemplate(String botName, String hChannel) {
-        String tmpl = getHeroTemplate(ircHeroChannelMessages, botName, hChannel);
-        if (tmpl.isEmpty()) {
-            return getMsgTemplate(MAINCONFIG, TemplateName.IRC_BC_CHAT);
-        }
-        return getHeroTemplate(ircHeroChannelMessages, botName, hChannel);
     }
 
     protected void transmitMessage(byte[] data, String subChannel) {

@@ -172,6 +172,7 @@ public final class PurpleBot {
         this.voicesList = new CaseInsensitiveMap<>();
         this.heroChannel = new CaseInsensitiveMap<>();
         this.townyChannel = new CaseInsensitiveMap<>();
+        this.bcChannel = new CaseInsensitiveMap<>();
         this.invalidCommandCTCP = new CaseInsensitiveMap<>();
         this.logIrcToHeroChat = new CaseInsensitiveMap<>();
         this.shortify = new CaseInsensitiveMap<>();
@@ -725,6 +726,9 @@ public final class PurpleBot {
 
                 townyChannel.put(channelName, config.getString("channels." + enChannelName + ".towny-channel", ""));
                 plugin.logDebug("  TownyChannel => " + townyChannel.get(channelName));
+                
+                bcChannel.put(channelName, config.getString("channels." + enChannelName + ".bungeechat-channel", ""));
+                plugin.logDebug("  BungeeChatChannel => " + bcChannel.get(channelName));
 
                 logIrcToHeroChat.put(channelName, config.getBoolean("channels." + enChannelName + ".log-irc-to-hero-chat", false));
                 plugin.logDebug("  LogIrcToHeroChat => " + logIrcToHeroChat.get(channelName));
@@ -1928,7 +1932,7 @@ public final class PurpleBot {
         } else {
             plugin.logDebug("NOPE we can't broadcast to HeroChat due to " + TemplateName.IRC_HERO_CHAT + " disabled");
         }
-
+        
         if (enabledMessages.get(myChannel).contains(TemplateName.IRC_CONSOLE_CHAT)) {
             String tmpl = plugin.getMsgTemplate(botNick, TemplateName.IRC_CONSOLE_CHAT);
             plugin.logDebug("broadcastChat [Console]: " + tmpl);
@@ -1938,14 +1942,19 @@ public final class PurpleBot {
                                     TemplateName.IRC_CONSOLE_CHAT), message)));
         }
 
-        if (enabledMessages.get(myChannel).contains(TemplateName.IRC_BC_CHAT) && plugin.bungeeChatHook != null) {
+        plugin.logDebug("Checking if " + TemplateName.IRC_BUNGEECHAT_CHAT + " is enabled before broadcasting chat from IRC to BungeeChat");
+        if (enabledMessages.get(myChannel).contains(TemplateName.IRC_BUNGEECHAT_CHAT) && plugin.bungeeChatHook != null) {
+            plugin.logDebug("Yup we can broadcast due to " + TemplateName.IRC_BUNGEECHAT_CHAT + " enabled");
             String bChannel = bcChannel.get(myChannel);
-            String tmpl = plugin.getIrcBungeeChatChannelTemplate(botNick, bChannel);
+            String tmpl = plugin.getMessageTemplate(botNick, bChannel, TemplateName.IRC_BUNGEECHAT_CHAT);
+            plugin.logDebug("broadcastChat [BC]: " + bChannel + ": " + tmpl);
             String rawBungeeChatMessage = filterMessage(
                     plugin.tokenizer.ircChatToBungeeChatTokenizer(this, user, channel, tmpl, message, bChannel), myChannel);
             if (!rawBungeeChatMessage.isEmpty()) {
                 plugin.bungeeChatHook.sendChannelMessage(user, bChannel, message);
             }
+        } else {
+            plugin.logDebug("NOPE we can't broadcast to BungeeChat due to " + TemplateName.IRC_BUNGEECHAT_CHAT + " disabled");
         }
     }
 

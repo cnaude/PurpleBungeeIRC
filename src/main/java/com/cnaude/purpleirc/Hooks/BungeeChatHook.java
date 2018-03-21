@@ -7,8 +7,12 @@ package com.cnaude.purpleirc.Hooks;
 
 import com.cnaude.purpleirc.PurpleIRC;
 import dev.aura.bungeechat.api.BungeeChatApi;
+import dev.aura.bungeechat.api.account.AccountManager;
+import dev.aura.bungeechat.api.account.BungeeChatAccount;
+import dev.aura.bungeechat.api.enums.ChannelType;
 import dev.aura.bungeechat.api.placeholder.BungeeChatContext;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.command.ConsoleCommandSender;
 import org.pircbotx.User;
 
 /**
@@ -35,11 +39,12 @@ public class BungeeChatHook {
     }
 
     public void sendChannelMessage(User user, String channel, String message) {
-        BungeeChatContext bcc = new BungeeChatContext();
-        bcc.setChannel(channel);
+        BungeeChatContext bcc = new BungeeChatContext();   
+        bcc.setSender(AccountManager.getConsoleAccount());
         bcc.setMessage(message);
+        bcc.setChannel(channel.toUpperCase());
         plugin.logDebug("Sending message from " + user.getNick() + " to BungeeChat [" + channel + "]: " + message);
-        this.instance.sendChannelMessage(bcc);
+        this.instance.sendChannelMessage(bcc);        
     }
 
 }

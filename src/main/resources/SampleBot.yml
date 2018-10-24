@@ -137,6 +137,9 @@ channels:
     #- bungeechat-join
     #- bungeechat-leave
     #- bungeechat-switch
+    #- mc-global-chat
+    #- mc-broadcast-chat
+    #- mc-staff-chat
     # These messages are sent from IRC to game (see permissions)
     - irc-action
     - irc-chat

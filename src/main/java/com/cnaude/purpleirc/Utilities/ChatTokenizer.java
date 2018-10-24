@@ -166,7 +166,38 @@ public class ChatTokenizer {
                 .replace("%SERVERNAME%", serverName)
                 .replace("%MESSAGE%", message));
     }
-    
+
+    /**
+     * Game chat to IRC
+     *
+     * @param sender
+     * @param template
+     *
+     * @param message
+     * @return
+     */
+    public String gameChatToIRCTokenizer(CommandSender sender, String template, String message) {
+        if (message == null) {
+            message = "";
+        }
+        String serverName = "";
+        String displayName = sender.getName();
+        if (sender instanceof ProxiedPlayer) {
+            ProxiedPlayer player = (ProxiedPlayer) sender;
+            if (player.getServer() != null) {
+                serverName = player.getServer().getInfo().getName();
+            }
+            return plugin.colorConverter.gameColorsToIrc(playerTokenizer(player, template)
+                    .replace("%SERVERNAME%", serverName)
+                    .replace("%MESSAGE%", message));
+        }
+        return plugin.colorConverter.gameColorsToIrc(template
+                .replace("%NAME%", sender.getName())
+                .replace("%DISPLAYNAME%", displayName)
+                .replace("%SERVERNAME%", serverName)
+                .replace("%MESSAGE%", message));
+    }
+
     /**
      * Game player AFK to IRC
      *
@@ -203,8 +234,8 @@ public class ChatTokenizer {
     public String gameKickTokenizer(ProxiedPlayer player, String template, String message, String reason) {
         return plugin.colorConverter.gameColorsToIrc(
                 gameChatToIRCTokenizer(player, template, message)
-                .replace("%MESSAGE%", message)
-                .replace("%REASON%", reason));
+                        .replace("%MESSAGE%", message)
+                        .replace("%REASON%", reason));
     }
 
     public String playerTokenizer(ProxiedPlayer player, String message) {
@@ -214,8 +245,6 @@ public class ChatTokenizer {
         String playerIP = player.getAddress().getAddress().getHostAddress();
         String worldName = "";
         String worldAlias = "";
-        String jobShort = "";
-        String job = "";
         String serverName;
         try {
             serverName = player.getServer().getInfo().getName();
@@ -232,8 +261,6 @@ public class ChatTokenizer {
         }
         plugin.logDebug("[P]Raw message: " + message);
         return message.replace("%DISPLAYNAME%", displayName)
-                .replace("%JOBS%", job)
-                .replace("%JOBSSHORT%", jobShort)
                 .replace("%NAME%", pName)
                 .replace("%SERVER%", serverName)
                 .replace("%PLAYERIP%", playerIP)
@@ -278,7 +305,7 @@ public class ChatTokenizer {
                 .replace("%MESSAGE%", message)
         );
     }
-    
+
     public String logTailerTokenizer(String file, String line, String template) {
         return plugin.colorConverter.gameColorsToIrc(template
                 .replace("%FILE%", file)

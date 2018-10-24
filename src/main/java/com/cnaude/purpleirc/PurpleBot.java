@@ -966,7 +966,7 @@ public final class PurpleBot {
                 plugin.logDebug("[" + tmpl + "] => "
                         + channelName + " => " + message);
                 asyncIRCMessage(channelName, plugin.tokenizer
-                        .gameChatToIRCTokenizer(sender.getName(), plugin.getMsgTemplate(botNick, tmpl), message));
+                        .gameChatToIRCTokenizer(sender, plugin.getMsgTemplate(botNick, tmpl), message));
             } else {
                 plugin.logDebug("Message type " + tmpl + " is not enabled. Ignoring message.");
             }

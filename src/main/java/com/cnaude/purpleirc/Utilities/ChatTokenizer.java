@@ -4,6 +4,7 @@ import com.cnaude.purpleirc.ChatMessage;
 import com.cnaude.purpleirc.ChatMessages.BungeeChatMessage;
 import com.cnaude.purpleirc.PurpleBot;
 import com.cnaude.purpleirc.PurpleIRC;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.pircbotx.User;
@@ -160,10 +161,12 @@ public class ChatTokenizer {
             serverName = player.getServer().getInfo().getName();
         }
         return plugin.colorConverter.gameColorsToIrc(playerTokenizer(player, template)
+                .replace("%NAME%", player.getName())
+                .replace("%DISPLAYNAME%", player.getDisplayName())
                 .replace("%SERVERNAME%", serverName)
                 .replace("%MESSAGE%", message));
     }
-
+    
     /**
      * Game player AFK to IRC
      *

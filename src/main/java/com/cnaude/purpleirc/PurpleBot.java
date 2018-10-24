@@ -726,7 +726,7 @@ public final class PurpleBot {
 
                 townyChannel.put(channelName, config.getString("channels." + enChannelName + ".towny-channel", ""));
                 plugin.logDebug("  TownyChannel => " + townyChannel.get(channelName));
-                
+
                 bcChannel.put(channelName, config.getString("channels." + enChannelName + ".bungeechat-channel", ""));
                 plugin.logDebug("  BungeeChatChannel => " + bcChannel.get(channelName));
 
@@ -910,17 +910,86 @@ public final class PurpleBot {
         if (!this.isConnected()) {
             return;
         }
+        String tmpl = TemplateName.GAME_CHAT;
         for (String channelName : botChannels) {
             if (!isPlayerInValidWorld(player, channelName)) {
                 continue;
             }
-            if (isMessageEnabled(channelName, TemplateName.GAME_CHAT)) {
-                plugin.logDebug("[" + TemplateName.GAME_CHAT + "] => "
+            if (isMessageEnabled(channelName, tmpl)) {
+                plugin.logDebug("[" + tmpl + "] => " + channelName + " => " + message);
+                asyncIRCMessage(channelName, plugin.tokenizer
+                        .gameChatToIRCTokenizer(player, plugin.getMsgTemplate(botNick, tmpl), message));
+            } else {
+                plugin.logDebug("Message type " + tmpl + " is not enabled. Ignoring message.");
+            }
+        }
+    }
+
+    /**
+     * Called from multichat global chat listener
+     *
+     * @param player
+     * @param message
+     */
+    public void multiChat(ProxiedPlayer player, String message) {
+        if (!this.isConnected()) {
+            return;
+        }
+        String tmpl = TemplateName.MC_GLOBAL_CHAT;
+        for (String channelName : botChannels) {
+            if (!isPlayerInValidWorld(player, channelName)) {
+                continue;
+            }
+            if (isMessageEnabled(channelName, tmpl)) {
+                plugin.logDebug("[" + tmpl + "] => " + channelName + " => " + message);
+                asyncIRCMessage(channelName, plugin.tokenizer
+                        .gameChatToIRCTokenizer(player, plugin.getMsgTemplate(botNick, tmpl), message));
+            } else {
+                plugin.logDebug("Message type " + tmpl + " is not enabled. Ignoring message.");
+            }
+        }
+    }
+
+    /**
+     * Called from multichat staff chat listener
+     *
+     * @param sender
+     * @param message
+     */
+    public void multiChat(CommandSender sender, String message) {
+        if (!this.isConnected()) {
+            return;
+        }
+        String tmpl = TemplateName.MC_STAFF_CHAT;
+        for (String channelName : botChannels) {
+            if (isMessageEnabled(channelName, tmpl)) {
+                plugin.logDebug("[" + tmpl + "] => "
                         + channelName + " => " + message);
                 asyncIRCMessage(channelName, plugin.tokenizer
-                        .gameChatToIRCTokenizer(player, plugin.getMsgTemplate(botNick, TemplateName.GAME_CHAT), message));
+                        .gameChatToIRCTokenizer(sender.getName(), plugin.getMsgTemplate(botNick, tmpl), message));
             } else {
-                plugin.logDebug("Message type " + TemplateName.GAME_CHAT + " is not enabled. Ignoring message.");
+                plugin.logDebug("Message type " + tmpl + " is not enabled. Ignoring message.");
+            }
+        }
+    }
+
+    /**
+     * Called from multichat broadcast chat listener
+     *
+     * @param message
+     */
+    public void multiChat(String message) {
+        if (!this.isConnected()) {
+            return;
+        }
+        String tmpl = TemplateName.MC_BCAST_CHAT;
+        for (String channelName : botChannels) {
+            if (isMessageEnabled(channelName, tmpl)) {
+                plugin.logDebug("[" + tmpl + "] => " + channelName + " => " + message);
+                asyncIRCMessage(channelName, plugin.tokenizer
+                        .gameChatToIRCTokenizer(plugin.getMsgTemplate(botNick, tmpl), message));
+            } else {
+                plugin.logDebug("Message type " + tmpl + " is not enabled. Ignoring message.");
             }
         }
     }
@@ -1932,7 +2001,7 @@ public final class PurpleBot {
         } else {
             plugin.logDebug("NOPE we can't broadcast to HeroChat due to " + TemplateName.IRC_HERO_CHAT + " disabled");
         }
-        
+
         if (enabledMessages.get(myChannel).contains(TemplateName.IRC_CONSOLE_CHAT)) {
             String tmpl = plugin.getMsgTemplate(botNick, TemplateName.IRC_CONSOLE_CHAT);
             plugin.logDebug("broadcastChat [Console]: " + tmpl);

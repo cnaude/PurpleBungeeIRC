@@ -139,4 +139,24 @@ public class BungeeChatFakeAccount implements BungeeChatAccount {
   public String toString() {
     return getName();
   }
+
+    @Override
+    public Optional<String> getStoredPrefix() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Optional<String> getStoredSuffix() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setStoredPrefix(Optional<String> optnl) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setStoredSuffix(Optional<String> optnl) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

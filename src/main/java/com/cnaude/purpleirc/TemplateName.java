@@ -21,6 +21,7 @@ package com.cnaude.purpleirc;
  * @author cnaude
  */
 public class TemplateName {
+
     public final static String GAME_ACHIEVEMENT = "game-achievement";
     public final static String GAME_ACTION = "game-action";
     public final static String GAME_AFK = "game-afk";
@@ -35,9 +36,9 @@ public class TemplateName {
     public final static String GAME_KICK = "game-kick";
     public final static String GAME_COMMAND = "game-command";
     public final static String GAME_MODE = "game-mode";
-                  
-    public final static String CONSOLE_CHAT = "console-chat";  
-    
+
+    public final static String CONSOLE_CHAT = "console-chat";
+
     public final static String IRC_ACTION = "irc-action";
     public final static String IRC_CHAT = "irc-chat";
     public final static String IRC_PCHAT = "irc-pchat";
@@ -51,33 +52,37 @@ public class TemplateName {
     public final static String IRC_MODE = "irc-mode";
     public final static String IRC_NOTICE = "irc-notice";
     public final static String IRC_CONSOLE_CHAT = "irc-console-chat";
-       
+
     public final static String INVALID_IRC_COMMAND = "invalid-irc-command";
     public final static String NO_PERM_FOR_IRC_COMMAND = "no-perm-for-irc-command";
-    
+
     public final static String BROADCAST_MESSAGE = "broadcast-message";
     public final static String BROADCAST_CONSOLE_MESSAGE = "broadcast-console-message";
-    
+
     public final static String HERO_ACTION = "hero-action";
     public final static String HERO_CHAT = "hero-chat";
-  
+
     public final static String IRC_HERO_ACTION = "irc-hero-action";
     public final static String IRC_HERO_CHAT = "irc-hero-chat";
     public final static String IRC_HERO_KICK = "irc-hero-kick";
     public final static String IRC_HERO_JOIN = "irc-hero-join";
     public final static String IRC_HERO_PART = "irc-hero-part";
     public final static String IRC_HERO_QUIT = "irc-hero-quit";
-    public final static String IRC_HERO_TOPIC = "irc-hero-topic";   
+    public final static String IRC_HERO_TOPIC = "irc-hero-topic";
     public final static String IRC_ESS_HELPOP = "irc-ess-helpop";
-    
+
     public final static String BUNGEE_CHAT_JOIN = "bungeechat-join";
     public final static String BUNGEE_CHAT_LEAVE = "bungeechat-leave";
     public final static String BUNGEE_CHAT_SWITCH = "bungeechat-switch";
 
+    public final static String MC_GLOBAL_CHAT = "mc-global-chat";
+    public final static String MC_BCAST_CHAT = "mc-broadcast-chat";
+    public final static String MC_STAFF_CHAT = "mc-staff-chat";
+
     public static final String IRC_MV_CHAT = "irc-mv-chat";
-    
+
     public static final String IRC_BUNGEECHAT_CHAT = "irc-bungeechat-chat";
     public static final String IRC_BUNGEECHAT_ACTION = "irc-bungeechat-action";
-    
+
     public final static String LOG_TAILER = "log-tailer";
 }

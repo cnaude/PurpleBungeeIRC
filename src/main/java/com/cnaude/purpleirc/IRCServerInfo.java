@@ -74,4 +74,14 @@ public class IRCServerInfo implements ServerInfo {
     public void ping(Callback<ServerPing> callback) {
 
     }
+
+    @Override
+    public boolean isRestricted() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getPermission() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

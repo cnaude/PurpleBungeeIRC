@@ -1,4 +1,16 @@
 /target/
 /nbactions.xml
-/.nb-gradle/
+/dependency-reduced-pom.xml
+
+/.idea/
+/*.iml
+
+.classpath
+.project
+.settings
+.gradle
+.nb-gradle
+
+/bin/
 /build/
+/*.code-workspace

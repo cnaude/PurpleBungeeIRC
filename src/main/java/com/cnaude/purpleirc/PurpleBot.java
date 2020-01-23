@@ -931,7 +931,7 @@ public final class PurpleBot {
      * @param player
      * @param message
      */
-    public void multiChat(ProxiedPlayer player, String message) {
+    public void multiChat(ProxiedPlayer player, String prefix, String suffix, String message) {
         if (!this.isConnected()) {
             return;
         }

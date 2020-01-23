@@ -166,6 +166,34 @@ public class ChatTokenizer {
                 .replace("%SERVERNAME%", serverName)
                 .replace("%MESSAGE%", message));
     }
+    
+        /**
+     * Game chat to IRC
+     *
+     * @param player
+     * @param prefix
+     * @param Suffix
+     * @param template
+     *
+     * @param message
+     * @return
+     */
+    public String gameChatToIRCTokenizer(ProxiedPlayer player, String prefix, String Suffix, String template, String message) {
+        if (message == null) {
+            message = "";
+        }
+        String serverName = "";
+        if (player.getServer() != null) {
+            serverName = player.getServer().getInfo().getName();
+        }
+        return plugin.colorConverter.gameColorsToIrc(playerTokenizer(player, template)
+                .replace("%NAME%", player.getName())
+                .replace("%DISPLAYNAME%", player.getDisplayName())
+                .replace("%SERVERNAME%", serverName)
+                .replace("%PREFIX%", serverName)
+                .replace("%SUFFIX%", serverName)
+                .replace("%MESSAGE%", message));
+    }
 
     /**
      * Game chat to IRC

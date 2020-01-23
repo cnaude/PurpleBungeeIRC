@@ -943,7 +943,7 @@ public final class PurpleBot {
             if (isMessageEnabled(channelName, tmpl)) {
                 plugin.logDebug("[" + tmpl + "] => " + channelName + " => " + message);
                 asyncIRCMessage(channelName, plugin.tokenizer
-                        .gameChatToIRCTokenizer(player, plugin.getMsgTemplate(botNick, tmpl), message));
+                        .gameChatToIRCTokenizer(player, prefix, suffix, plugin.getMsgTemplate(botNick, tmpl), message));
             } else {
                 plugin.logDebug("Message type " + tmpl + " is not enabled. Ignoring message.");
             }
@@ -967,6 +967,29 @@ public final class PurpleBot {
                         + channelName + " => " + message);
                 asyncIRCMessage(channelName, plugin.tokenizer
                         .gameChatToIRCTokenizer(sender, plugin.getMsgTemplate(botNick, tmpl), message));
+            } else {
+                plugin.logDebug("Message type " + tmpl + " is not enabled. Ignoring message.");
+            }
+        }
+    }
+    
+        /**
+     * Called from multichat staff chat listener
+     *
+     * @param sender
+     * @param message
+     */
+    public void multiChat(CommandSender sender, String prefix, String suffix, String message) {
+        if (!this.isConnected()) {
+            return;
+        }
+        String tmpl = TemplateName.MC_STAFF_CHAT;
+        for (String channelName : botChannels) {
+            if (isMessageEnabled(channelName, tmpl)) {
+                plugin.logDebug("[" + tmpl + "] => "
+                        + channelName + " => " + message);
+                asyncIRCMessage(channelName, plugin.tokenizer
+                        .gameChatToIRCTokenizer(sender, prefix, suffix, plugin.getMsgTemplate(botNick, tmpl), message));
             } else {
                 plugin.logDebug("Message type " + tmpl + " is not enabled. Ignoring message.");
             }

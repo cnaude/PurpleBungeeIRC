@@ -166,8 +166,8 @@ public class ChatTokenizer {
                 .replace("%SERVERNAME%", serverName)
                 .replace("%MESSAGE%", message));
     }
-    
-        /**
+
+    /**
      * Game chat to IRC
      *
      * @param player
@@ -178,7 +178,7 @@ public class ChatTokenizer {
      * @param message
      * @return
      */
-    public String gameChatToIRCTokenizer(ProxiedPlayer player, String prefix, String Suffix, String template, String message) {
+    public String gameChatToIRCTokenizer(ProxiedPlayer player, String prefix, String suffix, String template, String message) {
         if (message == null) {
             message = "";
         }
@@ -189,9 +189,9 @@ public class ChatTokenizer {
         return plugin.colorConverter.gameColorsToIrc(playerTokenizer(player, template)
                 .replace("%NAME%", player.getName())
                 .replace("%DISPLAYNAME%", player.getDisplayName())
+                .replace("%PREFIX%", prefix)
+                .replace("%SUFFIX%", suffix)
                 .replace("%SERVERNAME%", serverName)
-                .replace("%PREFIX%", serverName)
-                .replace("%SUFFIX%", serverName)
                 .replace("%MESSAGE%", message));
     }
 
@@ -222,6 +222,41 @@ public class ChatTokenizer {
         return plugin.colorConverter.gameColorsToIrc(template
                 .replace("%NAME%", sender.getName())
                 .replace("%DISPLAYNAME%", displayName)
+                .replace("%SERVERNAME%", serverName)
+                .replace("%MESSAGE%", message));
+    }
+
+    /**
+     * Game chat to IRC
+     *
+     * @param sender
+     * @param prefix
+     * @param suffix
+     * @param template
+     *
+     * @param message
+     * @return
+     */
+    public String gameChatToIRCTokenizer(CommandSender sender, String prefix, String suffix, String template, String message) {
+        if (message == null) {
+            message = "";
+        }
+        String serverName = "";
+        String displayName = sender.getName();
+        if (sender instanceof ProxiedPlayer) {
+            ProxiedPlayer player = (ProxiedPlayer) sender;
+            if (player.getServer() != null) {
+                serverName = player.getServer().getInfo().getName();
+            }
+            return plugin.colorConverter.gameColorsToIrc(playerTokenizer(player, template)
+                    .replace("%SERVERNAME%", serverName)
+                    .replace("%MESSAGE%", message));
+        }
+        return plugin.colorConverter.gameColorsToIrc(template
+                .replace("%NAME%", sender.getName())
+                .replace("%DISPLAYNAME%", displayName)
+                .replace("%PREFIX%", prefix)
+                .replace("%SUFFIX%", suffix)
                 .replace("%SERVERNAME%", serverName)
                 .replace("%MESSAGE%", message));
     }

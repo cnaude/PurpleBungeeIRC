@@ -78,6 +78,7 @@ public class TemplateName {
     public final static String MC_GLOBAL_CHAT = "mc-global-chat";
     public final static String MC_BCAST_CHAT = "mc-broadcast-chat";
     public final static String MC_STAFF_CHAT = "mc-staff-chat";
+    public static final Object IRC_MC_STAFF_CHAT = "irc-mc-staff-chat";
 
     public static final String IRC_MV_CHAT = "irc-mv-chat";
 

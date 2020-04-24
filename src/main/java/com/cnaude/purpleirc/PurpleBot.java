@@ -51,6 +51,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.pircbotx.cap.SASLCapHandler;
+import xyz.olivermartin.multichat.bungee.StaffChatManager;
 
 /**
  * @author Chris Naude
@@ -118,6 +119,7 @@ public final class PurpleBot {
     public CaseInsensitiveMap<String> heroChannel;
     public CaseInsensitiveMap<String> townyChannel;
     public CaseInsensitiveMap<String> bcChannel;
+    public CaseInsensitiveMap<String> multiChatServerName;
     public CaseInsensitiveMap<Collection<String>> opsList;
     public CaseInsensitiveMap<Collection<String>> voicesList;
     public CaseInsensitiveMap<Collection<String>> worldList;
@@ -173,6 +175,7 @@ public final class PurpleBot {
         this.heroChannel = new CaseInsensitiveMap<>();
         this.townyChannel = new CaseInsensitiveMap<>();
         this.bcChannel = new CaseInsensitiveMap<>();
+        this.multiChatServerName = new CaseInsensitiveMap<>();
         this.invalidCommandCTCP = new CaseInsensitiveMap<>();
         this.logIrcToHeroChat = new CaseInsensitiveMap<>();
         this.shortify = new CaseInsensitiveMap<>();
@@ -729,6 +732,9 @@ public final class PurpleBot {
 
                 bcChannel.put(channelName, config.getString("channels." + enChannelName + ".bungeechat-channel", ""));
                 plugin.logDebug("  BungeeChatChannel => " + bcChannel.get(channelName));
+
+                multiChatServerName.put(channelName, config.getString("channels." + enChannelName + ".multichat-server-name", "IRC"));
+                plugin.logDebug("  MultiChatServername => " + multiChatServerName.get(channelName));
 
                 logIrcToHeroChat.put(channelName, config.getBoolean("channels." + enChannelName + ".log-irc-to-hero-chat", false));
                 plugin.logDebug("  LogIrcToHeroChat => " + logIrcToHeroChat.get(channelName));
@@ -2047,6 +2053,14 @@ public final class PurpleBot {
             }
         } else {
             plugin.logDebug("NOPE we can't broadcast to BungeeChat due to " + TemplateName.IRC_BUNGEECHAT_CHAT + " disabled");
+        }
+
+        if (enabledMessages.get(myChannel).contains(TemplateName.IRC_MC_STAFF_CHAT)) {
+            StaffChatManager chatman = new StaffChatManager();
+            chatman.sendAdminMessage("irc_" + user.getNick(), user.getNick(), multiChatServerName.get(myChannel), message);
+            chatman = null;
+        } else {
+            plugin.logDebug("NOPE we can't broadcast to MultiChat due to " + TemplateName.IRC_MC_STAFF_CHAT + " disabled");
         }
     }
 

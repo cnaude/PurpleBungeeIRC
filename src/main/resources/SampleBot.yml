@@ -176,6 +176,8 @@ channels:
     hero-channel: admin
     # Bungeechat channel destination for IRC messages
     bungeechat-channel: admin
+    # MultiChat - Name of the server the IRC users will appear to be on.
+    multichat-server-name: IRC
     # ops - IRC hostname mask styled ops list
     ops:    
     - '*!*sarah@example.com'

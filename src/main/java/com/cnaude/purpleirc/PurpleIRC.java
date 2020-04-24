@@ -196,6 +196,10 @@ public class PurpleIRC extends Plugin {
             this.getProxy().getPluginManager().registerListener(this, new BungeeChatJoinListener(this));
             this.getProxy().getPluginManager().registerListener(this, new BungeeChatLeaveListener(this));
         }
+        if (this.getProxy().getPluginManager().getPlugin("MultiChat") != null) {
+            logInfo("Enabling MultiChat hooks!");
+            this.getProxy().getPluginManager().registerListener(this, new MultiChatListener(this));
+        }
         bungeeCordListener = new BungeeCordListener(this);
         getProxy().registerChannel("BungeeCord");
         this.getProxy().getPluginManager().registerListener(this, bungeeCordListener);

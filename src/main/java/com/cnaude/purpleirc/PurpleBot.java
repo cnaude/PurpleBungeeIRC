@@ -51,6 +51,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.pircbotx.cap.SASLCapHandler;
+import xyz.olivermartin.multichat.bungee.StaffChatManager;
 
 /**
  * @author Chris Naude
@@ -2047,6 +2048,14 @@ public final class PurpleBot {
             }
         } else {
             plugin.logDebug("NOPE we can't broadcast to BungeeChat due to " + TemplateName.IRC_BUNGEECHAT_CHAT + " disabled");
+        }
+
+        if (enabledMessages.get(myChannel).contains(TemplateName.IRC_MC_STAFF_CHAT)) {
+            StaffChatManager chatman = new StaffChatManager();
+            chatman.sendAdminMessage("irc_" + user.getNick(), user.getNick(), "IRC", message);
+            chatman = null;
+        } else {
+            plugin.logDebug("NOPE we can't broadcast to MultiChat due to " + TemplateName.IRC_MC_STAFF_CHAT + " disabled");
         }
     }
 

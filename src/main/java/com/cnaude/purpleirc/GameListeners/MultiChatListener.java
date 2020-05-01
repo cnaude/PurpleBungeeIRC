@@ -29,10 +29,7 @@ public class MultiChatListener implements Listener {
      */
     @EventHandler
     public void onPostGlobalChatEvent(PostGlobalChatEvent event) {
-        plugin.ircBots.values().forEach((ircBot) -> {
-            // player, message
-            ircBot.multiChat(event.getSender(), event.getSenderPrefix(), event.getSenderSuffix(), event.getMessage());
-        });
+        plugin.ircBots.values().forEach((ircBot) -> ircBot.multiChatGlobal(event.getSender(), event.getMessage()));
 
     }
     
@@ -42,9 +39,7 @@ public class MultiChatListener implements Listener {
      */
     @EventHandler
     public void onPostBroadcastEvent(PostBroadcastEvent event) {
-        plugin.ircBots.values().forEach((ircBot) -> {
-            ircBot.multiChat(event.getMessage());
-        });
+        plugin.ircBots.values().forEach((ircBot) -> ircBot.multiChatBroadcast(event.getMessage()));
 
     }
 
@@ -54,9 +49,7 @@ public class MultiChatListener implements Listener {
      */
     @EventHandler
     public void onPostStaffChatEvent(PostStaffChatEvent event) {
-        plugin.ircBots.values().forEach((ircBot) -> {
-            ircBot.multiChat(event.getSender(), event.getSenderPrefix(), event.getSenderSuffix(), event.getMessage());
-        });
+        plugin.ircBots.values().forEach((ircBot) -> ircBot.multiChatStaff(event.getSender(), event.getMessage()));
 
     }
 }

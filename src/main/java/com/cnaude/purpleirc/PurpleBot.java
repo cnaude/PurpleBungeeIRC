@@ -937,7 +937,7 @@ public final class PurpleBot {
      * @param player
      * @param message
      */
-    public void multiChat(ProxiedPlayer player, String prefix, String suffix, String message) {
+    public void multiChatGlobal(ProxiedPlayer player, String message) {
         if (!this.isConnected()) {
             return;
         }
@@ -949,7 +949,7 @@ public final class PurpleBot {
             if (isMessageEnabled(channelName, tmpl)) {
                 plugin.logDebug("[" + tmpl + "] => " + channelName + " => " + message);
                 asyncIRCMessage(channelName, plugin.tokenizer
-                        .gameChatToIRCTokenizer(player, prefix, suffix, plugin.getMsgTemplate(botNick, tmpl), message));
+                        .gameChatToIRCTokenizer(player, plugin.getMsgTemplate(botNick, tmpl), message));
             } else {
                 plugin.logDebug("Message type " + tmpl + " is not enabled. Ignoring message.");
             }
@@ -962,7 +962,7 @@ public final class PurpleBot {
      * @param sender
      * @param message
      */
-    public void multiChat(CommandSender sender, String message) {
+    public void multiChatStaff(CommandSender sender, String message) {
         if (!this.isConnected()) {
             return;
         }
@@ -978,36 +978,13 @@ public final class PurpleBot {
             }
         }
     }
-    
-        /**
-     * Called from multichat staff chat listener
-     *
-     * @param sender
-     * @param message
-     */
-    public void multiChat(CommandSender sender, String prefix, String suffix, String message) {
-        if (!this.isConnected()) {
-            return;
-        }
-        String tmpl = TemplateName.MC_STAFF_CHAT;
-        for (String channelName : botChannels) {
-            if (isMessageEnabled(channelName, tmpl)) {
-                plugin.logDebug("[" + tmpl + "] => "
-                        + channelName + " => " + message);
-                asyncIRCMessage(channelName, plugin.tokenizer
-                        .gameChatToIRCTokenizer(sender, prefix, suffix, plugin.getMsgTemplate(botNick, tmpl), message));
-            } else {
-                plugin.logDebug("Message type " + tmpl + " is not enabled. Ignoring message.");
-            }
-        }
-    }
 
     /**
      * Called from multichat broadcast chat listener
      *
      * @param message
      */
-    public void multiChat(String message) {
+    public void multiChatBroadcast(String message) {
         if (!this.isConnected()) {
             return;
         }

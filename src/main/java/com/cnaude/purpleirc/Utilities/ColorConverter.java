@@ -1,12 +1,13 @@
 package com.cnaude.purpleirc.Utilities;
 
 import com.cnaude.purpleirc.PurpleIRC;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.md_5.bungee.api.ChatColor;
 import org.pircbotx.Colors;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -19,7 +20,7 @@ public class ColorConverter {
     private final boolean stripIRCColors;
     private final boolean stripIRCBackgroundColors;
     private final boolean stripGameColorsFromIrc;
-    private final EnumMap<ChatColor, String> ircColorMap = new EnumMap<>(ChatColor.class);
+    private final Map<ChatColor, String> ircColorMap = new HashMap<>();
     private final HashMap<String, ChatColor> gameColorMap = new HashMap<>();
     private final Pattern bgColorPattern;
     private final Pattern singleDigitColorPattern;

@@ -651,7 +651,12 @@ public class PurpleIRC extends Plugin {
             }
 
             String[] data = str.toString().split("§");
-            maxPlayers = Integer.parseInt(data[data.length - 1]);
+            try {
+                maxPlayers = Integer.parseInt(data[data.length - 1]);
+            } catch (NumberFormatException nfe) {
+                logError("NumberFormatException: Failed to parse number -> " + data[data.length - 1]);
+                maxPlayers = -1;
+            }
         } catch (UnknownHostException e) {
             logInfo(e.getMessage());
             return;

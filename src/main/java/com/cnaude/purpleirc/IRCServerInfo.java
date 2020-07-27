@@ -23,6 +23,7 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.Collection;
 
 /**
@@ -42,6 +43,11 @@ public class IRCServerInfo implements ServerInfo {
 
     @Override
     public InetSocketAddress getAddress() {
+        return null;
+    }
+
+    @Override
+    public SocketAddress getSocketAddress() {
         return null;
     }
 

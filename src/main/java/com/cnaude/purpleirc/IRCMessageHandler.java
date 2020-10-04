@@ -16,8 +16,7 @@
  */
 package com.cnaude.purpleirc;
 
-import com.cnaude.purpleirc.IRCMessage.Type;
-import com.cnaude.purpleirc.Utilities.CaseInsensitiveMap;
+import net.md_5.bungee.util.CaseInsensitiveMap;
 import com.google.common.base.Joiner;
 import java.text.Collator;
 import java.util.ArrayList;
@@ -94,12 +93,12 @@ public class IRCMessageHandler {
                 String modes = (String) ircBot.commandMap.get(channelName).get(command).get("modes");
                 String perm = (String) ircBot.commandMap.get(channelName).get(command).get("perm");
                 boolean privateCommand = Boolean.parseBoolean(ircBot.commandMap.get(channelName).get(command).get("private"));
-                Type responseType = Type.MESSAGE;
+                IRCMessage.Type responseType = IRCMessage.Type.MESSAGE;
                 if (Boolean.parseBoolean(ircBot.commandMap.get(channelName).get(command).get("ctcp"))) {
-                    responseType = Type.CTCP;
+                    responseType = IRCMessage.Type.CTCP;
                 }
                 if (Boolean.parseBoolean(ircBot.commandMap.get(channelName).get(command).get("notice"))) {
-                    responseType = Type.NOTICE;
+                    responseType = IRCMessage.Type.NOTICE;
                 }
                 plugin.logDebug("  ctcp: " + ircBot.commandMap.get(channelName).get(command).get("ctcp"));
                 plugin.logDebug("  notice: " + ircBot.commandMap.get(channelName).get(command).get("notice"));
@@ -238,7 +237,7 @@ public class IRCMessageHandler {
         return modeOkay;
     }
 
-    private void sendMessage(PurpleBot ircBot, String target, String message, Type responseType) {
+    private void sendMessage(PurpleBot ircBot, String target, String message, IRCMessage.Type responseType) {
         switch (responseType) {
             case CTCP:
                 plugin.logDebug("Sending message to target: " + target + " => " + message);

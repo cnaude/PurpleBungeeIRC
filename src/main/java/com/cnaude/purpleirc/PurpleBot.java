@@ -17,10 +17,6 @@
 package com.cnaude.purpleirc;
 
 import com.cnaude.purpleirc.IRCListeners.*;
-import static com.cnaude.purpleirc.IRCMessage.Type.CTCP;
-import static com.cnaude.purpleirc.IRCMessage.Type.MESSAGE;
-import static com.cnaude.purpleirc.IRCMessage.Type.NOTICE;
-import com.cnaude.purpleirc.Utilities.CaseInsensitiveMap;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.io.ByteArrayDataOutput;
@@ -28,12 +24,11 @@ import com.google.common.io.ByteStreams;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
-import net.md_5.bungee.chat.ComponentSerializer;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+import net.md_5.bungee.util.CaseInsensitiveMap;
 import org.pircbotx.*;
 import org.pircbotx.cap.TLSCapHandler;
 import org.pircbotx.exception.IrcException;
@@ -422,19 +417,19 @@ public final class PurpleBot {
 
     public void asyncIRCMessage(final String target, final String message) {
         plugin.logDebug("Entering aysncIRCMessage");
-        IRCMessage ircMessage = new IRCMessage(target, plugin.colorConverter.gameColorsToIrc(message), MESSAGE);
+        IRCMessage ircMessage = new IRCMessage(target, plugin.colorConverter.gameColorsToIrc(message), IRCMessage.Type.MESSAGE);
         messageQueue.add(ircMessage);
     }
 
     public void asyncCTCPMessage(final String target, final String message) {
         plugin.logDebug("Entering asyncCTCPMessage");
-        IRCMessage ircMessage = new IRCMessage(target, plugin.colorConverter.gameColorsToIrc(message), CTCP);
+        IRCMessage ircMessage = new IRCMessage(target, plugin.colorConverter.gameColorsToIrc(message), IRCMessage.Type.CTCP);
         messageQueue.add(ircMessage);
     }
 
     public void asyncNoticeMessage(final String target, final String message) {
         plugin.logDebug("Entering asyncNoticeMessage");
-        IRCMessage ircMessage = new IRCMessage(target, plugin.colorConverter.gameColorsToIrc(message), NOTICE);
+        IRCMessage ircMessage = new IRCMessage(target, plugin.colorConverter.gameColorsToIrc(message), IRCMessage.Type.NOTICE);
         messageQueue.add(ircMessage);
     }
 

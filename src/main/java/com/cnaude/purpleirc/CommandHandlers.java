@@ -105,8 +105,9 @@ public class CommandHandlers extends Command {
             if (commands.containsKey(subCmd)) {
                 if (!sender.hasPermission("irc." + subCmd)) {
                     sender.sendMessage(new TextComponent(plugin.noPermission));
+                } else {
+                    commands.get(subCmd).dispatch(sender, args);
                 }
-                commands.get(subCmd).dispatch(sender, args);
                 return;
             }
         }

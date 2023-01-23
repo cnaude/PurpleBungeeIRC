@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- BungeeCord API Version, change if out dated -->
+        <bungeecord.version>1.19-R0.1-SNAPSHOT</bungeecord.version>
+        <build.number>SNAPSHOT</build.number>
+    </properties>
+
+    <groupId>com.cnaude</groupId>
+    <artifactId>PurpleBungeeIRC</artifactId>
+    <version>0.1.${build.number}</version>
+    <name>PurpleBungeeIRC</name>
+    <description>A BungeeCord plugin for bridging game chat with IRC. Connect to any number of IRC servers and channels simultaneously.</description>
+    <url>http://cnaude.org/PurpleBungeeIRC/</url>
+
+    <repositories>
+        <!-- For anything else without its own repo -->
+        <repository>
+            <id>cnaude-repo</id>
+            <url>https://repo.chrisnaude.com/</url>
+        </repository>
+
+        <repository>
+            <id>codecrafter47-repo</id>
+            <url>https://nexus.codecrafter47.dyndns.eu/content/repositories/public/</url>
+        </repository>
+
+        <repository>
+            <id>Maven2</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+
+    </repositories>
+
+    <dependencies>       
+        <!-- PircBotX -->
+        <dependency>
+            <groupId>com.cnaude.pircbotx</groupId>
+            <artifactId>pircbotx-shaded</artifactId>
+            <version>2.1.8</version>
+        </dependency>
+
+        <!-- BungeeCord API -->
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-api</artifactId>
+            <version>${bungeecord.version}</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- BungeeCord Chat -->
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-chat</artifactId>
+            <version>${bungeecord.version}</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- BungeeCord Config -->
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-config</artifactId>
+            <version>${bungeecord.version}</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- BungeeCord Event -->
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-event</artifactId>
+            <version>${bungeecord.version}</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Herochat -->
+        <dependency>
+            <groupId>com.cnaude.herochat</groupId>
+            <artifactId>HerochatBungeeBridge</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>codecrafter47.bungeetablistplus</groupId>
+            <artifactId>bungeetablistplus-api-bungee</artifactId>
+            <version>2.8.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.aura.bungeechat</groupId>
+            <artifactId>BungeeChat</artifactId>
+            <version>2.1.6.855</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>xyz.olivermartin.multichat</groupId>
+            <artifactId>MultiChat</artifactId>
+            <version>1.7.4</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.24</version>
+            <scope>provided</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <!-- Filter only plugin.yml -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>plugin.yml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>plugin.yml</exclude>
+                </excludes>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.9.0-SNAPSHOT</version>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.3.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <minimizeJar>true</minimizeJar>
+                            <artifactSet>
+                                <includes>
+                                    <include>com.cnaude.pircbotx</include>                             
+                                    <include>commons-codec</include>
+                                    <include>commons-io</include>
+                                </includes>
+                            </artifactSet>
+                            <filters>
+                            </filters>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.pircbotx</pattern>
+                                    <shadedPattern>com.cnaude.purpleirc.ext.org.pircbotx</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.apache.commons.lang3</pattern>
+                                    <shadedPattern>com.cnaude.purpleirc.ext.org.apache.commons.lang3</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.apache.commons.codec</pattern>
+                                    <shadedPattern>com.cnaude.purpleirc.ext.org.apache.commons.codec</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.apache.commons.io</pattern>
+                                    <shadedPattern>com.cnaude.purpleirc.ext.org.apache.commons.io</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>       
+        </plugins>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <id>stage-repo</id>
+            <url>file://${basedir}/../repo/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>stage-repo-stapshots</id>
+            <url>file://${basedir}/../repo/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+</project>
